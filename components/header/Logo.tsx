@@ -5,7 +5,7 @@ function Logo() {
   return (
     <Link
       href={"/"}
-      className=" !rounded-2xl shadow-lg p-2 bg-[var(--clr-primary)]  hover:cursor-pointer "
+      className=" rounded-xl shadow-lg p-0 bg-[var(--clr-primary-light)] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10  hover:cursor-pointer "
     >
       <div className=" relative w-[40px] h-[40px] ">
         <Image
@@ -13,7 +13,7 @@ function Logo() {
           alt="logo"
           sizes="true"
           fill
-          className="flex justify-start "
+          className="flex justify-start rounded-xl"
         />
       </div>
     </Link>

@@ -8,9 +8,12 @@ body,
   height: 100%;
   --clr-primary: #ffffff;
   --clr-primary-trans: rgba(41, 35, 31, 0.456);
-  --clr-primary-light: #cdcdcd;
-  --clr-secondary: #183159;
+  --clr-primary-light: rgb(205, 205, 205);
+  --clr-primary-light-trans: rgb(205, 205, 205, 0.8);
+  --clr-secondary: rgb(24, 49, 89);
+  --clr-secondary-trans: rgb(24, 49, 89, 0.6);
   --clr-secondary-light: #63bfe4;
+  --clr-tertiary-trans: rgb(10, 8, 74, 0.72);
   --clr-secondary-rgba: rgba(29, 21, 17);
   --clr-white: #fff;
   --clr-white-trans: rgb(255, 255, 255, 0.4);
@@ -25,7 +28,8 @@ body,
   --clr-scarlet-v1: rgb(254, 30, 0, 0.79);
   --clr-green: #0b8c00;
   --clr-yellow: #fec80a;
-  --clr-jet: #302924;
+  --clr-jet: rgb(48, 41, 36);
+  --clr-jet-trans: rgb(48, 41, 36, 0.6);
   --clr-peach: #f7efe8;
   --font-family-bai: "Bai Jamjuree", sans-serif;
   --transition-default: all 300ms ease-in-out;

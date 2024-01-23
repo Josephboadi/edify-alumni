@@ -95,8 +95,8 @@ const Navbar = ({ locale }: any) => {
 
   return (
     <header
-      className={`fixed z-[20]  px-5 pr-2 lg:px-8 py-2 w-full left-0 right-0 top-0 h-[8vh] ${
-        scrolled ? "bg-[var(--clr-primary-light)]" : "bg-transparent "
+      className={`fixed z-[20]  px-5 pr-2 lg:px-8 py-2 w-full left-0 right-0 top-0 h-[9vh] lg:h-[8vh] ${
+        scrolled ? "bg-[var(--clr-jet-trans)] shadow-xl" : "bg-transparent "
       }`}
     >
       <Wrapper>
@@ -109,7 +109,7 @@ const Navbar = ({ locale }: any) => {
             {session?.status === "authenticated" ? (
               <>
                 <LanguageButton asChild mode="modal">
-                  <div className=" h-[38px]   rounded-full p-2 px-2 flex items-center justify-center bg-[var(--clr-primary)] shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer mr-4">
+                  <div className=" h-[38px]   rounded-full p-2 px-2 flex items-center justify-center bg-[var(--clr-primary-light)]  bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer mr-2">
                     <div className="group flex items-center gap-1">
                       <BiWorld className="text-xl" />
                       <MdKeyboardArrowDown className=" group-hover:rotate-180 transition-all duration-300" />
@@ -117,7 +117,7 @@ const Navbar = ({ locale }: any) => {
                   </div>
                 </LanguageButton>
 
-                <div className=" h-[38px]   rounded-full p-2 px-2 flex items-center justify-center bg-[var(--clr-primary)] shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer mr-4">
+                <div className=" h-[38px]   rounded-full p-2 px-2 flex items-center justify-center bg-[var(--clr-primary-light)] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer mr-2">
                   <div className="group flex items-center gap-1">
                     <MdOutlineNotifications className="text-2xl" />
                     {/* <MdKeyboardArrowDown className=" group-hover:rotate-180 transition-all duration-300" /> */}
@@ -125,7 +125,7 @@ const Navbar = ({ locale }: any) => {
                 </div>
 
                 <div
-                  className=" h-[40px]   rounded-full p-4 px-2 flex items-center justify-center bg-[var(--clr-primary)] shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer"
+                  className=" h-[40px]   rounded-full p-4 px-2 flex items-center justify-center bg-[var(--clr-primary-light)] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer"
                   // onClick={() => setIsContextMenuVisible(true)}
                 >
                   {session?.status === "authenticated" ? (
