@@ -29,14 +29,7 @@ export const LanguageButton = ({
   // document.cookie = `NEXT_LOCALE=${language};expires=${expire};path=/`;
   // cookieCutter.set("lang", language);
 
-  // console.log(
-  //   "New Path===========================, ",
-  //   `/${language}${newpath}`
-  // );
-
   const onClick = async () => {
-    // console.log(language);
-    // console.log(pathname);
     // cookies().set("lang", language);
     await changelanguage(language, locale);
     // router.push(`/${language}${newpath}`);

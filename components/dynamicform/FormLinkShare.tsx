@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { useEffect, useState } from "react";
 import { ImShare } from "react-icons/im";
-import { toast } from "./ui/use-toast";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { toast } from "../ui/use-toast";
 
 function FormLinkShare({ shareUrl }: { shareUrl: string }) {
   const [mounted, setMounted] = useState(false);

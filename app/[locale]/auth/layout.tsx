@@ -1,13 +1,9 @@
-const AuthLayout = ({ 
-  children
-}: { 
-  children: React.ReactNode
-}) => {
-  return ( 
-    <div className="h-full flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">
+const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="h-full flex items-center justify-center bg-[var(--clr-silver)] bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30">
       {children}
     </div>
-   );
-}
- 
+  );
+};
+
 export default AuthLayout;

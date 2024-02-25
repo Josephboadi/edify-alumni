@@ -157,8 +157,6 @@ async function getAllRoleMenus() {
 
 async function main() {
   const allMenus = await getAllRoleMenus();
-
-  console.log(JSON.stringify(allMenus, null, 2));
   return allMenus;
 }
 

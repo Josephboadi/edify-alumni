@@ -20,8 +20,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ResetSchema } from "@/schemas";
+import { useParams } from "next/navigation";
 
-export const ResetForm = ({ locale }: any) => {
+export const ResetForm = () => {
+  const { locale } = useParams();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -49,7 +51,7 @@ export const ResetForm = ({ locale }: any) => {
     <CardWrapper
       headerLabel="Forgot your password?"
       backButtonLabel="Back to login"
-      backButtonHref={`${locale}/auth/login`}
+      backButtonHref={locale === "en" ? `/auth/login` : `/${locale}/auth/login`}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -66,6 +68,11 @@ export const ResetForm = ({ locale }: any) => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
+                      className={` bg-[var(--clr-silver)] ${
+                        form.formState.errors.email
+                          ? "border border-red-500 focus-visible:ring-0"
+                          : "focus-visible:ring-transparent border-none"
+                      }`}
                     />
                   </FormControl>
                   <FormMessage />

@@ -22,7 +22,6 @@ const sendEmail = async (options: any) => {
     attachments: options.attachments,
   };
 
-  // console.log("Mail Options===========================, ", mailOptions);
   await transporter.sendMail(mailOptions);
 };
 

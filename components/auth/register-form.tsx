@@ -20,8 +20,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RegisterSchema } from "@/schemas";
+import { useParams } from "next/navigation";
 
-export const RegisterForm = ({ locale }: any) => {
+export const RegisterForm = () => {
+  const { locale } = useParams();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -51,9 +53,8 @@ export const RegisterForm = ({ locale }: any) => {
     <CardWrapper
       headerLabel="Create an account"
       backButtonLabel="Already have an account?"
-      backButtonHref={locale === "en" ? `/auth/login` : `${locale}/auth/login`}
-      showSocial
-      locale={locale}
+      backButtonHref={locale === "en" ? `/auth/login` : `/${locale}/auth/login`}
+      // showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -69,6 +70,11 @@ export const RegisterForm = ({ locale }: any) => {
                       {...field}
                       disabled={isPending}
                       placeholder="John Doe"
+                      className={` bg-[var(--clr-silver)] ${
+                        form.formState.errors.name
+                          ? "border border-red-500 focus-visible:ring-0"
+                          : "focus-visible:ring-transparent border-none"
+                      }`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -87,6 +93,11 @@ export const RegisterForm = ({ locale }: any) => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
+                      className={` bg-[var(--clr-silver)] ${
+                        form.formState.errors.email
+                          ? "border border-red-500 focus-visible:ring-0"
+                          : "focus-visible:ring-transparent border-none"
+                      }`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -105,6 +116,11 @@ export const RegisterForm = ({ locale }: any) => {
                       disabled={isPending}
                       placeholder="******"
                       type="password"
+                      className={` bg-[var(--clr-silver)] ${
+                        form.formState.errors.password
+                          ? "border border-red-500 focus-visible:ring-0"
+                          : "focus-visible:ring-transparent border-none"
+                      }`}
                     />
                   </FormControl>
                   <FormMessage />

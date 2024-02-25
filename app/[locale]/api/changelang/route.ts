@@ -14,8 +14,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     //    maxAge: 60 * 60 * 2, // 2 hours in seconds
   });
 
-  console.log(" REQUEST BODY============================", reqBody);
-
   return response;
   //   return NextResponse.json(
   //     {

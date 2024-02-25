@@ -7,8 +7,6 @@ import { Text } from "@react-email/text";
 export function OtpEmail(props: any) {
   const { token } = props;
 
-  // console.log("Email Test======================================, ", text);
-
   return (
     <Html lang="en">
       {/* <Button href={url}>Click me</Button> */}

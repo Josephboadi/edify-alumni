@@ -30,9 +30,10 @@ export default auth(async (req) => {
   // });
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  const fallbacklanguage = "";
+  const fallbacklanguage = "/";
   const fallbacklanguage1 = "/de";
 
+  let locale = (await req.cookies.get("NEXT_LOCALE")?.value)?.toString();
   let language =
     (await req.cookies.get("NEXT_LOCALE")?.value)?.toString() || "";
 
@@ -60,10 +61,15 @@ export default auth(async (req) => {
     `${language}`,
     "/",
     "/en",
-    // `${language}/api/changelang`,
+    `/auth/new-verification`,
     `${language}/auth/new-verification`,
   ];
   const authRoutes = [
+    `/auth/login`,
+    `/auth/register`,
+    `/auth/error`,
+    `/auth/reset`,
+    `/auth/new-password`,
     `${language}/auth/login`,
     `${language}/auth/register`,
     `${language}/auth/error`,
@@ -72,7 +78,7 @@ export default auth(async (req) => {
   ];
 
   // const apiAuthPrefix = `${language}/api/auth`;
-  const DEFAULT_LOGIN_REDIRECT = `${language}/settings`;
+  const DEFAULT_LOGIN_REDIRECT = locale === "en" ? "/" : `${language}/`;
 
   // const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -101,7 +107,8 @@ export default auth(async (req) => {
 
     return Response.redirect(
       new URL(
-        // `${language}/auth/login?callbackUrl=${encodedCallbackUrl}`,
+        // `${language}auth/login?callbackUrl=${encodedCallbackUrl}`,
+        // `${language}auth/login`,
         `${language}`,
         nextUrl
       )

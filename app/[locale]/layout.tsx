@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/sonner";
+import NextTopLoader from "nextjs-toploader";
 // import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
@@ -34,8 +35,9 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning={true}>
       <SessionProvider session={session}>
-        {/* <NextTopLoader /> */}
-        <body className={inter.className}>
+        {/* <NextTopLoader color={"var(--clr-secondary)"} showSpinner={false} /> */}
+        <body className={inter.className} suppressHydrationWarning={true}>
+          <NextTopLoader color={"var(--clr-secondary-light)"} showSpinner={false} />
           {/* <ThemeProvider
             attribute="class"
             defaultTheme="system"

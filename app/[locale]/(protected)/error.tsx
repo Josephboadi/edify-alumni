@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 function ErrorPage({ error }: { error: Error }) {
   useEffect(() => {
@@ -10,9 +10,12 @@ function ErrorPage({ error }: { error: Error }) {
   }, [error]);
 
   return (
-    <div className="flex w-full h-full flex-col items-center justify-center gap-4">
+    <div className="flex w-full h-[100vh] flex-col items-center justify-center gap-4">
       <h2 className="text-destructive text-4xl">Something went wrong!</h2>
-      <Button asChild>
+      <Button
+        asChild
+        className="bg-[var(--clr-secondary)] text-[var(--clr-primary)]"
+      >
         <Link href={"/"}>Go back to home</Link>
       </Button>
     </div>

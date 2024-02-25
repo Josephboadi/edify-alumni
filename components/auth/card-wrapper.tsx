@@ -1,15 +1,12 @@
 "use client";
 
-import { Header } from "@/components/auth/header";
-import { Social } from "@/components/auth/social";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
 import { useAppStore } from "@/store/store";
+import Image from "next/image";
 import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { BackButton } from "./back-button";
+import { Header } from "./header";
+import { Social } from "./social";
 
 interface CardWrapperProps {
   children: React.ReactNode;
@@ -17,7 +14,6 @@ interface CardWrapperProps {
   backButtonLabel: string;
   backButtonHref: string;
   showSocial?: boolean;
-  locale: string;
 }
 
 export const CardWrapper = ({
@@ -26,44 +22,108 @@ export const CardWrapper = ({
   backButtonLabel,
   backButtonHref,
   showSocial,
-  locale,
 }: CardWrapperProps) => {
-  const { setFormType } = useAppStore();
+  const { setFormType, formType } = useAppStore();
   return (
-    <Card className="w-[400px] shadow-md">
-      <CardHeader>
-        <Header label={headerLabel} />
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-      {showSocial && (
-        <CardFooter>
-          <Social />
-        </CardFooter>
-      )}
-      <CardFooter>
-        {/* <BackButton label={backButtonLabel} href={backButtonHref} /> */}
-        {backButtonLabel === "Already have an account?" ? (
-          // <RegisterButton asChild locale={locale} mode="modal">
-          <Button
-            onClick={() => setFormType("login")}
-            variant="link"
-            size="sm"
-            className="font-normal w-full"
-          >
-            {backButtonLabel}
-          </Button>
-        ) : (
-          // <LoginButton asChild locale={locale} mode="modal">
-          <Button
-            onClick={() => setFormType("register")}
-            variant="link"
-            size="sm"
-            className="font-normal w-full"
-          >
-            {backButtonLabel}
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
+    <div className="grid grid-cols-1 md:grid-cols-7 w-[400px] md:w-[700px]  border-none min-h-[520px] h-full">
+      <div className=" col-span-1 md:col-span-3 bg-[var(--clr-primary-light)]  px-8 pb-1 md:pb-2 pt-1 md:pt-16  flex flex-row md:flex-col items-center justify-center md:items-center md:justify-between md:h-[100%]">
+        <div className="w-full flex flex-col justify-between items-center md:h-[320px]">
+          <div className="w-[200px] h-[100px] relative">
+            <Image
+              src={"/translogo.png"}
+              fill
+              alt="-"
+              className=" object-contain"
+            />
+          </div>
+          <div className=" hidden md:block w-[200px] h-[200px] border-4 border-[var(--clr-primary)] relative rounded-full">
+            <Image
+              src={"/formimage.png"}
+              fill
+              alt="-"
+              className=" object-contain"
+            />
+            <div className="absolute w-[18px] h-[18px] bg-[var(--clr-secondary-light)] shadow-lg top-[17px] left-[18px] rounded-full" />
+          </div>
+        </div>
+
+        <div className=" hidden md:block w-[80px] h-[40px]  relative">
+          <Image
+            src={"/edifylogo.png"}
+            fill
+            alt="-"
+            className=" object-contain"
+          />
+        </div>
+      </div>
+      <div className="col-span-1 md:col-span-4 rounded-none h-ful">
+        <Card className="w-full rounded-none h-full flex flex-col justify-between">
+          <CardHeader>
+            <Header label={headerLabel} />
+          </CardHeader>
+          <div>
+            <CardContent>{children}</CardContent>
+            {showSocial && (
+              <CardFooter>
+                <Social />
+              </CardFooter>
+            )}
+          </div>
+
+          <CardFooter>
+            {/* <BackButton label={backButtonLabel} href={backButtonHref} /> */}
+            {backButtonLabel === "Don't have an account?" &&
+            formType === "login" ? (
+              // <RegisterButton asChild mode="modal">
+              <Button
+                onClick={() => setFormType("register")}
+                variant="link"
+                size="sm"
+                className="font-normal w-full"
+              >
+                {backButtonLabel}
+              </Button>
+            ) : backButtonLabel === "Already have an account?" &&
+              formType === "register" ? (
+              // {/* <LoginButton asChild mode="modal">
+              //   {children}
+              // </LoginButton> */}
+
+              //   {/* : backButtonLabel === "Already have an account?" ? (
+              // <LoginButton asChild mode="modal">
+              //   {children}
+              // </LoginButton>
+              //   ) */}
+              // <Button
+              //   onClick={() => setFormType("login")}
+              //   variant="link"
+              //   size="sm"
+              //   className="font-normal w-full"
+              // >
+              //   {backButtonLabel}
+              // </Button>
+              // <RegisterButton asChild mode="modal">
+              //   {children}
+              // </RegisterButton>
+              // <LoginButton asChild locale={locale} mode="modal">
+              <Button
+                onClick={() => setFormType("login")}
+                variant="link"
+                size="sm"
+                className="font-normal w-full"
+              >
+                {backButtonLabel}
+              </Button>
+            ) : backButtonLabel === "Already have an account?" ? (
+              <BackButton label={backButtonLabel} href={backButtonHref} />
+            ) : backButtonLabel === "Don't have an account?" ? (
+              <BackButton label={backButtonLabel} href={backButtonHref} />
+            ) : (
+              <BackButton label={backButtonLabel} href={backButtonHref} />
+            )}
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
   );
 };

@@ -1,7 +1,6 @@
 "use server";
 
 import { AuthError } from "next-auth";
-// import { getLocale } from "next-intl/server";
 import * as z from "zod";
 
 import { signIn } from "@/auth";
@@ -18,19 +17,11 @@ import { LoginSchema } from "@/schemas";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
-  { locale }: any,
+  locale : any,
   callbackUrl?: string | null
 ) => {
-  // const locale = getLocale();
   const redirectUrl = `/`;
-  console.log(
-    "Server Locale===============================================, ",
-    locale
-  );
-  console.log(
-    "callbackUrl Locale===============================================, ",
-    callbackUrl
-  );
+
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -58,10 +49,9 @@ export const login = async (
 
     return { success: "Confirmation email sent!" };
   }
-  // console.log(existingUser);
+
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     if (code) {
-      // console.log(existingUser.email);
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
@@ -112,7 +102,6 @@ export const login = async (
       redirectTo: callbackUrl || redirectUrl,
     });
   } catch (error) {
-    console.log(error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":

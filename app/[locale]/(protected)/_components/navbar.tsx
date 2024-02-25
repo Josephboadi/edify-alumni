@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 
 const Navbar = ({ locale }: any) => {
   const pathname = usePathname();
-  // console.log("locale============================, ", locale);
 
   return (
     <nav className="bg-secondary flex justify-between items-center p-4 rounded-xl w-[600px] shadow-sm">

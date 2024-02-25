@@ -16,8 +16,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
     user_agent: ua,
   };
 
-  console.log("HEADER REQUEST============================", data);
-
   const role = await currentRole();
 
   if (role === UserRole.ADMIN) {

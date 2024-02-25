@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -22,15 +22,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
+import { useAppStore } from "@/store/store";
 
-export const LoginForm = ({ locale }: any) => {
+export const LoginForm = () => {
   const searchParams = useSearchParams();
+  const { locale } = useParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
       : "";
-
+  const { setFormType } = useAppStore();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -76,8 +78,7 @@ export const LoginForm = ({ locale }: any) => {
       backButtonHref={
         locale === "en" ? `/auth/register` : `/${locale}/auth/register`
       }
-      showSocial
-      locale={locale}
+      // showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -94,6 +95,11 @@ export const LoginForm = ({ locale }: any) => {
                         {...field}
                         disabled={isPending}
                         placeholder="123456"
+                        className={` bg-[var(--clr-silver)] ${
+                          form.formState.errors.code
+                            ? "border border-red-500 focus-visible:ring-1"
+                            : "focus-visible:ring-transparent border-none"
+                        }`}
                       />
                     </FormControl>
                     <FormMessage />
@@ -115,6 +121,11 @@ export const LoginForm = ({ locale }: any) => {
                           disabled={isPending}
                           placeholder="john.doe@example.com"
                           type="email"
+                          className={` bg-[var(--clr-silver)] ${
+                            form.formState.errors.email
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
                         />
                       </FormControl>
                       <FormMessage />
@@ -133,9 +144,16 @@ export const LoginForm = ({ locale }: any) => {
                           disabled={isPending}
                           placeholder="******"
                           type="password"
+                          className={` bg-[var(--clr-silver)] ${
+                            form.formState.errors.password
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
                         />
                       </FormControl>
+                      <FormMessage />
                       <Button
+                        onClick={() => setFormType("")}
                         size="sm"
                         variant="link"
                         asChild
@@ -151,7 +169,6 @@ export const LoginForm = ({ locale }: any) => {
                           Forgot password?
                         </Link>
                       </Button>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -160,7 +177,11 @@ export const LoginForm = ({ locale }: any) => {
           </div>
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="w-full bg-[var(--clr-secondary)]"
+          >
             {showTwoFactor ? "Confirm" : "Login"}
           </Button>
         </form>

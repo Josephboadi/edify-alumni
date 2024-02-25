@@ -1,52 +1,55 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { LoginForm } from "@/components/auth/login-form";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useAppStore } from "@/store/store";
+import { useState } from "react";
 import { RegisterForm } from "./register-form";
 
 interface LoginButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
-  locale: string;
   asChild?: boolean;
 }
 
 export const LoginButton = ({
   children,
   mode = "redirect",
-  locale,
   asChild,
 }: LoginButtonProps) => {
   const router = useRouter();
+  const { locale } = useParams();
   const { formType } = useAppStore();
+  const [mounted, setMounted] = useState(false);
 
-  // console.log(formType);
+  const onClick = () => {
+    router.push(locale === "en" ? `/auth/login` : `/${locale}/auth/login`);
+  };
 
-  // const onClick = () => {
-  //   router.push(`/${locale}/auth/login`);
-  // };
+  //  useEffect(() => {
+  //    setMounted(true);
+  //  }, []);
 
-  // if (mode === "modal") {
+  //  if (!mounted) {
+  //    return null;
+  //  }
+
+  if (mode === "modal") {
+    return (
+      <Dialog>
+        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+        <DialogContent className="p-0  w-max  flex items-center justify-center bg-transparent border-none !z-[10000000] max-h-[96vh] overflow-y-auto no-scrollbar shadow-lg">
+          {formType === "login" ? <LoginForm /> : <RegisterForm />}
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
-    <Dialog>
-      <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
-      <DialogContent className="p-0 w-auto bg-transparent border-none !z-[10000000]">
-        {formType === "login" ? (
-          <LoginForm locale={locale} />
-        ) : (
-          <RegisterForm locale={locale} />
-        )}
-      </DialogContent>
-    </Dialog>
+    <span onClick={onClick} className="cursor-pointer">
+      {children}
+    </span>
   );
-  // }
-
-  // return (
-  //   <span onClick={onClick} className="cursor-pointer">
-  //     {children}
-  //   </span>
-  // );
 };

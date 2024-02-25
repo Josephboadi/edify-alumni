@@ -1,14 +1,20 @@
 "use client";
 
-import React, { useCallback, useRef, useState, useTransition } from "react";
-import { FormElementInstance, FormElements } from "./FormElements";
-import { Button } from "./ui/button";
-import { HiCursorClick } from "react-icons/hi";
-import { toast } from "./ui/use-toast";
-import { ImSpinner2 } from "react-icons/im";
 import { SubmitForm } from "@/actions/form";
+import { useCallback, useRef, useState, useTransition } from "react";
+import { HiCursorClick } from "react-icons/hi";
+import { ImSpinner2 } from "react-icons/im";
+import { Button } from "../ui/button";
+import { toast } from "../ui/use-toast";
+import { FormElementInstance, FormElements } from "./FormElements";
 
-function FormSubmitComponent({ formUrl, content }: { content: FormElementInstance[]; formUrl: string }) {
+function FormSubmitComponent({
+  formUrl,
+  content,
+}: {
+  content: FormElementInstance[];
+  formUrl: string;
+}) {
   const formValues = useRef<{ [key: string]: string }>({});
   const formErrors = useRef<{ [key: string]: boolean }>({});
   const [renderKey, setRenderKey] = useState(new Date().getTime());
@@ -68,7 +74,9 @@ function FormSubmitComponent({ formUrl, content }: { content: FormElementInstanc
       <div className="flex justify-center w-full h-full items-center p-8">
         <div className="max-w-[620px] flex flex-col gap-4 flex-grow bg-background w-full p-8 overflow-y-auto border shadow-xl shadow-blue-700 rounded">
           <h1 className="text-2xl font-bold">Form submitted</h1>
-          <p className="text-muted-foreground">Thank you for submitting the form, you can close this page now.</p>
+          <p className="text-muted-foreground">
+            Thank you for submitting the form, you can close this page now.
+          </p>
         </div>
       </div>
     );

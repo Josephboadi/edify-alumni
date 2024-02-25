@@ -11,10 +11,9 @@ import { RegisterSchema } from "@/schemas";
 
 export const register = async (
   values: z.infer<typeof RegisterSchema>,
-  { locale }: any
+  locale: any
 ) => {
   const validatedFields = RegisterSchema.safeParse(values);
-
   if (!validatedFields.success) {
     return { error: "Invalid fields!" };
   }

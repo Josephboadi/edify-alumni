@@ -1,7 +1,11 @@
 import { LoginForm } from "@/components/auth/login-form";
 
-const LoginPage = ({ params: { locale } }: any) => {
-  return <LoginForm locale={locale} />;
+const LoginPage = () => {
+  return (
+    <div className="p-0  w-max  flex items-center justify-center bg-transparent border-none !z-[10000000] max-h-[96vh] overflow-y-auto no-scrollbar shadow-lg">
+      <LoginForm />
+    </div>
+  );
 };
 
 export default LoginPage;

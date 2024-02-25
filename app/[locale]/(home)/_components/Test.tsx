@@ -8,6 +8,5 @@ export const Test = (props: Props) => {
   const { t } = useTranslation();
   const session = useSession();
 
-  console.log(session);
   return <div>{t("title")}</div>;
 };

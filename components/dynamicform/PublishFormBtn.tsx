@@ -13,9 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "./ui/alert-dialog";
-import { Button } from "./ui/button";
-import { toast } from "./ui/use-toast";
+} from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import { toast } from "../ui/use-toast";
 
 function PublishFormBtn({ id }: { id: number }) {
   const [loading, startTransition] = useTransition();
@@ -49,11 +49,12 @@ function PublishFormBtn({ id }: { id: number }) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. After publishing you will not be able to edit this form. <br />
+            This action cannot be undone. After publishing you will not be able
+            to edit this form. <br />
             <br />
             <span className="font-medium">
-              By publishing this form you will make it available to the public and you will be able to collect
-              submissions.
+              By publishing this form you will make it available to the public
+              and you will be able to collect submissions.
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>

@@ -88,8 +88,6 @@ async function getAllMenus() {
 
 async function main() {
   const allMenus = await getAllMenus();
-
-  console.log(JSON.stringify(allMenus, null, 2));
   return allMenus;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { RegisterForm } from "@/components/auth/register-form";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -8,36 +8,38 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 interface RegisterButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
-  locale: string;
   asChild?: boolean;
 }
 
 export const RegisterButton = ({
   children,
   mode = "redirect",
-  locale,
   asChild,
 }: RegisterButtonProps) => {
   const router = useRouter();
+  const { locale } = useParams();
+  const onClick = () => {
+    if (locale === "en") {
+      router.push(`/auth/login`);
+    } else {
+      router.push(`/${locale}/auth/login`);
+    }
+  };
 
-  // const onClick = () => {
-  //   router.push(`/${locale}/auth/login`);
-  // };
+  if (mode === "modal") {
+    return (
+      <Dialog>
+        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+        <DialogContent className="p-0  w-max  flex items-center justify-center bg-transparent border-none !z-[10000000] max-h-[96vh] overflow-y-auto no-scrollbar shadow-lg">
+          <RegisterForm />
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
-  // if (mode === "modal") {
   return (
-    <Dialog>
-      <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
-      <DialogContent className="p-0 w-auto bg-transparent border-none">
-        <RegisterForm />
-      </DialogContent>
-    </Dialog>
+    <span onClick={onClick} className="cursor-pointer">
+      {children}
+    </span>
   );
-  // }
-
-  // return (
-  //   <span onClick={onClick} className="cursor-pointer">
-  //     {children}
-  //   </span>
-  // );
 };

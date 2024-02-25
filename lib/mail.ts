@@ -27,7 +27,8 @@ export const sendPasswordResetEmail = async (
   token: string,
   locale: string
 ) => {
-  const resetLink = `${domain}/${locale}/auth/new-password?token=${token}`;
+  const checklocale = locale === "en" ? "" : `/${locale}`;
+  const resetLink = `${domain}${checklocale}/auth/new-password?token=${token}`;
 
   // await resend.emails.send({
   //   from: "onboarding@resend.dev",
@@ -48,7 +49,8 @@ export const sendVerificationEmail = async (
   token: string,
   locale: string
 ) => {
-  const confirmLink = `${domain}/${locale}/auth/new-verification?token=${token}`;
+  const checklocale = locale === "en" ? "" : `/${locale}`;
+  const confirmLink = `${domain}${checklocale}/auth/new-verification?token=${token}`;
 
   // await resend.emails.send({
   //   from: "onboarding@resend.dev",

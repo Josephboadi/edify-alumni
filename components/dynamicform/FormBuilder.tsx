@@ -1,21 +1,27 @@
 "use client";
 
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { Form } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Confetti from "react-confetti";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { ImSpinner2 } from "react-icons/im";
+import useDesigner from "../hooks/useDesigner";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { toast } from "../ui/use-toast";
+import Designer from "./Designer";
+import DragOverlayWrapper from "./DragOverlayWrapper";
 import PreviewDialogBtn from "./PreviewDialogBtn";
 import PublishFormBtn from "./PublishFormBtn";
 import SaveFormBtn from "./SaveFormBtn";
-import Designer from "./Designer";
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import DragOverlayWrapper from "./DragOverlayWrapper";
-import useDesigner from "./hooks/useDesigner";
-import { ImSpinner2 } from "react-icons/im";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { toast } from "./ui/use-toast";
-import Link from "next/link";
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import Confetti from "react-confetti";
 
 function FormBuilder({ form }: { form: Form }) {
   const { setElements, setSelectedElement } = useDesigner();
@@ -58,7 +64,12 @@ function FormBuilder({ form }: { form: Form }) {
   if (form.published) {
     return (
       <>
-        <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={1000} />
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          recycle={false}
+          numberOfPieces={1000}
+        />
         <div className="flex flex-col items-center justify-center h-full w-full">
           <div className="max-w-md">
             <h1 className="text-center text-4xl font-bold text-primary border-b pb-2 mb-10">

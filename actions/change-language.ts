@@ -2,8 +2,6 @@
 
 import { cookies } from "next/headers";
 export const changelanguage = async (language: string, locale: string) => {
-  console.log("Locale========================", locale);
-  console.log("Change Language==========================, ", language);
   //   const language = await getUserByEmail(email);
   // ;
   cookies().set("NEXT_LOCALE", language);

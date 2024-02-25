@@ -55,7 +55,7 @@ const ContextMenu = ({
               key={name}
               //   onClick={(e) => handleClick(e, callBack)}
             >
-              <LoginButton asChild locale={locale} mode="modal">
+              <LoginButton asChild mode="modal">
                 <Button variant="outline" size="lg">
                   Sign in
                 </Button>
