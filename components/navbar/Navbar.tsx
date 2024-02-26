@@ -250,8 +250,8 @@ const Navbar = ({ locale }: any) => {
                                   locale === "en"
                                     ? menu.path
                                     : menu.path === "/"
-                                    ? `/${locale}`
-                                    : `/${locale}${menu.path}`;
+                                      ? `/${locale}`
+                                      : `/${locale}${menu.path}`;
 
                                 return (
                                   <DrawerClose asChild key={menu.key}>
@@ -328,8 +328,8 @@ const Navbar = ({ locale }: any) => {
                                 locale === "en"
                                   ? menu.path
                                   : menu.path === "/"
-                                  ? `/${locale}`
-                                  : `/${locale}${menu.path}`;
+                                    ? `/${locale}`
+                                    : `/${locale}${menu.path}`;
 
                               return (
                                 <DropdownMenuItem
@@ -392,12 +392,12 @@ const Navbar = ({ locale }: any) => {
                   </div>
                 </LanguageButton>
                 <LoginButton asChild mode="modal">
-                  <div className="w-[160px] h-[44px] rounded-[40px] shadow-lg bg-[var(--clr-secondary-light)]  flex items-center justify-between pl-4 text-[14px] font-bold text-[var(--clr-primary)] hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer">
+                  <div className="w-[120px] h-[38px] rounded-[20px] shadow-lg bg-[var(--clr-secondary-light)]  flex items-center justify-between pl-[10px] text-[14px] font-base text-[var(--clr-primary)] shadow-md hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer">
                     <div>
-                      <p>Login</p>
+                      <p className="text-sm">Login</p>
                     </div>
-                    <div className="w-[90px] h-full rounded-[40px] shadow-lg bg-[var(--clr-secondary)]  flex items-center justify-center">
-                      <p>Sign Up</p>
+                    <div className="w-[65px] h-full rounded-[20px] shadow-lg bg-[var(--clr-secondary)]  flex items-center justify-center">
+                      <p className="text-sm">Signup</p>
                     </div>
                   </div>
                 </LoginButton>
