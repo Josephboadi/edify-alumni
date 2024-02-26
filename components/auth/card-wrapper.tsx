@@ -25,7 +25,7 @@ export const CardWrapper = ({
 }: CardWrapperProps) => {
   const { setFormType, formType } = useAppStore();
   return (
-    <div className="grid grid-cols-1 md:grid-cols-7 w-full xs:w-[360px] sm:w-[400px] md:w-[700px]  border-none min-h-[520px] h-full !rounded-xl">
+    <div className="grid grid-cols-1 md:grid-cols-7 w-[320px] xs:w-[360px] sm:w-[400px] md:w-[700px]  border-none min-h-[520px] h-full !rounded-xl">
       <div className=" col-span-1 md:col-span-3 bg-[var(--clr-primary-light)]  px-8 pb-1 md:pb-2 pt-1 md:pt-16  flex flex-row md:flex-col items-center justify-center md:items-center md:justify-between md:h-[100%]">
         <div className="w-full flex flex-col justify-between items-center md:h-[320px]">
           <div className="w-[200px] h-[100px] relative">
