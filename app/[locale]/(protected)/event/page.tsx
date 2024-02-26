@@ -37,7 +37,7 @@ const EventPage = async ({ searchParams, params: { locale } }: any) => {
               <div className="w-max h-8 relative  sm:mt-2 sm:mb-5">
                 <h1
                   className={cn(
-                    "text-3xl -mt-[42px] sm:-mt-[42px] mb-6 text-[var(--clr-black)] font-bold drop-shadow-md text-center",
+                    "text-2xl xs:text-3xl -mt-[42px] sm:-mt-[42px] mb-6 text-[var(--clr-black)] font-bold drop-shadow-md text-center",
                     font1.className
                   )}
                 >

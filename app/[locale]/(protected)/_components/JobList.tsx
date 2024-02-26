@@ -25,7 +25,6 @@ const JobList = ({ pageCount, jobsData }: JobListProps) => {
   //   if (q.length > 3) {
   //     result = result.filter((job) =>
   //       job.List.every(({ title }) => {
-  //         // console.log(title);
   //         return title.toLowerCase().includes(q.toLowerCase());
   //       })
   //     );
@@ -43,7 +42,6 @@ const JobList = ({ pageCount, jobsData }: JobListProps) => {
   //     if (q.length > 3) {
   //       result = result.filter((job) =>
   //         job.List.every(({ title }) => {
-  //           // console.log(title);
   //           return title.toLowerCase().includes(q.toLowerCase());
   //         })
   //       );

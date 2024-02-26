@@ -73,10 +73,10 @@ const ScholarshipList = ({
       <div className="divide-y divide-[var(--clr-black)] border-b border-[var(--clr-black)]">
         {scholarshipsData?.map((scholarship) => (
           <div
-            className="w-full flex md:flex-wrap md:flex-row flex-col gap-2 p-5"
+            className="w-full flex md:flex-wrap md:flex-row flex-col gap-2 px-0 py-3 sm:p-5"
             key={scholarship.key}
           >
-            <div className=" w-[300px] md:w-[200px] h-[200px] md:h-[150px] relative rounded-[5px]">
+            <div className=" w-full md:w-[200px] h-[180px] xs:w-[300px] xs:h-[200px] md:h-[150px] relative rounded-[5px]">
               <Image src={scholarship.image} fill alt="-" />
             </div>
 

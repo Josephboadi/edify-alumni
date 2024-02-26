@@ -38,13 +38,13 @@ const JobDetail = async ({ params: { locale, id } }: any) => {
           />
         </Head>
 
-        <section className=" w-full !mb-6 mt-20  pb-5">
+        <section className=" w-full !mb-6 mt-16 xs:mt-20  pb-5">
           <Wrapper>
             <div className="w-full flex items-center justify-center ">
               <div className="w-max h-8 relative mt-4 sm:mt-2 sm:mb-5">
                 <h1
                   className={cn(
-                    "text-3xl -mt-[72px] sm:-mt-[42px] mb-6 text-[var(--clr-black)] font-bold drop-shadow-md text-center",
+                    "text-2xl xs:text-3xl -mt-[62px] xs:-mt-[72px] sm:-mt-[42px] mb-6 text-[var(--clr-black)] font-bold drop-shadow-md text-center",
                     font1.className
                   )}
                 >

@@ -30,13 +30,13 @@ const EventDetail = async ({ params: { locale, id } }: any) => {
     >
       <Navbar locale={locale} />
       <div className="w-full h-full overflow-y-auto flex flex-col bg-[var(--clr-silver)]">
-        <section className=" w-full  mt-32  pb-5">
+        <section className=" w-full mt-28 xs:mt-32  pb-5">
           <Wrapper>
             <div className="w-full flex items-center justify-center ">
               <div className="w-max h-8 relative mt-4 sm:mt-2 sm:mb-5">
                 <h1
                   className={cn(
-                    "text-4xl -mt-[46px] sm:-mt-[46px] mb-6 text-[var(--clr-black)] font-bold text-center",
+                    "text-2xl xs:text-3xl -mt-[38px] xs:-mt-[46px] mb-6 text-[var(--clr-black)] font-bold text-center",
                     font1.className
                   )}
                 >
@@ -71,8 +71,8 @@ const EventDetail = async ({ params: { locale, id } }: any) => {
         </section> */}
       </div>
       <div className="w-full">
-          <Footer />
-        </div>
+        <Footer />
+      </div>
     </TranslationsProvider>
   );
 };

@@ -39,15 +39,18 @@ export function LanguageForm() {
         className="grid grid-cols-2 md:grid-cols-2 gap-6 "
       >
         {languagesData.map((lang) => (
-          <div className="flex items-center space-x-2" key={lang.key}>
+          <div
+            className="flex items-center space-x-1 md:space-x-2"
+            key={lang.key}
+          >
             <RadioGroupItem value={lang.lang!} id={`ri-${lang.key}`} />
             <Label
               htmlFor={`ri-${lang.key}`}
-              className="flex items-center gap-4"
+              className="flex items-center gap-3 md:gap-4"
             >
               {lang.title}{" "}
               <span>
-                <div className="relative w-5 h-5 rounded-full shadow-2xl">
+                <div className="relative w-4 h-4 md:w-5 md:h-5 rounded-full shadow-2xl">
                   <Image
                     src={lang?.flag}
                     fill
