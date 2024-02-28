@@ -17,7 +17,7 @@ import { LoginSchema } from "@/schemas";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
-  locale : any,
+  locale: any,
   callbackUrl?: string | null
 ) => {
   const redirectUrl = `/`;
@@ -38,7 +38,8 @@ export const login = async (
 
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(
-      existingUser.email
+      existingUser.email,
+      existingUser.user_id
     );
 
     await sendVerificationEmail(

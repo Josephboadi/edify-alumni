@@ -22,7 +22,7 @@ export const {
   events: {
     async linkAccount({ user }) {
       await db.user.update({
-        where: { id: user.id },
+        where: { id: parseInt(user.id) },
         data: { emailVerified: new Date() },
       });
     },
@@ -39,7 +39,7 @@ export const {
 
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-          existingUser.id
+          existingUser.user_id
         );
 
         if (!twoFactorConfirmation) return false;
@@ -66,7 +66,11 @@ export const {
       }
 
       if (session.user) {
+        session.user.user_id = token.user_id as string;
         session.user.name = token.name;
+        session.user.country = token.country as string;
+        session.user.school = token.school as string;
+        session.user.year = token.year as string;
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth as boolean;
       }
@@ -80,10 +84,14 @@ export const {
 
       if (!existingUser) return token;
 
-      const existingAccount = await getAccountByUserId(existingUser.id);
+      const existingAccount = await getAccountByUserId(existingUser.user_id);
 
       token.isOAuth = !!existingAccount;
+      token.user_id = existingUser.user_id;
       token.name = existingUser.name;
+      token.country = existingUser?.country;
+      token.school = existingUser?.school;
+      token.year = existingUser?.year;
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;

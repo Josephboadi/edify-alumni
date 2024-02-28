@@ -68,7 +68,7 @@ export const ResetForm = () => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
-                      className={` bg-[var(--clr-silver)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.email
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -82,7 +82,11 @@ export const ResetForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="w-full bg-[var(--clr-secondary)]"
+          >
             Send reset email
           </Button>
         </form>

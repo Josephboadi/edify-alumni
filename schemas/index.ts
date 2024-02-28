@@ -69,6 +69,15 @@ export const RegisterSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required",
   }),
+  country: z.string().min(1, {
+    message: "Country is required",
+  }),
+  school: z.string().min(1, {
+    message: "School is required",
+  }),
+  year: z.string().min(1, {
+    message: "Year is required",
+  }),
 });
 
 export const SubscribeSchema = z.object({
@@ -238,4 +247,19 @@ export type JobCatData = {
   key: number;
   image: string;
   title: string;
+}[];
+
+export type CountryData = {
+  name: string;
+  code: string;
+}[];
+
+export type SchoolData = {
+  id: number;
+  name: string;
+}[];
+
+export type YearData = {
+  name: string;
+  value: string;
 }[];

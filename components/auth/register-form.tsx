@@ -21,6 +21,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { RegisterSchema } from "@/schemas";
 import { useParams } from "next/navigation";
+import DropdownCountry from "../common/DropdownCountry";
+import DropdownSchool from "../common/DropdownSchool";
+import DropdownYear from "../common/DropdownYear";
 
 export const RegisterForm = () => {
   const { locale } = useParams();
@@ -34,6 +37,7 @@ export const RegisterForm = () => {
       email: "",
       password: "",
       name: "",
+      country: "",
     },
   });
 
@@ -70,7 +74,7 @@ export const RegisterForm = () => {
                       {...field}
                       disabled={isPending}
                       placeholder="John Doe"
-                      className={` bg-[var(--clr-silver)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.name
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -81,6 +85,7 @@ export const RegisterForm = () => {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="email"
@@ -93,11 +98,64 @@ export const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
-                      className={` bg-[var(--clr-silver)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.email
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
                       }`}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Select Country</FormLabel>
+                  <FormControl>
+                    <DropdownCountry
+                      onChangeHandler={field.onChange}
+                      value={field.value}
+                      isError={form.formState.errors.country ? true : false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="school"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Select Your School</FormLabel>
+                  <FormControl>
+                    <DropdownSchool
+                      onChangeHandler={field.onChange}
+                      value={field.value}
+                      isError={form.formState.errors.school ? true : false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="year"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Select Year of Completion</FormLabel>
+                  <FormControl>
+                    <DropdownYear
+                      onChangeHandler={field.onChange}
+                      value={field.value}
+                      isError={form.formState.errors.year ? true : false}
                     />
                   </FormControl>
                   <FormMessage />
@@ -116,7 +174,7 @@ export const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="******"
                       type="password"
-                      className={` bg-[var(--clr-silver)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.password
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -130,7 +188,11 @@ export const RegisterForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button disabled={isPending} type="submit" className="w-full">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="w-full bg-[var(--clr-secondary)]"
+          >
             Create an account
           </Button>
         </form>

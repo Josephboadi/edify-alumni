@@ -73,7 +73,8 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
+      headerLabel="Sign In"
+      subHeaderLabel="Welcome back"
       backButtonLabel="Don't have an account?"
       backButtonHref={
         locale === "en" ? `/auth/register` : `/${locale}/auth/register`
@@ -95,7 +96,7 @@ export const LoginForm = () => {
                         {...field}
                         disabled={isPending}
                         placeholder="123456"
-                        className={` bg-[var(--clr-silver)] ${
+                        className={` bg-[var(--clr-silver-v6)] ${
                           form.formState.errors.code
                             ? "border border-red-500 focus-visible:ring-1"
                             : "focus-visible:ring-transparent border-none"
@@ -121,7 +122,7 @@ export const LoginForm = () => {
                           disabled={isPending}
                           placeholder="john.doe@example.com"
                           type="email"
-                          className={` bg-[var(--clr-silver)] ${
+                          className={` bg-[var(--clr-silver-v6)] ${
                             form.formState.errors.email
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
@@ -144,7 +145,7 @@ export const LoginForm = () => {
                           disabled={isPending}
                           placeholder="******"
                           type="password"
-                          className={` bg-[var(--clr-silver)] ${
+                          className={` bg-[var(--clr-silver-v6)] ${
                             form.formState.errors.password
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"

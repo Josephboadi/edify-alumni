@@ -26,8 +26,8 @@ body,
   --clr-pumpkin: #e47b00;
   --clr-pumpkin-v1: rgb(255, 111, 0, 0.8);
   --clr-silver: #ededed;
-  --clr-silver-v6: #F6F6F6;
-  --clr-silver-v5: #D0CFCF;
+  --clr-silver-v6: #f6f6f6;
+  --clr-silver-v5: #d0cfcf;
   --clr-silver-v4: #e6e6e6;
   --clr-silver-v3: #a9a9a9;
   --clr-silver-v2: #d9d9d9;
@@ -174,4 +174,34 @@ body,
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer utilities {
+  .select-field {
+    @apply w-full bg-[var(--clr-silver)] h-[54px] placeholder:text-[var(--clr-black-light)] rounded-full px-5 py-3 border-none focus-visible:ring-transparent focus:ring-transparent !important;
+  }
+  .select-item {
+    @apply py-3 cursor-pointer  focus:bg-[var(--clr-secondary)];
+  }
+}
+
+.datePicker {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  background-color: transparent;
+  width: 100%;
+  outline: none;
+  margin-left: 16px;
+}
+
+.react-datepicker__day--selected {
+  background-color: #624cf5 !important;
+  color: #ffffff !important;
+  border-radius: 4px;
+}
+
+.react-datepicker__time-list-item--selected {
+  background-color: #624cf5 !important;
 }

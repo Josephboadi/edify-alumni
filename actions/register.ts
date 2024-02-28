@@ -18,7 +18,7 @@ export const register = async (
     return { error: "Invalid fields!" };
   }
 
-  const { email, password, name } = validatedFields.data;
+  const { email, password, name, country, school, year } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
@@ -27,15 +27,21 @@ export const register = async (
     return { error: "Email already in use!" };
   }
 
-  await db.user.create({
+  const newUser = await db.user.create({
     data: {
       name,
+      country,
+      school,
+      year,
       email,
       password: hashedPassword,
     },
   });
 
-  const verificationToken = await generateVerificationToken(email);
+  const verificationToken = await generateVerificationToken(
+    email,
+    newUser.user_id
+  );
   await sendVerificationEmail(
     verificationToken.email,
     verificationToken.token,

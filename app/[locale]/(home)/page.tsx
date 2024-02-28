@@ -45,47 +45,54 @@ const font1 = Montserrat({
 
 const i18nNamespace = ["navbar", "footer", "home"];
 
-// async function getHerosData() {
-//   const herosData = await heroes();
-//   return herosData;
-// }
-// async function getAboutData() {
-//   const aboutData = await about();
-//   return aboutData;
-// }
-// async function getBreiefNewsData() {
-//   const newsData = await news();
-//   return newsData;
-// }
-// async function getJobCatData() {
-//   const jobCatData = await jobCategories();
-//   return jobCatData;
-// }
-// async function getSponsorData() {
-//   const sponsorData = await sponsor();
-//   return sponsorData;
-// }
-// async function getTopAlumniData() {
-//   const alumniData = await alumni();
-//   return alumniData;
-// }
+async function getHerosData() {
+  const herosData = await heroes();
+  return herosData;
+}
+async function getAboutData() {
+  const aboutData = await about();
+  return aboutData;
+}
+async function getBreiefNewsData() {
+  const newsData = await news();
+  return newsData;
+}
+async function getJobCatData() {
+  const jobCatData = await jobCategories();
+  return jobCatData;
+}
+async function getSponsorData() {
+  const sponsorData = await sponsor();
+  return sponsorData;
+}
+async function getTopAlumniData() {
+  const alumniData = await alumni();
+  return alumniData;
+}
 export default async function Home({ params: { locale } }: any) {
   const { t, resources } = await initTranslations(locale, i18nNamespace);
- const herosData = await heroes();
-  const aboutData = await about();
-  const newsData = await news();
-  const jobCatData = await jobCategories();
-  const sponsorData = await sponsor();
-  const alumniData = await alumni();
-  // const [herosData, aboutData, newsData, jobCatData, sponsorData, alumniData] =
-  //   await Promise.all([
-  //     getHerosData,
-  //     getAboutData,
-  //     getBreiefNewsData,
-  //     getJobCatData,
-  //     getSponsorData,
-  //     getTopAlumniData,
-  //   ]);
+  //  const herosData = await heroes();
+  //   const aboutData = await about();
+  //   const newsData = await news();
+  //   const jobCatData = await jobCategories();
+  //   const sponsorData = await sponsor();
+  //   const alumniData = await alumni();
+
+  const getHeros = getHerosData();
+  const getAbout = getAboutData();
+  const getNews = getBreiefNewsData();
+  const getJobCat = getJobCatData();
+  const getSponsor = getSponsorData();
+  const getTopAlumni = getTopAlumniData();
+  const [herosData, aboutData, newsData, jobCatData, sponsorData, alumniData] =
+    await Promise.all([
+      getHeros,
+      getAbout,
+      getNews,
+      getJobCat,
+      getSponsor,
+      getTopAlumni,
+    ]);
 
   // console.log(herosData);
 
