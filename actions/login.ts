@@ -74,7 +74,7 @@ export const login = async (
       });
 
       const existingConfirmation = await getTwoFactorConfirmationByUserId(
-        existingUser.id
+        existingUser.user_id
       );
 
       if (existingConfirmation) {
@@ -85,7 +85,7 @@ export const login = async (
 
       await db.twoFactorConfirmation.create({
         data: {
-          userId: existingUser.id,
+          userId: existingUser.user_id,
         },
       });
     } else {
