@@ -60,7 +60,6 @@ model Account {
 
 model VerificationToken {
   id String @id @default(cuid())
-  user_id String
   email String
   token String @unique
   expires DateTime
