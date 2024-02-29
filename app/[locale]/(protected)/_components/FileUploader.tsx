@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 type FileUploaderProps = {
   onFieldChange: (url: string) => void
-  imageUrl: string
+  imageUrl: any
 }
 
 export function FileUploader({ imageUrl, onFieldChange }: FileUploaderProps) {
