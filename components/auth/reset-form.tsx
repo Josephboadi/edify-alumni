@@ -49,7 +49,8 @@ export const ResetForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Forgot your password?"
+      headerLabel="Reset Account"
+      subHeaderLabel="Once submitted, we will send a code for reset into your mail."
       backButtonLabel="Back to login"
       backButtonHref={locale === "en" ? `/auth/login` : `/${locale}/auth/login`}
     >
@@ -68,7 +69,7 @@ export const ResetForm = () => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
-                      className={` bg-[var(--clr-silver-v6)] ${
+                      className={` bg-[var(--clr-silver-v7)] ${
                         form.formState.errors.email
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"

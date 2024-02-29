@@ -80,6 +80,25 @@ export const RegisterSchema = z.object({
   }),
 });
 
+export const JobApplicationSchema = z.object({
+  jobtitle: z.string().min(1, {
+    message: "Job title is required",
+  }),
+  company: z.string().min(1, {
+    message: "Company is required",
+  }),
+  type: z.string().min(1, {
+    message: "Job type is required",
+  }),
+  location: z.string().min(1, {
+    message: "Location is required",
+  }),
+  cvfileUrl: z.string().min(1, {
+    message: "Upload your CV.",
+  }),
+  coverLetterFileUrl: z.string().optional(),
+});
+
 export const SubscribeSchema = z.object({
   email: z.string().email({
     message: "Email is required",

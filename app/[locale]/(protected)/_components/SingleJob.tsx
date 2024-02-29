@@ -1,17 +1,18 @@
 "use client";
-import { Button } from "@/components/ui/button";
 // import { jobListData } from "@/data/joblist";
 import { Job } from "@/schemas";
+import { useAppStore } from "@/store/store";
 import moment from "moment";
-import Link from "next/link";
 import {
   MdOutlineBusinessCenter,
   MdOutlineLocationOn,
   MdOutlinePayments,
 } from "react-icons/md";
 import { PiToolboxBold } from "react-icons/pi";
+import { JobApplicationButton } from "./jobapplication-button";
 
 const SingleJob = ({ jobData }: { jobData: Job }) => {
+  const { setJobInfoData } = useAppStore();
   // const params = useParams();
   // const [jobData, setJobData] = useState<Job>();
 
@@ -62,20 +63,28 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
                 </div>
               </div>
 
-              <div className="mb-3 md:mr-8">
-                <Button
+              <div className="mb-3 md:mr-8" onClick={() => setJobInfoData(jobData)}>
+                {/* <Button
                   variant={"default"}
                   size={"sm"}
                   asChild
                   className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] w-[90px] h-8 "
-                >
-                  <Link
+                  onClick={() => setJobInfoData(jobData)}
+                > */}
+                  <JobApplicationButton asChild>
+                    <div className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer">
+                      <p className="text-sm font-medium text-[var(--clr-primary)]">
+                        Apply
+                      </p>
+                    </div>
+                  </JobApplicationButton>
+                  {/* <Link
                     href={`#`}
                     className=" text-sm font-medium text-[var(--clr-primary)]"
                   >
                     Apply
-                  </Link>
-                </Button>
+                  </Link> */}
+                {/* </Button> */}
               </div>
             </div>
             <div>

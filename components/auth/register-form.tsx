@@ -74,7 +74,7 @@ export const RegisterForm = () => {
                       {...field}
                       disabled={isPending}
                       placeholder="John Doe"
-                      className={` bg-[var(--clr-silver-v6)] ${
+                      className={` bg-[var(--clr-silver-v7)] ${
                         form.formState.errors.name
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -98,7 +98,7 @@ export const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
-                      className={` bg-[var(--clr-silver-v6)] ${
+                      className={` bg-[var(--clr-silver-v7)] ${
                         form.formState.errors.email
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -174,7 +174,7 @@ export const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="******"
                       type="password"
-                      className={` bg-[var(--clr-silver-v6)] ${
+                      className={` bg-[var(--clr-silver-v7)] ${
                         form.formState.errors.password
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"

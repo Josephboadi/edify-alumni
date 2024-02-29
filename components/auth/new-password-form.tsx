@@ -52,7 +52,8 @@ export const NewPasswordForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Enter a new password"
+      headerLabel="New password"
+      subHeaderLabel="Please enter your new password"
       backButtonLabel="Back to login"
       backButtonHref={locale === "en" ? `/auth/login` : `/${locale}/auth/login`}
     >
@@ -64,14 +65,14 @@ export const NewPasswordForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>New Password</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={isPending}
                       placeholder="******"
                       type="password"
-                      className={` bg-[var(--clr-silver-v6)] ${
+                      className={` bg-[var(--clr-silver-v7)] ${
                         form.formState.errors.password
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"

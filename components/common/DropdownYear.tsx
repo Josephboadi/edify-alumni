@@ -77,7 +77,7 @@ const DropdownYear = ({
         <div
           ref={contextMenuRef}
           onClick={() => handleClick()}
-          className={` w-full h-[38px] bg-[var(--clr-silver-v6)] cursor-pointer relative ${isError ? "border-[1px] border-red-500" : ""}`}
+          className={` w-full h-[38px] bg-[var(--clr-silver-v7)] cursor-pointer relative ${isError ? "border-[1px] border-red-500" : ""}`}
         >
           <input
             type="text"
@@ -99,11 +99,11 @@ const DropdownYear = ({
 
         <ul
           ref={selectMenuRef}
-          className={`bg-[var(--clr-silver-v6)] no-scrollbar shadow-2xl overflow-y-auto max-h-60 absolute top-[36] left-0 right-0 z-[10] rounded rounded-tl-md rounded-tr-md ${
+          className={`bg-[var(--clr-silver-v7)] no-scrollbar shadow-2xl overflow-y-auto max-h-60 absolute top-[36] left-0 right-0 z-[10] rounded rounded-tl-md rounded-tr-md ${
             open ? "block" : "hidden"
           } `}
         >
-          <div className="flex w-full items-center px-2 gap-2 sticky top-0 bg-[var(--clr-silver-v6)] overflow-hidden">
+          <div className="flex w-full items-center px-2 gap-2 sticky top-0 bg-[var(--clr-silver-v7)] overflow-hidden">
             <div className=" absolute w-[5%] ">
               <AiOutlineSearch className="text-[var(--clr-black-light)] !text-lg" />
             </div>
