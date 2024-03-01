@@ -1,7 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useAppStore } from "@/store/store";
 import Image from "next/image";
+import { MdClose } from "react-icons/md";
 import { Header } from "./header";
 
 interface CardWrapperProps {
@@ -21,8 +24,17 @@ export const CardWrapper = ({
   subImageUrl,
   type = "normal",
 }: CardWrapperProps) => {
+  const { setOpen } = useAppStore();
   return (
-    <div className="grid grid-cols-1 md:grid-cols-7 w-[320px] xs:w-[360px] sm:w-[400px] md:w-[700px]  border-none min-h-[520px] !rounded-xl">
+    <div className="grid grid-cols-1 md:grid-cols-7 w-[320px] xs:w-[360px] sm:w-[400px] md:w-[700px]  border-none min-h-[520px] !rounded-xl relative">
+      <Button
+        size={"icon"}
+        variant={"ghost"}
+        className="absolute right-3 top-3 w-5 h-5 flex items-center justify-center z-[2]"
+        onClick={() => setOpen()}
+      >
+        <MdClose className="text-lg" />
+      </Button>
       <div className=" col-span-1 md:col-span-3 bg-[var(--clr-primary-light)]  px-8 pb-1 md:pb-2 pt-1 md:pt-16  flex flex-row md:flex-col items-center justify-center md:items-center md:justify-between md:h-[100%]">
         <div className="w-full flex flex-col justify-between items-center md:h-[320px]">
           <div className="w-[200px] h-[100px] relative">
@@ -88,8 +100,8 @@ export const CardWrapper = ({
         </div>
       </div>
       <div className="col-span-1 md:col-span-4 rounded-none h-full">
-        <Card className="w-full rounded-none h-full max-h-[76vh] md:max-h-[96vh] overflow-y-auto no-scrollbar flex flex-col justify-between bg-[var(--clr-primary)]">
-          <CardHeader>
+        <Card className="w-full rounded-none h-full max-h-[76vh] md:max-h-[96vh] overflow-y-auto no-scrollbar flex flex-col justify-between bg-[var(--clr-primary)] relative">
+          <CardHeader className="!bg-[var(--clr-primary)] sticky top-0 left-0 right-0 z-[1]">
             <Header label={headerLabel} subLabel={subHeaderLabel} />
           </CardHeader>
           <div>

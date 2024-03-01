@@ -16,7 +16,7 @@ const font1 = Montserrat({
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-const i18nNamespace = ["navbar", "footer","job"];
+const i18nNamespace = ["navbar", "footer", "job"];
 
 const JobDetail = async ({ params: { locale, id } }: any) => {
   const { t, resources } = await initTranslations(locale, i18nNamespace);
@@ -65,13 +65,14 @@ const JobDetail = async ({ params: { locale, id } }: any) => {
           <Wrapper>
             <Suspense fallback={"Loading..."}>
               <SingleJob jobData={jobData!} />
+              {/* <SingleJob /> */}
             </Suspense>
           </Wrapper>
         </section>
       </div>
       <div className="w-full">
-          <Footer />
-        </div>
+        <Footer />
+      </div>
     </TranslationsProvider>
   );
 };

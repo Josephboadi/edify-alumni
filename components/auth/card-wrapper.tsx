@@ -59,8 +59,8 @@ export const CardWrapper = ({
         </div>
       </div>
       <div className="col-span-1 md:col-span-4 rounded-none h-full">
-        <Card className="w-full rounded-none h-full max-h-[76vh] md:max-h-[96vh] overflow-y-auto no-scrollbar flex flex-col justify-between">
-          <CardHeader>
+        <Card className="w-full rounded-none h-full max-h-[76vh] md:max-h-[96vh] overflow-y-auto no-scrollbar flex flex-col justify-between relative">
+          <CardHeader className="!bg-[var(--clr-primary)] sticky top-0 left-0 right-0 z-[1]">
             <Header label={headerLabel} subLabel={subHeaderLabel} />
           </CardHeader>
           <div>

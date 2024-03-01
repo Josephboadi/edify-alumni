@@ -3,28 +3,32 @@
 import { Job } from "@/schemas";
 import { useAppStore } from "@/store/store";
 import moment from "moment";
+import { useEffect, useState } from "react";
 import {
   MdOutlineBusinessCenter,
   MdOutlineLocationOn,
   MdOutlinePayments,
 } from "react-icons/md";
 import { PiToolboxBold } from "react-icons/pi";
-import { JobApplicationButton } from "./jobapplication-button";
+import { JobApplication } from "./jobapplicationform/JobApplication";
 
 const SingleJob = ({ jobData }: { jobData: Job }) => {
-  const { setJobInfoData } = useAppStore();
+  const { setJobInfoData, open, setOpen } = useAppStore();
+  // const [open, setOpen] = useState<boolean>(false);
+  // setJobInfoData(jobData);
   // const params = useParams();
   // const [jobData, setJobData] = useState<Job>();
 
-  // useEffect(() => {
-  //   jobListData.map((job) => {
-  //     job.List.map((data) => {
-  //       if (data.id === params.id) {
-  //         setJobData(data);
-  //       }
-  //     });
-  //   });
-  // }, []);
+  useEffect(() => {
+    setJobInfoData(jobData);
+
+    return;
+  }, []);
+
+  const handleOpenForm = async () => {
+    await setJobInfoData(jobData);
+    setOpen();
+  };
 
   return (
     <>
@@ -63,29 +67,39 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
                 </div>
               </div>
 
-              <div className="mb-3 md:mr-8" onClick={() => setJobInfoData(jobData)}>
-                {/* <Button
+              <div className="mb-3 md:mr-8">
+                <div
+                  onClick={handleOpenForm}
+                  className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer"
+                >
+                  <p className="text-sm font-medium text-[var(--clr-primary)]">
+                    Apply
+                  </p>
+                </div>
+              </div>
+
+              {/* <div className="mb-3 md:mr-8" onClick={handleOpenForm}> */}
+              {/* <Button
                   variant={"default"}
                   size={"sm"}
                   asChild
                   className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] w-[90px] h-8 "
-                  onClick={() => setJobInfoData(jobData)}
+                  onClick={() => setJobData(jobData)}
                 > */}
-                  <JobApplicationButton asChild>
-                    <div className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer">
-                      <p className="text-sm font-medium text-[var(--clr-primary)]">
-                        Apply
-                      </p>
-                    </div>
-                  </JobApplicationButton>
-                  {/* <Link
+              {/* <div className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer">
+                  <p className="text-sm font-medium text-[var(--clr-primary)]">
+                    Apply
+                  </p>
+                </div> */}
+
+              {/* <Link
                     href={`#`}
                     className=" text-sm font-medium text-[var(--clr-primary)]"
                   >
                     Apply
                   </Link> */}
-                {/* </Button> */}
-              </div>
+              {/* </Button> */}
+              {/* </div> */}
             </div>
             <div>
               <p className=" mt-2 text-lg font-normal mb-5">
@@ -137,6 +151,8 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
           </div>
         )}
       </div>
+
+      {open && <JobApplication />}
     </>
   );
 };

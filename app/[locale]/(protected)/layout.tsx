@@ -21,7 +21,7 @@ const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
     //   namespaces={i18nNamespace}
     // >
     // {/* max-h-screen */}
-    <main className="flex flex-col min-h-screen min-w-full  ">
+    <main className="flex flex-col min-h-screen min-w-full ">
       {/* <Navbar locale={locale} /> */}
       {/* <div className="flex w-full">{children}</div> */}
       {/* <div className="w-full">
