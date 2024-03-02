@@ -3,7 +3,6 @@ import Pagination from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 // import { jobListData } from "@/data/joblist";
 import { JobListData } from "@/schemas";
-import { useAppStore } from "@/store/store";
 import Link from "next/link";
 
 interface JobListProps {
@@ -106,7 +105,6 @@ const JobList = ({ pageCount, jobsData }: JobListProps) => {
                     key={list.id}
                   >
                     <Link
-                      // onClick={() => setJobInfoData(list)}
                       href={`/job/${list.id}`}
                       className=" text-sm font-medium text-[var(--clr-primary)]"
                     >

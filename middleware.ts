@@ -63,6 +63,8 @@ export default auth(async (req) => {
     "/en",
     `/auth/new-verification`,
     `${language}/auth/new-verification`,
+    `/api/uploadthing`,
+    `${language}/api/uploadthing`,
   ];
   const authRoutes = [
     `/auth/login`,

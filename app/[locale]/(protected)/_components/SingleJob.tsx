@@ -3,7 +3,7 @@
 import { Job } from "@/schemas";
 import { useAppStore } from "@/store/store";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   MdOutlineBusinessCenter,
   MdOutlineLocationOn,
@@ -32,6 +32,7 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
 
   return (
     <>
+      {open && <JobApplication />}
       <div className=" w-full">
         {jobData && (
           <div className="md:px-10 xl:px-14 w-full">
@@ -151,8 +152,6 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
           </div>
         )}
       </div>
-
-      {open && <JobApplication />}
     </>
   );
 };

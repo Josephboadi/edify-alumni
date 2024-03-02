@@ -15,8 +15,8 @@ import { JobApplicationForm } from "./jobapplication-form";
 
 export const JobApplication = () => {
   const router = useRouter();
-  const { locale } = useParams();
-  const { jobInfoData, setOpen } = useAppStore();
+  const { locale, id } = useParams();
+  const { setOpen } = useAppStore();
 
   // const [open, setOpen] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -27,11 +27,10 @@ export const JobApplication = () => {
       if (
         contextMenuRef.current &&
         !contextMenuRef.current.contains(event.target)
-        // &&
-        // selectMenuRef.current &&
-       // //// !selectMenuRef.current.contains(event.target)
       ) {
         setOpen();
+        router.push(locale === "en" ? `/job/${id}` : `/${locale}/job/${id}`);
+        router.refresh()
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -64,9 +63,9 @@ export const JobApplication = () => {
     // <div onClick={() => handleOpenForm()}>
     // {
 
-    // createPortal(
+    createPortal(
       <div
-        className={`fixed h-[100vh] max-h-[100vh] min-h-[100vh] left-0 right-0 bottom-0 top-0 bg-[rgba(0,0,0,.6)] flex items-center justify-center z-[100] `}
+        className={`fixed h-[100vh] min-h-[100vh] max-h-[100vh] left-0 right-0 bottom-0 top-0 bg-[rgba(0,0,0,.6)] flex items-center justify-center z-[100] `}
       >
         <div
           ref={contextMenuRef}
@@ -74,10 +73,9 @@ export const JobApplication = () => {
         >
           <JobApplicationForm />
         </div>
-      </div>
-    //   ,
-    //   document.body
-    // )
+      </div>,
+      document.body
+    )
 
     //       : (
     // <div className="mb-3 md:mr-8">
