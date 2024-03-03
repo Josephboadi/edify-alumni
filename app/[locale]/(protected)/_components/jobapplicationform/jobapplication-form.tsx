@@ -115,7 +115,7 @@ export const JobApplicationForm = () => {
                         {...field}
                         disabled
                         placeholder="Infomation Security "
-                        className={` bg-[var(--clr-silver-v7)] ${
+                        className={` bg-[var(--clr-silver-v6)] ${
                           form.formState.errors.jobtitle
                             ? "border border-red-500 focus-visible:ring-0"
                             : "focus-visible:ring-transparent border-none"
@@ -137,7 +137,7 @@ export const JobApplicationForm = () => {
                         {...field}
                         disabled
                         placeholder="edify Ltd"
-                        className={` bg-[var(--clr-silver-v7)] ${
+                        className={` bg-[var(--clr-silver-v6)] ${
                           form.formState.errors.company
                             ? "border border-red-500 focus-visible:ring-0"
                             : "focus-visible:ring-transparent border-none"
@@ -159,7 +159,7 @@ export const JobApplicationForm = () => {
                         {...field}
                         disabled
                         placeholder="full time"
-                        className={` bg-[var(--clr-silver-v7)] ${
+                        className={` bg-[var(--clr-silver-v6)] ${
                           form.formState.errors.type
                             ? "border border-red-500 focus-visible:ring-0"
                             : "focus-visible:ring-transparent border-none"
@@ -182,7 +182,7 @@ export const JobApplicationForm = () => {
                         {...field}
                         disabled
                         placeholder="Accra"
-                        className={` bg-[var(--clr-silver-v7)] ${
+                        className={` bg-[var(--clr-silver-v6)] ${
                           form.formState.errors.location
                             ? "border border-red-500 focus-visible:ring-0"
                             : "focus-visible:ring-transparent border-none"

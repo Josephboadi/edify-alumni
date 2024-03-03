@@ -1,12 +1,12 @@
 import initTranslations from "@/app/i18n";
-import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/common/Footer";
 import Wrapper from "@/components/common/Wrapper";
+import Navbar from "@/components/navbar/Navbar";
 import TranslationsProvider from "@/components/providers/TranslationsProvider";
 import { cn } from "@/lib/utils";
 import { Montez, Montserrat, Russo_One } from "next/font/google";
 import Image from "next/image";
-
+import { ServiceRequestButton } from "../_components/servicerequest/servicerequest-button";
 
 const font = Montez({
   subsets: ["latin"],
@@ -87,53 +87,59 @@ const ServicePage = async ({ searchParams, params: { locale } }: any) => {
         <section className=" w-full md:mt-8 !mb-10  pb-5">
           <Wrapper>
             <div className=" px-4 sm:px-8 md:px-4 lg:px-14 xl:px-20 mt-20 flex w-full items-center justify-center gap-6 sm:gap-12">
-              <div className="flex flex-col items-center transition-all duration-300 hover:scale-95 cursor-pointer">
-                <div className="w-[65px] h-[65px] sm:w-[70px] sm:h-[70px] relative rounded-full border-[3px] border-[var(--clr-green)] !p-2">
-                  <Image
-                    src={"/service/image3.png"}
-                    width={100}
-                    height={100}
-                    alt="-"
-                    className=" object-cover rounded-full object-center  "
-                  />
+              <ServiceRequestButton asChild>
+                <div className="flex flex-col items-center transition-all duration-300 hover:scale-95 cursor-pointer">
+                  <div className="w-[65px] h-[65px] sm:w-[70px] sm:h-[70px] relative rounded-full border-[3px] border-[var(--clr-green)] !p-2">
+                    <Image
+                      src={"/service/image3.png"}
+                      width={100}
+                      height={100}
+                      alt="-"
+                      className=" object-cover rounded-full object-center  "
+                    />
+                  </div>
+                  <p className=" -mt-6 text-[var(--clr-secondary)] flex w-full items-center justify-center text-5xl">
+                    .
+                  </p>
+                  <p className=" text-center">Emotional</p>
                 </div>
-                <p className=" -mt-6 text-[var(--clr-secondary)] flex w-full items-center justify-center text-5xl">
-                  .
-                </p>
-                <p className=" text-center">Emotional</p>
-              </div>
+              </ServiceRequestButton>
 
-              <div className="flex flex-col items-center transition-all duration-300 hover:scale-95 cursor-pointer">
-                <div className="w-[65px] h-[65px] sm:w-[70px] sm:h-[70px] relative rounded-full border-[3px] border-[var(--clr-green)] !p-2">
-                  <Image
-                    src={"/service/image4.png"}
-                    width={100}
-                    height={100}
-                    alt="-"
-                    className="object-cover rounded-full object-center "
-                  />
+              <ServiceRequestButton asChild>
+                <div className="flex flex-col items-center transition-all duration-300 hover:scale-95 cursor-pointer">
+                  <div className="w-[65px] h-[65px] sm:w-[70px] sm:h-[70px] relative rounded-full border-[3px] border-[var(--clr-green)] !p-2">
+                    <Image
+                      src={"/service/image4.png"}
+                      width={100}
+                      height={100}
+                      alt="-"
+                      className="object-cover rounded-full object-center "
+                    />
+                  </div>
+                  <p className=" -mt-6 text-[var(--clr-secondary)] flex w-full items-center justify-center text-5xl">
+                    .
+                  </p>
+                  <p className=" text-center">Psychological</p>
                 </div>
-                <p className=" -mt-6 text-[var(--clr-secondary)] flex w-full items-center justify-center text-5xl">
-                  .
-                </p>
-                <p className=" text-center">Psychological</p>
-              </div>
+              </ServiceRequestButton>
 
-              <div className="flex flex-col items-center transition-all duration-300 hover:scale-95 cursor-pointer">
-                <div className="w-[65px] h-[65px] sm:w-[70px] sm:h-[70px] relative rounded-full border-[3px] border-[var(--clr-green)] !p-2">
-                  <Image
-                    src={"/service/image5.png"}
-                    width={100}
-                    height={100}
-                    alt="-"
-                    className="object-cover rounded-full object-center "
-                  />
+              <ServiceRequestButton asChild>
+                <div className="flex flex-col items-center transition-all duration-300 hover:scale-95 cursor-pointer">
+                  <div className="w-[65px] h-[65px] sm:w-[70px] sm:h-[70px] relative rounded-full border-[3px] border-[var(--clr-green)] !p-2">
+                    <Image
+                      src={"/service/image5.png"}
+                      width={100}
+                      height={100}
+                      alt="-"
+                      className="object-cover rounded-full object-center "
+                    />
+                  </div>
+                  <p className=" -mt-6 text-[var(--clr-secondary)] flex w-full items-center justify-center text-5xl">
+                    .
+                  </p>
+                  <p className=" text-center">Mental</p>
                 </div>
-                <p className=" -mt-6 text-[var(--clr-secondary)] flex w-full items-center justify-center text-5xl">
-                  .
-                </p>
-                <p className=" text-center">Mental</p>
-              </div>
+              </ServiceRequestButton>
             </div>
           </Wrapper>
         </section>

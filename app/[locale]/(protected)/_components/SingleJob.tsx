@@ -1,5 +1,6 @@
 "use client";
 // import { jobListData } from "@/data/joblist";
+import { Button } from "@/components/ui/button";
 import { Job } from "@/schemas";
 import { useAppStore } from "@/store/store";
 import moment from "moment";
@@ -10,7 +11,7 @@ import {
   MdOutlinePayments,
 } from "react-icons/md";
 import { PiToolboxBold } from "react-icons/pi";
-import { JobApplication } from "./jobapplicationform/JobApplication";
+import { JobApplicationButton } from "./jobapplicationform/jobapplication-button";
 
 const SingleJob = ({ jobData }: { jobData: Job }) => {
   const { setJobInfoData, open, setOpen } = useAppStore();
@@ -32,7 +33,7 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
 
   return (
     <>
-      {open && <JobApplication />}
+      {/* {open && <JobApplication />} */}
       <div className=" w-full">
         {jobData && (
           <div className="md:px-10 xl:px-14 w-full">
@@ -68,7 +69,7 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
                 </div>
               </div>
 
-              <div className="mb-3 md:mr-8">
+              {/* <div className="mb-3 md:mr-8">
                 <div
                   onClick={handleOpenForm}
                   className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer"
@@ -77,30 +78,25 @@ const SingleJob = ({ jobData }: { jobData: Job }) => {
                     Apply
                   </p>
                 </div>
-              </div>
+              </div> */}
 
-              {/* <div className="mb-3 md:mr-8" onClick={handleOpenForm}> */}
-              {/* <Button
-                  variant={"default"}
-                  size={"sm"}
-                  asChild
-                  className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] w-[90px] h-8 "
-                  onClick={() => setJobData(jobData)}
-                > */}
-              {/* <div className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer">
-                  <p className="text-sm font-medium text-[var(--clr-primary)]">
-                    Apply
-                  </p>
-                </div> */}
-
-              {/* <Link
-                    href={`#`}
-                    className=" text-sm font-medium text-[var(--clr-primary)]"
+              <div className="mb-3 md:mr-8" onClick={handleOpenForm}>
+                <JobApplicationButton asChild>
+                  <Button
+                    variant={"default"}
+                    size={"sm"}
+                    asChild
+                    className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] w-[90px] h-8 "
+                    // onClick={() => setJobData(jobData)}
                   >
-                    Apply
-                  </Link> */}
-              {/* </Button> */}
-              {/* </div> */}
+                    <div className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-green)] hover:shadow-lg w-[90px] h-8 cursor-pointer">
+                      <p className="text-sm font-medium text-[var(--clr-primary)]">
+                        Apply
+                      </p>
+                    </div>
+                  </Button>
+                </JobApplicationButton>
+              </div>
             </div>
             <div>
               <p className=" mt-2 text-lg font-normal mb-5">

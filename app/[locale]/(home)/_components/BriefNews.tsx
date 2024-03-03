@@ -8,10 +8,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { BriefNewsData } from "@/schemas";
+import { useAppStore } from "@/store/store";
 // import { newsData } from "@/data/briefnews";
+import { Button } from "@/components/ui/button";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { useRef } from "react";
+import { NewsPreviewButton } from "./NewsPreviewButton";
 
 interface BriefNewsProps {
   newsData: BriefNewsData;
@@ -20,6 +23,7 @@ interface BriefNewsProps {
 const BriefNews = ({ newsData }: BriefNewsProps) => {
   const plugin = useRef(Autoplay({ delay: 10000, stopOnInteraction: true }));
   const plugin1 = useRef(Autoplay({ delay: 2000, stopOnInteraction: false }));
+  const { setNewsInfoData } = useAppStore();
   return (
     <>
       <Carousel
@@ -57,13 +61,27 @@ const BriefNews = ({ newsData }: BriefNewsProps) => {
                   </Carousel>
                 </div>
                 <div className=" col-span-1 sm:col-span-5 lg:col-span-4 xl:col-span-4  h-[274px] p-5 pt-5 sm:pt-0">
-                  <div className="w-full h-full flex flex-col gap-6">
-                    <h1 className="text-xl font-bold text-left">
-                      {news?.title}
-                    </h1>
-                    <p className=" text-left line-clamp-6">
-                      {news?.description}
-                    </p>
+                  <div className="w-full h-full flex flex-col justify-between gap-4">
+                    <div className="flex w-full flex-col gap-4">
+                      <h1 className="text-xl font-bold text-left">
+                        {news?.title}
+                      </h1>
+                      <p className=" text-left line-clamp-6">
+                        {news?.description}
+                      </p>
+                    </div>
+
+                    <div className="flex justify-end pr-4">
+                      <NewsPreviewButton asChild>
+                        <Button
+                          onClick={() => setNewsInfoData(news)}
+                          variant={"outline"}
+                          className="text-sm font-normal h-[32px]"
+                        >
+                          View Details
+                        </Button>
+                      </NewsPreviewButton>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,10 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useAppStore } from "@/store/store";
 import Image from "next/image";
-import { MdClose } from "react-icons/md";
 import { Header } from "./header";
 
 interface CardWrapperProps {
@@ -24,17 +21,17 @@ export const CardWrapper = ({
   subImageUrl,
   type = "normal",
 }: CardWrapperProps) => {
-  const { setOpen } = useAppStore();
+  // const { setOpen } = useAppStore();
   return (
     <div className="grid grid-cols-1 md:grid-cols-7 w-[320px] xs:w-[360px] sm:w-[400px] md:w-[700px]  border-none min-h-[520px] !rounded-xl relative">
-      <Button
+      {/* <Button
         size={"icon"}
         variant={"ghost"}
         className="absolute right-3 top-3 w-5 h-5 flex items-center justify-center z-[2]"
         onClick={() => setOpen()}
       >
         <MdClose className="text-lg" />
-      </Button>
+      </Button> */}
       <div className=" col-span-1 md:col-span-3 bg-[var(--clr-primary-light)]  px-8 pb-1 md:pb-2 pt-1 md:pt-16  flex flex-row md:flex-col items-center justify-center md:items-center md:justify-between md:h-[100%]">
         <div className="w-full flex flex-col justify-between items-center md:h-[320px]">
           <div className="w-[200px] h-[100px] relative">
@@ -58,8 +55,8 @@ export const CardWrapper = ({
                     className=" object-contain"
                   />
                   {subImageUrl && (
-                    <div className="absolute w-[80px] h-[80px] bottom-[-10px] right-[-10px]">
-                      <div className="w-full h-full relative">
+                    <div className="absolute w-[130px] h-[130px] bottom-[-36px] right-[-25px]">
+                      <div className="w-full h-full relative border-4 border-[var(--clr-primary)] rounded-full">
                         <Image
                           src={subImageUrl}
                           fill

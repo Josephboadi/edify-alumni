@@ -13,6 +13,7 @@ export default withUt({
   prefix: "",
   theme: {
     screens: {
+      xsm: "475px",
       xs: "375px",
       ...defaultTheme.screens,
     },

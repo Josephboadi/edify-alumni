@@ -3,8 +3,9 @@ import Pagination from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
 // import { scholarshipListData } from "@/data/scholarshiplist";
 import { ScholarshipListData } from "@/schemas";
+import { useAppStore } from "@/store/store";
 import Image from "next/image";
-import Link from "next/link";
+import { ScholarshipApplicationButton } from "./scholarshipapplicationform/scholarshipapplication-button";
 
 interface ScholarshipListProps {
   pageCount: number;
@@ -14,59 +15,7 @@ const ScholarshipList = ({
   pageCount,
   scholarshipsData,
 }: ScholarshipListProps) => {
-  // const [scholarshipData, setScholarshipData] = useState<ScholarshipListData>(
-  //   []
-  // );
-  // const [filteredData, setFilteredData] = useState<ScholarshipListData>([]);
-  // const [page, setPage] = useState(1);
-  // const [limit, setLimit] = useState(2);
-  // const [pageCount, setPageCount] = useState(0);
-
-  // useEffect(() => {
-  //   setScholarshipData(scholarshipListData);
-  // }, []);
-
-  // useEffect(() => {
-  //   let result = scholarshipData;
-  //   if (q.length > 3) {
-  //     result = result.filter((scholarship) =>
-  //       scholarship.title.toLowerCase().includes(q.toLowerCase())
-  //     );
-  //   }
-  //   setPageCount(Math.ceil(result?.length / limit));
-  //   const skip = (page - 1) * limit;
-
-  //   setFilteredData(result?.slice(skip, skip + limit));
-  //   return;
-  // }, [scholarshipData]);
-
-  // useEffect(() => {
-  //   const getScholarshipList = async () => {
-  //     let result = scholarshipData;
-  //     if (q.length > 3) {
-  //       result = result.filter((scholarship) =>
-  //         scholarship.title.toLowerCase().includes(q.toLowerCase())
-  //       );
-  //     }
-  //     setPageCount(Math.ceil(result?.length / limit));
-  //     const skip = (page - 1) * limit;
-  //     result = result?.slice(skip, skip + limit);
-
-  //     const scholarshipsData = await result;
-
-  //     setFilteredData(scholarshipsData);
-  //   };
-
-  //   getScholarshipList();
-
-  //   return function cleanup() {
-  //     getScholarshipList();
-  //   };
-  // }, [q, page, scholarshipData]);
-
-  // const handlePageClick = (data: any) => {
-  //   setPage(data.selected + 1);
-  // };
+  const { setScholarshipInfoData } = useAppStore();
 
   return (
     <>
@@ -86,19 +35,19 @@ const ScholarshipList = ({
                 <p>{scholarship.information}</p>
               </div>
               <div className=" w-full md:w-[90px] flex justify-start md:justify-start items-end h-full">
-                <Button
-                  variant={"default"}
-                  size={"sm"}
-                  asChild
-                  className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-secondary-light)] w-[90px] h-8 "
-                >
-                  <Link
-                    href={`#`}
-                    className=" text-sm font-medium text-[var(--clr-primary)]"
+                <ScholarshipApplicationButton asChild>
+                  <Button
+                    variant={"default"}
+                    size={"sm"}
+                    asChild
+                    className="flex items-center justify-center  !rounded-[6px]  bg-[var(--clr-secondary-light)] w-[90px] h-8 "
+                    onClick={() => setScholarshipInfoData(scholarship)}
                   >
-                    Apply
-                  </Link>
-                </Button>
+                    <div className=" text-sm font-medium text-[var(--clr-primary)]">
+                      Apply
+                    </div>
+                  </Button>
+                </ScholarshipApplicationButton>
               </div>
             </div>
           </div>

@@ -99,6 +99,28 @@ export const JobApplicationSchema = z.object({
   coverLetterFileUrl: z.string().optional(),
 });
 
+export const ScholarshipApplicationSchema = z.object({
+  scholarshiptitle: z.string().min(1, {
+    message: "Job title is required",
+  }),
+  certificateFileUrl: z.string().min(1, {
+    message: "Upload your school certificate.",
+  }),
+  applicationLetterFileUrl: z.string().min(1, {
+    message: "Upload your application letter.",
+  }),
+});
+
+export const ServiceRequestSchema = z.object({
+  requesttitle: z.string().min(1, {
+    message: "Request title is required",
+  }),
+  reason: z.string().min(1, {
+    message: "Reason is required",
+  }),
+  additionalNote: z.string().optional(),
+});
+
 export const SubscribeSchema = z.object({
   email: z.string().email({
     message: "Email is required",
