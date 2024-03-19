@@ -34,4 +34,9 @@ export const menusData = [
     path: "/discussion",
     title: "Discussion Board",
   },
+  {
+    key: 8,
+    path: "/admin/dashboard",
+    title: "Dashboard",
+  },
 ];

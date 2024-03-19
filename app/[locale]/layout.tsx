@@ -34,10 +34,23 @@ export default async function LocaleLayout({
   // unstable_setRequestLocale(locale);
   return (
     <html lang={locale} suppressHydrationWarning={true}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"
+          integrity="sha512-Oy+sz5W86PK0ZIkawrG0iv7XwWhYecM3exvUtMKNJMekGFJtVAhibhRPTpmyTj8+lJCkmWfnpxKgT2OopquBHA=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
+        <style></style>
+      </head>
       <SessionProvider session={session}>
         {/* <NextTopLoader color={"var(--clr-secondary)"} showSpinner={false} /> */}
         <body className={inter.className} suppressHydrationWarning={true}>
-          <NextTopLoader color={"var(--clr-secondary-light)"} showSpinner={false} />
+          <NextTopLoader
+            color={"var(--clr-secondary-light)"}
+            showSpinner={false}
+          />
           {/* <ThemeProvider
             attribute="class"
             defaultTheme="system"

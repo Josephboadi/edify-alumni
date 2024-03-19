@@ -57,7 +57,7 @@ export const ScholarshipApplicationForm = () => {
         if (!uploadedFiles) {
           return;
         }
-        console.log("cv file url================, ", uploadedFiles[0]);
+        // console.log("cv file url================, ", uploadedFiles[0]);
 
         uploadedCertificateFileUrl = uploadedFiles[0].url;
       }
@@ -69,7 +69,7 @@ export const ScholarshipApplicationForm = () => {
           return;
         }
 
-        console.log("cover file url================, ", uploaded1Files[0]);
+        // console.log("cover file url================, ", uploaded1Files[0]);
 
         uploadedApplicationFileUrl = uploaded1Files[0].url;
       }

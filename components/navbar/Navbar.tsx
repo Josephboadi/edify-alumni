@@ -16,7 +16,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiWorld } from "react-icons/bi";
@@ -25,7 +25,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { RiNotification2Fill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { LoginButton } from "../auth/login-button";
-import ContextMenu from "../common/ContextMenu";
 import { LanguageButton } from "../common/Language-button";
 import Wrapper from "../common/Wrapper";
 import Logo from "../header/Logo";
@@ -44,13 +43,13 @@ const Navbar = ({ locale }: any) => {
 
   const pathname = usePathname();
   const session = useSession();
-  const router = useRouter();
+  // const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
-  const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
-  const [open, setOpen] = useState(false);
+  // const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
+  // const [open, setOpen] = useState(false);
   // const screenSize = useScreenSize();
 
-  const user = useCurrentUser();
+  // const user = useCurrentUser();
   const [selectedMenu, setSelectedMenu] = useState(pathname);
 
   // const contextMenuOptions = [
@@ -67,36 +66,36 @@ const Navbar = ({ locale }: any) => {
   //   },
   // ];
 
-  const authenticatedUserContextMenuOptions = [
-    {
-      name: "Home",
-      callBack: () => {
-        router.push("/");
-        setIsContextMenuVisible(false);
-      },
-    },
-    {
-      name: "Wallet",
-      callBack: () => {
-        router.push("/user/wallet");
-        setIsContextMenuVisible(false);
-      },
-    },
-    {
-      name: "KYC Verification",
-      callBack: () => {
-        router.push("/user/kyc");
-        setIsContextMenuVisible(false);
-      },
-    },
-    {
-      name: "Logout",
-      callBack: () => {
-        logout();
-        setIsContextMenuVisible(false);
-      },
-    },
-  ];
+  // const authenticatedUserContextMenuOptions = [
+  //   {
+  //     name: "Home",
+  //     callBack: () => {
+  //       router.push("/");
+  //       setIsContextMenuVisible(false);
+  //     },
+  //   },
+  //   {
+  //     name: "Wallet",
+  //     callBack: () => {
+  //       router.push("/user/wallet");
+  //       setIsContextMenuVisible(false);
+  //     },
+  //   },
+  //   {
+  //     name: "KYC Verification",
+  //     callBack: () => {
+  //       router.push("/user/kyc");
+  //       setIsContextMenuVisible(false);
+  //     },
+  //   },
+  //   {
+  //     name: "Logout",
+  //     callBack: () => {
+  //       logout();
+  //       setIsContextMenuVisible(false);
+  //     },
+  //   },
+  // ];
 
   useEffect(() => {
     document.addEventListener("scroll", () => {
@@ -367,7 +366,7 @@ const Navbar = ({ locale }: any) => {
                     </div>
                   )}
                 </div>
-                {isContextMenuVisible && (
+                {/* {isContextMenuVisible && (
                   <ContextMenu
                     contextMenu={isContextMenuVisible}
                     setContextMenu={setIsContextMenuVisible}
@@ -379,7 +378,7 @@ const Navbar = ({ locale }: any) => {
                     }
                     locale={locale}
                   />
-                )}
+                )} */}
               </>
             ) : (
               <div className="flex items-center gap-3 ">

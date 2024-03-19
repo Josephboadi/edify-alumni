@@ -212,6 +212,8 @@ export interface Discussion {
 export type DiscussionListData = Discussion[];
 
 export type ProfileData = {
+  id: number;
+  status: string;
   bio: {
     name: string;
     email: string;

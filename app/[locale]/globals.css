@@ -11,6 +11,7 @@ body,
   --clr-primary-light: #cdcdcd;
   --clr-primary-light-trans: hsla(0, 0%, 80%, 0.8);
   --clr-secondary: rgb(24, 49, 89);
+  --clr-secondary-v1: rgb(36, 73, 132);
   --clr-secondary-trans: rgb(24, 49, 89, 0.6);
   --clr-secondary-trans1: rgb(24, 49, 89, 0.2);
   --clr-secondary-light: #63bfe4;
@@ -46,6 +47,29 @@ body,
   --transition-default: all 300ms ease-in-out;
 }
 
+::-webkit-scrollbar {
+  width: 0.6em;
+  height: 0.6em;
+  margin: 5em 5em;
+}
+
+::-webkit-scrollbar-track {
+  background: #f2f2f2 !important;
+
+  /* margin: 2em 4em !important; */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d9dadb !important;
+  border-radius: 10px !important;
+  border: 0.1em solid white !important;
+  padding: 0 2px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8c8d8f !important;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -55,6 +79,63 @@ body,
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background-color: rgba(22, 22, 22, 1);
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar-item {
+  padding: 0.75em 1em;
+  padding-right: 0;
+  display: block;
+  transition: background-color 0.15s;
+  border-radius: 5px;
+}
+.sidebar-item:hover {
+}
+
+.sidebar-title {
+  display: flex;
+  font-size: 1em;
+  justify-content: space-between;
+  /* color: #000000; */
+}
+.sidebar-title span i {
+  display: inline-block;
+  width: 1.5em;
+}
+.sidebar-title .toggle-btn {
+  cursor: pointer;
+  transition: transform 0.3s;
+  /* color: #000000 !important; */
+}
+.sidebar-item.open > .sidebar-title .toggle-btn {
+  transform: rotate(180deg);
+}
+.sidebar-content {
+  padding-top: 0.25em;
+  height: 0;
+  overflow: hidden;
+}
+.sidebar-item.open > .sidebar-content {
+  height: auto;
+}
+
+.sidebar-item.plain {
+  color: #ed8b00;
+  text-decoration: none;
+}
+.sidebar-item.plain:hover {
+  text-decoration: underline;
+}
+.sidebar-item.plain i {
+  display: inline-block;
+  width: 1.7em;
 }
 
 /* @layer base {
