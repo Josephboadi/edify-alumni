@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { CgAddR } from "react-icons/cg";
-import { TiDownload } from "react-icons/Ti";
+import { TiDownload } from "react-icons/ti";
 
 // import convertArrayOfObjectsToCSV from "@/utils/convertArray";
 import DataTable from "react-data-table-component";
@@ -10,8 +10,8 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import ToolTip from "@/components/common/ToolTip";
 import { convertArrayOfObjectsToCSV } from "@/lib/utils";
 import { ImSpinner2 } from "react-icons/im";
-import { FormButton } from "./form-button";
 import Search from "./Search";
+import { FormButton } from "./form-button";
 
 const Table = ({
   filteredData,
