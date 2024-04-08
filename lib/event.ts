@@ -17,6 +17,16 @@ export const eventList = async (page: number) => {
   }
 };
 
+export const events = async () => {
+  try {
+    let eventListData = await EventListData;
+
+    return { eventListData };
+  } catch (error) {
+    throw new Error("Failed to discussions data!");
+  }
+};
+
 export const singleEvent = async (id: string) => {
   try {
     let eventData;

@@ -94,15 +94,21 @@ const EventList = ({ pageCount, eventsData }: EventListProps) => {
                 <div className="w-[16px]  min-w-[16px] max-w-[16px] h-[16px] rounded-full bg-[var(--clr-green)]" />
                 <p className=" text-left text-sm font-semibold text-[var(--clr-black-light)] line-clamp-3">
                   Happening Today /{" "}
-                  {
-                    eventsData?.filter((event) => event.isEventDay == true)[0]
-                      ?.eventStartTime
-                  }{" "}
+                  {moment(
+                    new Date(
+                      eventsData?.filter(
+                        (event) => event.isEventDay == true
+                      )[0].eventStartTime
+                    )
+                  ).format("LT")}{" "}
                   -{" "}
-                  {
-                    eventsData?.filter((event) => event.isEventDay == true)[0]
-                      ?.eventEndTime
-                  }
+                  {moment(
+                    new Date(
+                      eventsData?.filter(
+                        (event) => event.isEventDay == true
+                      )[0].eventEndTime
+                    )
+                  ).format("LT")}
                 </p>
               </div>
 

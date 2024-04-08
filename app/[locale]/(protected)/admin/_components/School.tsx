@@ -27,7 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema, SchoolSchema } from "@/schemas";
 import { useAppStore } from "@/store/store";
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import { AlertButton } from "./common/alert-button";
@@ -35,135 +35,90 @@ import { AlertCardWrapper } from "./common/alert-card-wrapper";
 import { CardWrapper } from "./common/card-wrapper";
 import { FormButton } from "./common/form-button";
 
-const data: Payment[] = [
+const data: School[] = [
   {
     id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
+    name: "Christ the king int. school",
+    countryId: "Ghana",
+    status: "ENABLED",
   },
   {
     id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
+    name: "Christ the king int. school",
+    countryId: "Liberia",
+    status: "ENABLED",
   },
   {
     id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
+    name: "Christ the king int. school",
+    countryId: "Nigeria",
+    status: "ENABLED",
   },
   {
     id: "5kma53ae1",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
+    name: "Christ the king int. school",
+    countryId: "South Africa",
+    status: "ENABLED",
   },
   {
     id: "bhqecj4p1",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws01",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae2",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p2",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws02",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae3",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p3",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
+    name: "Christ the king int. school",
+    countryId: "Kenya",
+    status: "ENABLED",
   },
 ];
 
-export type Payment = {
+export type School = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  name: string;
+  countryId: string;
+  status: "ENABLED" | "DISABLED";
 };
 
 export function SchoolDataTable() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [filteredData, setFilteredData] = useState<Payment[]>([]);
+  const [dataList, setDataList] = useState<School[]>([]);
+  const [filteredData, setFilteredData] = useState<School[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
   const [report, setReport] = useState<any>([]);
-
-  const { locale } = useParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
-  const { setFormType } = useAppStore();
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof SchoolSchema>>({
+    resolver: zodResolver(SchoolSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      name: "",
+      countryId: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof SchoolSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      login(values, locale, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
+      // login(values, locale, callbackUrl)
+      //   .then((data) => {
+      //     if (data?.error) {
+      //       form.reset();
+      //       setError(data.error);
+      //     }
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-          }
+      //     if (data?.success) {
+      //       form.reset();
+      //       setSuccess(data.success);
+      //     }
 
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-          }
-        })
-        .catch(() => setError("Something went wrong"));
+      //     if (data?.twoFactor) {
+      //       setShowTwoFactor(true);
+      //     }
+      //   })
+      //   .catch(() => setError("Something went wrong"));
     });
   };
 
@@ -172,7 +127,7 @@ export function SchoolDataTable() {
     const getData = async () => {
       // const data = await getAllTransactionsAPI();
       // setTransactions(data)
-      setPayments(data);
+      setDataList(data);
       setIsLoading(false);
     };
     getData();
@@ -180,13 +135,13 @@ export function SchoolDataTable() {
 
   useEffect(() => {
     const getData = async () => {
-      setFilteredData(payments);
+      setFilteredData(dataList);
 
-      const rep: any = payments?.map((dat: any) => {
+      const rep: any = dataList?.map((dat: any) => {
         return {
           ID: dat.id,
-          Amount: dat.amount,
-          Email: dat.email,
+          Name: dat.name,
+          Country: dat.countryId,
           Status: dat.status,
         };
       });
@@ -194,14 +149,15 @@ export function SchoolDataTable() {
       setReport(rep);
     };
     getData();
-  }, [payments]);
+  }, [dataList]);
 
   useEffect(() => {
-    let result = payments;
+    let result = dataList;
     if (q && q.length > 3) {
-      result = payments.filter((data: any) => {
+      result = dataList.filter((data: any) => {
         return (
-          data?.email.toLowerCase().includes(q.toLowerCase()) ||
+          data?.name.toLowerCase().includes(q.toLowerCase()) ||
+          data?.countryId.toLowerCase().includes(q.toLowerCase()) ||
           data?.status.toLowerCase().includes(q.toLowerCase())
         );
       });
@@ -243,10 +199,25 @@ export function SchoolDataTable() {
     );
   };
 
-  const HandleForm = () => {
+  const HandleForm = ({
+    type = "CREATE",
+    singleData,
+  }: {
+    type: "CREATE" | "EDIT";
+    singleData?: School;
+  }) => {
+    if (type === "EDIT") {
+      if (singleData) {
+        form.setValue("name", singleData?.name);
+        form.setValue("countryId", singleData?.countryId);
+      }
+    } else {
+      form.setValue("name", "");
+      form.setValue("countryId", "");
+    }
     return (
       <CardWrapper
-        headerLabel="Sign In"
+        headerLabel={type === "CREATE" ? "Create New School" : "Update School"}
         // subHeaderLabel="Welcome back"
       >
         <Form {...form}>
@@ -258,18 +229,40 @@ export function SchoolDataTable() {
               <>
                 <FormField
                   control={form.control}
-                  name="password"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>School Name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="******"
-                          type="password"
-                          className={` bg-[var(--clr-silver-v7)] ${
-                            form.formState.errors.password
+                          placeholder="eg. De Youngsters Int. School"
+                          className={` bg-[var(--clr-silver-v6)] ${
+                            form.formState.errors.name
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="countryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          placeholder="eg. Ghana"
+                          className={` bg-[var(--clr-silver-v6)] ${
+                            form.formState.errors.countryId
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
                           }`}
@@ -281,15 +274,13 @@ export function SchoolDataTable() {
                 />
               </>
             </div>
-            <FormError message={error || urlError} />
-            <FormSuccess message={success} />
             <div className="!mb-4 !mt-6 !pt-4">
               <Button
                 disabled={isPending}
                 type="submit"
                 className="w-full bg-[var(--clr-secondary)] "
               >
-                {showTwoFactor ? "Confirm" : "Login"}
+                {type === "CREATE" ? "Create" : "Update"}
               </Button>
             </div>
           </form>
@@ -298,27 +289,27 @@ export function SchoolDataTable() {
     );
   };
 
-  const columns: TableColumn<Payment>[] = useMemo(
+  const columns: TableColumn<School>[] = useMemo(
     () => [
       {
         name: "ID",
-        // width: "100px",
+        width: "100px",
         selector: (row: any, index: any) => index + 1,
       },
       {
-        name: "Amount",
-        // width: "120px",
-        cell: (row: any) => row?.amount,
+        name: "Name",
+        minWidth: "200px",
+        cell: (row: any) => row?.name,
       },
       {
-        name: "Email",
-        cell: (row: any) => row?.email,
-        width: "300px",
+        name: "Country",
+        minWidth: "200px",
+        cell: (row: any) => row?.countryId,
       },
 
       {
         name: "Status",
-        // width: "120px",
+        width: "120px",
         cell: (row: any) => row?.status,
         //   selector: (row) => (row?.status ? "Active" : "Inactive"),
         //   sortable: true,
@@ -349,13 +340,13 @@ export function SchoolDataTable() {
         cell: (row) => (
           <div className="flex justify-center items-center">
             <div className="flex gap-6">
-              {row.status === "success" ? (
-                <ToolTip tooltip="Deactivate">
+              {row.status === "ENABLED" ? (
+                <ToolTip tooltip="Disable">
                   <AlertButton
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "disactivate this school",
+                        alertText: "disable this school",
                         alertType: "danger",
                       })
                     }
@@ -370,12 +361,12 @@ export function SchoolDataTable() {
                   </AlertButton>
                 </ToolTip>
               ) : (
-                <ToolTip tooltip="Activate">
+                <ToolTip tooltip="Enable">
                   <AlertButton
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "activate this school",
+                        alertText: "enable this school",
                       })
                     }
                     isAlert={true}
@@ -389,8 +380,8 @@ export function SchoolDataTable() {
                   </AlertButton>
                 </ToolTip>
               )}
-              <ToolTip tooltip="Edit Role">
-                <FormButton asChild Form={HandleForm}>
+              <ToolTip tooltip="Edit School">
+                <FormButton asChild Form={() => HandleForm({ type: "EDIT", singleData: row })}>
                   <div>
                     <FiEdit
                       //   onClick={() => editWallet(row)}
@@ -422,8 +413,8 @@ export function SchoolDataTable() {
           search={search}
           setSearch={setSearch}
           report={report}
-          reportFilename="Payments"
-          addButtonTitle="Add Payment"
+          reportFilename="Schools"
+          addButtonTitle="Add School"
           isAdd={true}
           addModal={HandleForm}
         />

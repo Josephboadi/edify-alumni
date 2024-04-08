@@ -25,7 +25,7 @@ const ToolTip = ({
       {tooltip ? (
         <span
           ref={tooltipRef}
-          className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition bg-[var(--clr-primary)]  text-[var(--clr-secondary)] border border-[var(--clr-primary-secondary)] p-1 px-2 rounded absolute -top-full -mt-2 whitespace-nowrap !z-[1908000000000000000] shadow-2xl "
+          className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition bg-[var(--clr-primary)]  text-[var(--clr-secondary)] border border-[var(--clr-primary-secondary)] p-1 px-2 rounded absolute -top-full -mt-3 whitespace-nowrap !z-[190800000] shadow-2xl "
         >
           {tooltip}
         </span>

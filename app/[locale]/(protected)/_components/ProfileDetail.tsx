@@ -118,6 +118,25 @@ const ProfileDetail = ({ profileData, loading }: ProfileDetailProps) => {
                           font.className
                         )}
                       >
+                        Phone Number
+                      </p>
+
+                      <p
+                        className={cn(
+                          " text-sm text-[var(--clr-black-light)] font-normal ",
+                          font.className
+                        )}
+                      >
+                        {profileData?.bio?.phoneNumber}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-start gap-4 text-wrap">
+                      <p
+                        className={cn(
+                          " text-sm  text-[var(--clr-black-light)] font-bold ",
+                          font.className
+                        )}
+                      >
                         Country
                       </p>
 

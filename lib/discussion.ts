@@ -11,8 +11,8 @@ export const discussionList = async (q: string, page: number) => {
       discussionData = discussionData.filter((discussion) => {
         return (
           discussion.topic.toLowerCase().includes(q.toLowerCase()) ||
-          discussion.hashTags.some((tag) =>
-            tag.toLowerCase().includes(q.toLowerCase())
+          discussion.hashTags.some((tag:any) =>
+            tag.hash.toLowerCase().includes(q.toLowerCase())
           )
         );
       });
@@ -24,6 +24,16 @@ export const discussionList = async (q: string, page: number) => {
     const discussionsData = await discussionData;
 
     return { pageCount, discussionsData };
+  } catch (error) {
+    throw new Error("Failed to discussions data!");
+  }
+};
+
+export const discussions = async () => {
+  try {
+    let discussionListData = await DiscussionListData;
+
+    return { discussionListData };
   } catch (error) {
     throw new Error("Failed to discussions data!");
   }

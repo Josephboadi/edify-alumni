@@ -1,38 +1,38 @@
 "use client";
-import { country } from "@/lib/country";
-import { CountryData } from "@/schemas";
+import { jobCategories } from "@/lib/jobcat";
+import { JobCatData } from "@/schemas";
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
 
-type DropdownCountryProps = {
-  value?: string;
+type DropdownJobCatProps = {
+  value: string | undefined;
   onChangeHandler?: any;
   isError: boolean;
 };
 
-const DropdownCountry = ({
+const DropdownJobCat = ({
   value,
   onChangeHandler,
   isError,
-}: DropdownCountryProps) => {
-  const [countryData, setCountryData] = useState<CountryData>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [inputValue1, setInputValue1] = useState("");
-  const [selected, setSelected] = useState("");
+}: DropdownJobCatProps) => {
+  const [jobCatData, setJobCatData] = useState<JobCatData>([]);
+  const [inputValue, setInputValue] = useState<any>("");
+  const [inputValue1, setInputValue1] = useState<any>(value);
+  const [selected, setSelected] = useState<any>(value);
   const [open, setOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const selectMenuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const getCountries = async () => {
-      const countryList = await country();
+    const getJobCats = async () => {
+      const jobCatList = await jobCategories();
 
-      countryList && setCountryData(countryList as CountryData);
+      jobCatList && setJobCatData(jobCatList as JobCatData);
     };
 
-    getCountries();
+    getJobCats();
   }, []);
 
   useEffect(() => {
@@ -83,10 +83,10 @@ const DropdownCountry = ({
             type="text"
             disabled
             autoComplete="off"
-            id="country"
-            name="country"
+            id="categoryName"
+            name="categoryName"
             className={`text-sm font-normal placeholder:text-sm placeholder:text-muted-foreground placeholder:font-normal w-full h-full px-4 pl-3 cursor-pointer outline-none caret-transparent`}
-            placeholder="eg. Ghana"
+            placeholder="eg. Education"
             defaultValue={inputValue1}
           />
 
@@ -104,7 +104,7 @@ const DropdownCountry = ({
           } `}
         >
           <div className="flex w-full items-center px-2 gap-2 sticky top-0 bg-[var(--clr-silver-v6)] overflow-hidden">
-            <div className="absolute w-[5%] ">
+            <div className=" absolute w-[5%] ">
               <AiOutlineSearch className="text-[var(--clr-black-light)] !text-lg" />
             </div>
 
@@ -114,6 +114,7 @@ const DropdownCountry = ({
                 ref={inputRef}
                 autoFocus={true}
                 value={inputValue}
+                // defaultValue={value}
                 onChange={(e) => setInputValue(e.target.value.toLowerCase())}
                 placeholder="Search here..."
                 className="text-sm font-normal placeholder:text-sm placeholder:text-muted-foreground placeholder:font-normal p-2 outline-none flex flex-1 bg-transparent"
@@ -133,58 +134,53 @@ const DropdownCountry = ({
               setInputValue("");
             }}
           >
-            Select a Country
+            Select a Job Category
           </p>
-          {countryData?.map((item, index) => (
+          {jobCatData?.map((item, index) => (
             <p
               key={index}
               className={`p-2 text-[var(--clr-black)] text-sm hover:bg-[var(--clr-secondary)] hover:text-[var(--clr-primary)]
             ${
-              item?.name?.toLowerCase() === selected?.toLowerCase() &&
+              item?.title?.toLowerCase() === selected?.toLowerCase() &&
               "bg-[var(--clr-secondary)] text-[var(--clr-primary)]"
             }
             ${
-              item?.name?.toLowerCase().startsWith(inputValue)
+              item?.title?.toLowerCase().startsWith(inputValue)
                 ? "block"
                 : "hidden"
             }`}
               onClick={() => {
-                if (item?.name?.toLowerCase() !== selected.toLowerCase()) {
-                  setSelected(item?.name);
+                if (item?.title?.toLowerCase() !== selected.toLowerCase()) {
+                  setSelected(item?.title);
                   setOpen(false);
                   setInputValue("");
                 }
               }}
             >
-              {item?.name}
+              {item?.title}
             </p>
           ))}
         </div>
       </div>
     </>
+    // <Select onValueChange={onChangeHandler} defaultValue={value}>
+    //   <SelectTrigger className="select-field">
+    //     <SelectValue placeholder="Category" />
+    //   </SelectTrigger>
+    //   <SelectContent>
+    //     {jobCatData.length > 0 &&
+    //       jobCatData.map((yea) => (
+    //         <SelectItem
+    //           key={yea.value}
+    //           value={yea.value}
+    //           className="select-item p-regular-14"
+    //         >
+    //           {yea.name}
+    //         </SelectItem>
+    //       ))}
+    //   </SelectContent>
+    // </Select>
   );
 };
 
-export default DropdownCountry;
-
-{
-  /* <Select onValueChange={onChangeHandler} defaultValue={value}>
-      <SelectTrigger className="select-field">
-        <SelectValue placeholder="Country" />
-      </SelectTrigger>
-      <SelectContent
-        className={` z-[20000000000000000000000] bg-[var(--clr-silver)] "focus-visible:ring-transparent border-none"`}
-      >
-        {countryData.length > 0 &&
-          countryData?.map((count) => (
-            <SelectItem
-              key={count.name}
-              value={count.name}
-              // className="select-item p-regular-14"
-            >
-              {count.name}
-            </SelectItem>
-          ))}
-      </SelectContent>
-    </Select> */
-}
+export default DropdownJobCat;

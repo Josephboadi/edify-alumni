@@ -2,12 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 // import { eventListData } from "@/data/events";
-import { Event } from "@/schemas";
+import { EventData } from "@/schemas";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 
-const SingleEvent = ({ eventData }: { eventData: Event }) => {
+const SingleEvent = ({ eventData }: { eventData: EventData }) => {
   // const params = useParams();
   // const [eventData, setEventData] = useState<Event>();
 
@@ -44,8 +44,9 @@ const SingleEvent = ({ eventData }: { eventData: Event }) => {
                 <div className="flex flex-row items-center gap-2">
                   <div className="w-[16px]  min-w-[16px] max-w-[16px] h-[16px] rounded-full bg-[var(--clr-green)]" />
                   <p className=" text-left text-sm font-semibold text-[var(--clr-black-light)] line-clamp-3">
-                    Happening Today / {eventData?.eventStartTime} -{" "}
-                    {eventData?.eventEndTime}
+                    Happening Today /{" "}
+                    {moment(new Date(eventData?.eventStartTime)).format("LT")}{" "}
+                    - {moment(new Date(eventData?.eventEndTime)).format("LT")}
                   </p>
                 </div>
 
@@ -87,18 +88,21 @@ const SingleEvent = ({ eventData }: { eventData: Event }) => {
               <div className="flex flex-wrap flex-1 items-center gap-3 px-4">
                 <div>
                   <p className=" text-xl text-[var(--clr-jet-v1)]">
-                    {moment(eventData?.publishDate, "YYYYMMDD").fromNow()}
+                    {moment(
+                      new Date(eventData?.publishDate),
+                      "YYYYMMDD"
+                    ).fromNow()}
                   </p>
                 </div>
 
-                {eventData?.hashTags?.map((tag, index) => (
+                {eventData?.hashTags?.map((tag: any, index: any) => (
                   <div
                     className="w-[110px] min-w-[110px] px-[6px] h-[32px] bg-[var(--clr-secondary-light)] rounded-full flex items-center justify-center"
                     key={index}
                   >
                     <div className="w-full px-8 py-2 h-[32px] rounded-full bg-[var(--clr-secondary)] flex items-center justify-center">
                       <p className=" capitalize text-sm text-center font-semibold text-[var(--clr-primary)]">
-                        #{tag}
+                        #{tag.hash}
                       </p>
                     </div>
                   </div>

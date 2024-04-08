@@ -11,9 +11,8 @@ import ToolTip from "@/components/common/ToolTip";
 import { convertArrayOfObjectsToCSV } from "@/lib/utils";
 import { ImSpinner2 } from "react-icons/im";
 import Search from "./Search";
-import { FormButton } from "./form-button";
 
-const Table = ({
+const ModalTable = ({
   filteredData,
   columns,
   isLoading,
@@ -198,14 +197,14 @@ const Table = ({
               {isAdd && (
                 <div
                   className="sm:w-32 flex items-center justify-start xsm:justify-center cursor-pointer"
-                  // onClick={addModal}
+                    onClick={addModal}
                 >
                   <ToolTip tooltip={addButtonTitle}>
-                    <FormButton asChild Form={addModal}>
+                    {/* <FormButton asChild Form={addModal}> */}
                       <div>
                         <CgAddR className="text-2xl  !text-[var(--clr-secondary)] shadow-sm" />
                       </div>
-                    </FormButton>
+                    {/* </FormButton> */}
                   </ToolTip>
                 </div>
               )}
@@ -240,4 +239,4 @@ const Table = ({
   );
 };
 
-export default Table;
+export default ModalTable;

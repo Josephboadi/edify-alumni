@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 // import { jobListData } from "@/data/joblist";
 import { JobListData } from "@/schemas";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface JobListProps {
   pageCount: number;
@@ -11,16 +12,37 @@ interface JobListProps {
 }
 const JobList = ({ pageCount, jobsData }: JobListProps) => {
   // const { setJobInfoData } = useAppStore();
-  // const [jobData, setJobData] = useState<JobListData>([]);
+  const [jobData, setJobData] = useState<any>([]);
   // const [filteredData, setFilteredData] = useState<JobListData>([]);
   // const [page, setPage] = useState(1);
   // const [limit, setLimit] = useState(2);
   // const [pageCount, setPageCount] = useState(0);
+  console.log(jobsData);
 
-  // useEffect(() => {
-  //   setJobData(jobListData);
-  // }, []);
+  useEffect(() => {
+    const modifyData = async () => {
+      const groupedBy = jobsData?.reduce((acc: any, jbd: any) => {
+        const jcat = jbd.categoryName;
+        (acc[jcat] = acc[jcat] || []).push(jbd);
+        return acc;
+      }, {});
 
+      await setJobData(Object?.values(groupedBy));
+      // function groupBy(arr: any, property: any) {
+      //   return arr.reduce(function (memo: any, x: any) {
+      //     if (!memo[x[property]]) {
+      //       memo[x[property]] = [];
+      //     }
+      //     memo[x[property]].push(x);
+      //     return memo;
+      //   }, {});
+      // }
+      // await setJobData(groupBy(jobsData, "categoryName"));
+    };
+    modifyData();
+  }, [jobsData]);
+
+  console.log(jobData);
   // useEffect(() => {
   //   let result = jobData;
   //   if (q.length > 3) {
@@ -70,17 +92,17 @@ const JobList = ({ pageCount, jobsData }: JobListProps) => {
   return (
     <>
       <div className="divide-y divide-[var(--clr-black)] border-b border-[var(--clr-black)]">
-        {jobsData?.map((job) => (
-          <div className="w-full" key={job.key}>
+        {jobData?.map((job: any, index: any) => (
+          <div className="w-full" key={index}>
             <div className=" w-full border-b border-[var(--clr-black)]  py-3">
               <div className="py-1 px-6 rounded-full border border-[var(--clr-black)] w-max">
-                <p className=" text-sm font-normal">{job.categoryName}</p>
+                <p className=" text-sm font-normal">{job[0].categoryName}</p>
               </div>
             </div>
 
             <div className="w-full flex gap-3 items-center h-max relative">
               <div className=" absolute left-0 top-0 bottom-0 flex flex-col justify-around h-full">
-                {job.List.map((list) => (
+                {job.map((list: any) => (
                   <div
                     className="w-3 h-3 rounded-full bg-[var(--clr-pumpkin)]"
                     key={list.id}
@@ -89,14 +111,14 @@ const JobList = ({ pageCount, jobsData }: JobListProps) => {
               </div>
 
               <div className="divide-y ml-5 mr-[84px]  divide-[var(--clr-silver-v3)] flex-grow">
-                {job.List.map((list) => (
+                {job?.map((list: any) => (
                   <div key={list.id} className="py-4 pl-3">
                     <p className=" text-sm font-medium">{list.title}</p>
                   </div>
                 ))}
               </div>
               <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-around h-full ">
-                {job.List.map((list) => (
+                {job?.map((list: any) => (
                   <Button
                     variant={"default"}
                     size={"sm"}

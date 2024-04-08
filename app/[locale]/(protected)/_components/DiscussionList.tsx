@@ -124,12 +124,12 @@ const DiscussionList = ({
             <CardFooter className="px-6 w-full flex  py-0">
               <div className="flex justify-between gap-4 w-full">
                 <div className="flex flex-1 flex-wrap gap-2 items-center px-1">
-                  {discussion?.hashTags?.map((tag, index) => (
+                  {discussion?.hashTags?.map((tag:any, index:any) => (
                     <p
                       key={index}
                       className=" capitalize text-xs text-center font-semibold text-[var(--clr-black-light)]"
                     >
-                      #{tag}
+                      #{tag.hash}
                     </p>
                   ))}
                 </div>

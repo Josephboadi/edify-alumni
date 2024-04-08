@@ -6,7 +6,7 @@
     "image": "/discussion/image.png",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Education", "Biblical"],
+    "hashTags": [{"hash":"Education"}, {"hash":"Biblical"}],
     "comments": [
       {
         "id": "com11",
@@ -44,7 +44,7 @@
     "image": "",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Biblical"],
+    "hashTags": [{"hash":"Biblical"}],
     "comments": [
       {
         "id": "com21",
@@ -82,7 +82,7 @@
     "image": "/discussion/image.png",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Education", "Biblical"],
+    "hashTags": [{"hash":"Education"}, {"hash":"Biblical"}],
     "comments": [
       {
         "id": "com31",
@@ -120,7 +120,7 @@
     "image": "/discussion/image.png",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Biblical"],
+    "hashTags": [{"hash":"Biblical"}],
     "comments": [
       {
         "id": "com41",
@@ -158,7 +158,7 @@
     "image": "",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Education"],
+    "hashTags": [{"hash":"Education"}],
     "comments": [
       {
         "id": "com51",
@@ -196,7 +196,7 @@
     "image": "/discussion/image.png",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Biblical"],
+    "hashTags": [{"hash":"Biblical"}],
     "comments": [
       {
         "id": "com61",
@@ -234,7 +234,7 @@
     "image": "",
     "createdAt": "Thu Feb 22 2024 19:15:04 GMT+0000 (Greenwich Mean Time)",
     "createdTime": "11:00",
-    "hashTags": ["Education", "Biblical"],
+    "hashTags": [{"hash":"Education"}, {"hash":"Biblical"}],
     "comments": [
       {
         "id": "com71",

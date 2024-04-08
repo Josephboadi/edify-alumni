@@ -1,23 +1,22 @@
 "use client";
 
 import ToolTip from "@/components/common/ToolTip";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { TableColumn } from "react-data-table-component";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useFieldArray, useForm } from "react-hook-form";
 import { FiEdit } from "react-icons/fi";
-import { VscActivateBreakpoints } from "react-icons/vsc";
-import Breadcrump from "./common/Breadcrump";
-import Table from "./common/Table";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import * as z from "zod";
+import Breadcrump from "./common/Breadcrump";
 
-import { login } from "@/actions/login";
 // import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import ModalForm from "@/components/common/Modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,152 +26,113 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/schemas";
-import { useAppStore } from "@/store/store";
+import { Textarea } from "@/components/ui/textarea";
+import { eventsList } from "@/lib/eventlist";
+import { useUploadThing } from "@/lib/uploadthing";
+import { EventData, EventFormSchema } from "@/schemas";
+import moment from "moment";
+import Image from "next/image";
+import { createPortal } from "react-dom";
+import { FaTrashAlt } from "react-icons/fa";
+import { HiOutlinePlus } from "react-icons/hi";
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import { AlertButton } from "./common/alert-button";
+import { ImageUploader } from "../../_components/ImageUploader";
 import { AlertCardWrapper } from "./common/alert-card-wrapper";
 import { CardWrapper } from "./common/card-wrapper";
 import { FormButton } from "./common/form-button";
-
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae1",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p1",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws01",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae2",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p2",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws02",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae3",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p3",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
+import { ImageWrapper } from "./common/image-wrapper";
+import ModalTable from "./common/ModalTable";
 
 export function EventDataTable() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [filteredData, setFilteredData] = useState<Payment[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [dataList, setDataList] = useState<EventData[]>([]);
+  const [filteredData, setFilteredData] = useState<EventData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
+  const [isAddingEvent, setIsAddingEvent] = useState<boolean>(false);
+  const [isEditingEvent, setIsEditingEvent] = useState<boolean>(false);
 
   const [report, setReport] = useState<any>([]);
-
-  const { locale } = useParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
-  const { setFormType } = useAppStore();
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const { startUpload } = useUploadThing("imageUploader");
+  const startDateTimeLocalNow = new Date();
+  // new Date().getTime() - new Date().getTimezoneOffset() * 60_000
+  const endDateTimeLocalNow = new Date();
+  // new Date().getTime() - new Date().getTimezoneOffset() * 60_000
+  // .toISOString().slice(0, 16);
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof EventFormSchema>>({
+    resolver: zodResolver(EventFormSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      title: "",
+      information: "",
+      eventLocation: "",
+      image: "",
+      eventStartTime: startDateTimeLocalNow,
+      eventEndTime: endDateTimeLocalNow,
+      eventDate: new Date(),
+      hashTags: [{ hash: "" }],
+      isEventDay: false,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const control = form.control;
+
+  const eventHashTagsArray = useFieldArray({
+    name: "hashTags",
+    control,
+    //  rules: {
+    //    required: "Please append at least 1 Job Specification",
+    //  },
+  });
+
+  const onSubmit = (values: z.infer<typeof EventFormSchema>) => {
     setError("");
     setSuccess("");
 
-    startTransition(() => {
-      login(values, locale, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
+    startTransition(async () => {
+      let uploadedCoverImageUrl = values.image;
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-          }
+      if (imageFiles.length > 0) {
+        const uploadedImages = await startUpload(imageFiles);
 
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-          }
-        })
-        .catch(() => setError("Something went wrong"));
+        if (!uploadedImages) {
+          return;
+        }
+        console.log("Image file url================, ", uploadedImages[0]);
+
+        uploadedCoverImageUrl = uploadedImages[0].url;
+      }
+      // login(values, locale, callbackUrl)
+      //   .then((data) => {
+      //     if (data?.error) {
+      //       form.reset();
+      //       setError(data.error);
+      //     }
+
+      //     if (data?.success) {
+      //       form.reset();
+      //       setSuccess(data.success);
+      //     }
+
+      //     if (data?.twoFactor) {
+      //       setShowTwoFactor(true);
+      //     }
+      //   })
+      //   .catch(() => setError("Something went wrong"));
     });
   };
 
   useEffect(() => {
     setIsLoading(true);
     const getData = async () => {
-      // const data = await getAllTransactionsAPI();
-      // setTransactions(data)
-      setPayments(data);
+      const data = await eventsList();
+      setDataList(data);
       setIsLoading(false);
     };
     getData();
@@ -180,29 +140,39 @@ export function EventDataTable() {
 
   useEffect(() => {
     const getData = async () => {
-      setFilteredData(payments);
+      setFilteredData(dataList);
 
-      const rep: any = payments?.map((dat: any) => {
+      const rep: any = dataList?.map((dat: EventData) => {
         return {
-          ID: dat.id,
-          Amount: dat.amount,
-          Email: dat.email,
-          Status: dat.status,
+          ID: dat.key,
+          Title: dat.title,
+          Information: dat.information,
+          Image: dat.image,
+          "Event Start": dat.eventStartTime,
+          "Event End": dat.eventEndTime,
+          "Event Date": dat.eventDate,
+          Location: dat.eventLocation,
+          "Published Date": dat.publishDate,
+          Hashtag: JSON.stringify(dat.hashTags),
         };
       });
-
       setReport(rep);
     };
     getData();
-  }, [payments]);
+  }, [dataList]);
 
   useEffect(() => {
-    let result = payments;
+    let result = dataList;
     if (q && q.length > 3) {
-      result = payments.filter((data: any) => {
+      result = dataList.filter((data: any) => {
         return (
-          data?.email.toLowerCase().includes(q.toLowerCase()) ||
-          data?.status.toLowerCase().includes(q.toLowerCase())
+          data?.title.toLowerCase().includes(q.toLowerCase()) ||
+          data?.information.toLowerCase().includes(q.toLowerCase()) ||
+          data?.eventStartTime.toLowerCase().includes(q.toLowerCase()) ||
+          data?.eventEndTime.toLowerCase().includes(q.toLowerCase()) ||
+          data?.publishDate.toString().includes(q.toString()) ||
+          data?.eventDate.toString().includes(q.toString()) ||
+          data?.eventLocation.toLowerCase().includes(q.toLowerCase())
         );
       });
     }
@@ -243,10 +213,10 @@ export function EventDataTable() {
     );
   };
 
-  const HandleForm = () => {
+  const HandleForm = ({ type = "CREATE" }: { type: "CREATE" | "EDIT" }) => {
     return (
       <CardWrapper
-        headerLabel="Sign In"
+        headerLabel={type === "CREATE" ? "Create New Event" : "Update Event"}
         // subHeaderLabel="Welcome back"
       >
         <Form {...form}>
@@ -258,18 +228,17 @@ export function EventDataTable() {
               <>
                 <FormField
                   control={form.control}
-                  name="password"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>Event Title</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="******"
-                          type="password"
-                          className={` bg-[var(--clr-silver-v7)] ${
-                            form.formState.errors.password
+                          placeholder="Enter envent title"
+                          className={` bg-[var(--clr-silver-v6)] ${
+                            form.formState.errors.title
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
                           }`}
@@ -279,17 +248,296 @@ export function EventDataTable() {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="information"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Scholarship Information</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          disabled={isPending}
+                          placeholder="Type Additional Notes Here."
+                          className={`rounded-[6px]  !min-h-[100px] !max-h-[10vh] bg-[var(--clr-silver-v6)] placeholder:text-left ${
+                            form.formState.errors.information
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="eventDate"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Event Date:</FormLabel>
+                      <FormControl>
+                        <div
+                          className={` relative flex item-center gap-1 justify-center pl-2  text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
+                            form.formState.errors.eventDate
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
+                        >
+                          <Image
+                            src="/assets/calendar.svg"
+                            alt="calendar"
+                            width={24}
+                            height={24}
+                            className="text-[var(--clr-secondary)]"
+                          />
+                          <DatePicker
+                            selected={field.value}
+                            onChange={(date: Date) => field.onChange(date)}
+                            // showTimeSelect
+                            // timeInputLabel="Time:"
+                            dateFormat="MM/dd/yyyy"
+                            wrapperClassName="w-full flex flex-1 h-full !py-2"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="eventStartTime"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Start Time:</FormLabel>
+                      <FormControl>
+                        <div
+                          className={` relative flex item-center gap-1 justify-center pl-2  text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
+                            form.formState.errors.eventStartTime
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
+                        >
+                          <Image
+                            src="/assets/clock.svg"
+                            alt="calendar"
+                            width={24}
+                            height={24}
+                            className="filter-grey"
+                          />
+                          <DatePicker
+                            selected={field.value}
+                            onChange={(date: Date) => field.onChange(date)}
+                            showTimeSelect
+                            timeInputLabel="Time:"
+                            dateFormat="MM/dd/yyyy h:mm aa"
+                            wrapperClassName="w-full flex flex-1 h-full !py-2"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="eventEndTime"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>End Time:</FormLabel>
+                      <FormControl>
+                        <div
+                          className={` relative flex item-center gap-1 justify-center pl-2  text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
+                            form.formState.errors.eventEndTime
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
+                        >
+                          <Image
+                            src="/assets/clock.svg"
+                            alt="calendar"
+                            width={24}
+                            height={24}
+                            className="filter-grey"
+                          />
+
+                          <DatePicker
+                            selected={field.value}
+                            onChange={(date: Date) => field.onChange(date)}
+                            showTimeSelect
+                            timeInputLabel="Time:"
+                            dateFormat="MM/dd/yyyy h:mm aa"
+                            wrapperClassName="w-full flex flex-1 h-full !py-2 "
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="eventLocation"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Event Location</FormLabel>
+                      <FormControl>
+                        <div
+                          className={` relative flex item-center gap-1 justify-center pl-2 text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
+                            form.formState.errors.eventLocation
+                              ? "border border-red-500 focus-visible:ring-0"
+                              : "focus-visible:ring-transparent border-none"
+                          }`}
+                        >
+                          <Image
+                            src="/assets/location-grey.svg"
+                            alt="calendar"
+                            width={24}
+                            height={24}
+                            className="filter-grey"
+                          />
+                          <Input
+                            placeholder="Event location or Online"
+                            disabled={isPending}
+                            {...field}
+                            className="flex flex-1 h-full py-3 outline-none focus-visible:ring-transparent border-none"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Cover Image</FormLabel>
+                      <FormControl>
+                        <ImageUploader
+                          onFieldChange={field.onChange}
+                          imageUrl={field.value}
+                          setFiles={setImageFiles}
+                          isError={form.formState.errors.image ? true : false}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div>
+                  <p className="text-[0.9rem] font-medium mb-2">Hashtags</p>
+                  <div className=" space-y-2">
+                    {eventHashTagsArray.fields.map((field, index) => {
+                      const errorForField =
+                        form.formState.errors?.hashTags?.[index]?.hash;
+                      return (
+                        <div key={field.hash} className="w-full flex flex-col">
+                          <div className="flex flex-row items-end gap-2">
+                            <div className="flex-1 !h-[38px] ">
+                              <input
+                                {...form.register(
+                                  `hashTags.${index}.hash` as const
+                                )}
+                                placeholder="eg. bible"
+                                defaultValue={field.hash}
+                                className={`flex rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-full w-full bg-[var(--clr-silver-v6)] ${
+                                  errorForField
+                                    ? "border border-red-500 focus-visible:ring-0"
+                                    : "focus-visible:ring-transparent border-none"
+                                }`}
+                              />
+                            </div>
+
+                            <ToolTip tooltip="Remove">
+                              <Button
+                                size={"icon"}
+                                variant={"ghost"}
+                                asChild
+                                className="  w-5 h-5 shadow-lg  mb-1 flex items-center justify-center"
+                              >
+                                <FaTrashAlt
+                                  onClick={() =>
+                                    eventHashTagsArray.remove(index)
+                                  }
+                                  className="text-sm text-[var(--clr-scarlet)]"
+                                />
+                              </Button>
+                            </ToolTip>
+                          </div>
+                          {errorForField?.message && (
+                            <p>{errorForField?.message ?? <>&nbsp;</>}</p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <p>{form.formState.errors.hashTags?.message}</p>
+                  <div className="flex w-full justify-end mt-3 pr-7">
+                    <Button
+                      // size={""}
+                      size={"sm"}
+                      variant={"outline"}
+                      asChild
+                      className="shadow-none  flex items-center justify-center rounded-[4px] border-[var(--clr-secondary)]"
+                    >
+                      <p
+                        className="gap-2"
+                        onClick={() => {
+                          eventHashTagsArray.append({ hash: "" });
+                          form.trigger("hashTags");
+                        }}
+                      >
+                        <HiOutlinePlus className="text-lg text-[var(--clr-secondary)]" />
+                        <span>Add New Hashtag</span>
+                      </p>
+                    </Button>
+                  </div>
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="isEventDay"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="flex items-center flex-row-reverse">
+                          <label
+                            htmlFor="isEventDay"
+                            className="flex-1 pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Is Event Day
+                          </label>
+                          <Checkbox
+                            onCheckedChange={field.onChange}
+                            checked={field.value}
+                            id="isEventDay"
+                            className="mr-2 h-5 w-5 border-2 border-primary-500"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </>
             </div>
-            <FormError message={error || urlError} />
-            <FormSuccess message={success} />
             <div className="!mb-4 !mt-6 !pt-4">
               <Button
                 disabled={isPending}
                 type="submit"
                 className="w-full bg-[var(--clr-secondary)] "
               >
-                {showTwoFactor ? "Confirm" : "Login"}
+                {type === "CREATE" ? "Create" : "Update"}
               </Button>
             </div>
           </form>
@@ -298,7 +546,32 @@ export function EventDataTable() {
     );
   };
 
-  const columns: TableColumn<Payment>[] = useMemo(
+  const HandleImagePreview = ({ singleData }: { singleData?: EventData }) => {
+    return (
+      <ImageWrapper
+      // subHeaderLabel="Welcome back"
+      >
+        <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center justify-center !rounded-xl">
+          {singleData?.image ? (
+            <Image
+              src={singleData?.image}
+              alt="-"
+              fill
+              className="object-cover object-center !rounded-xl"
+            />
+          ) : (
+            <div className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] flex items-center justify-center w-full h-full">
+              <h1 className="text-4xl font-bold">
+                {singleData?.title?.split("")?.shift()?.toUpperCase()}
+              </h1>
+            </div>
+          )}
+        </div>
+      </ImageWrapper>
+    );
+  };
+
+  const columns: TableColumn<EventData>[] = useMemo(
     () => [
       {
         name: "ID",
@@ -306,98 +579,73 @@ export function EventDataTable() {
         selector: (row: any, index: any) => index + 1,
       },
       {
-        name: "Amount",
-        // width: "120px",
-        cell: (row: any) => row?.amount,
+        name: "Cover Image",
+        width: "120px",
+        cell: (row: any) => (
+          <FormButton
+            asChild
+            Form={() => HandleImagePreview({ singleData: row })}
+          >
+            <div className="cursor-pointer">
+              <Avatar className="w-[45px] h-[45px] relative">
+                <AvatarImage src={row?.image || ""} />
+                <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)]">
+                  {row?.title?.split("")?.shift()?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          </FormButton>
+        ),
       },
       {
-        name: "Email",
-        cell: (row: any) => row?.email,
-        width: "300px",
+        name: "Title",
+        minWidth: "300px",
+        cell: (row: any) => row?.title,
+      },
+      {
+        name: "Information",
+        minWidth: "450px",
+        cell: (row: any) => row?.information,
+      },
+      {
+        name: "Event Date",
+        width: "200px",
+        cell: (row: any) => moment(new Date(row?.eventDate)).format("LL"),
       },
 
       {
-        name: "Status",
-        // width: "120px",
-        cell: (row: any) => row?.status,
-        //   selector: (row) => (row?.status ? "Active" : "Inactive"),
-        //   sortable: true,
-        //   conditionalCellStyles: [
-        //     {
-        //       when: (row) => row?.status,
-        //       style: {
-        //         color: "green",
-        //         "&:hover": {
-        //           cursor: "pointer",
-        //         },
-        //       },
-        //     },
-        //     {
-        //       when: (row) => !row?.status,
-        //       style: {
-        //         color: "red",
-        //         "&:hover": {
-        //           cursor: "pointer",
-        //         },
-        //       },
-        //     },
-        //   ],
+        name: "Start Time",
+        minWidth: "200px",
+        cell: (row: any) => moment(new Date(row?.eventStartTime)).format("LT"),
+      },
+      {
+        name: "End Time",
+        minWidth: "200px",
+        cell: (row: any) => moment(new Date(row?.eventEndTime)).format("LT"),
+      },
+      {
+        name: "Event Location",
+        minWidth: "200px",
+        cell: (row: any) => row?.eventLocation,
       },
       {
         name: "Action",
         width: "140px",
         cell: (row) => (
           <div className="flex justify-center items-center">
-            <div className="flex gap-6">
-              {row.status === "success" ? (
-                <ToolTip tooltip="Deactivate">
-                  <AlertButton
-                    asChild
-                    Form={() =>
-                      HandleConfirmPromt({
-                        alertText: "disactivate this event",
-                        alertType: "danger",
-                      })
-                    }
-                    isAlert={true}
-                  >
-                    <div>
-                      <VscActivateBreakpoints
-                        //   onClick={() => onDeactivateRole(row)}
-                        className="text-red-600 text-xl cursor-pointer"
-                      />
-                    </div>
-                  </AlertButton>
-                </ToolTip>
-              ) : (
-                <ToolTip tooltip="Activate">
-                  <AlertButton
-                    asChild
-                    Form={() =>
-                      HandleConfirmPromt({
-                        alertText: "activate this event",
-                      })
-                    }
-                    isAlert={true}
-                  >
-                    <div>
-                      <VscActivateBreakpoints
-                        //   onClick={() => onDeactivateRole(row)}
-                        className="text-green-600 text-xl cursor-pointer"
-                      />
-                    </div>
-                  </AlertButton>
-                </ToolTip>
-              )}
-              <ToolTip tooltip="Edit Role">
-                <FormButton asChild Form={HandleForm}>
-                  <div>
-                    <FiEdit
-                      //   onClick={() => editWallet(row)}
-                      className="text-xl font-black  cursor-pointer"
-                    />
-                  </div>
-                </FormButton>
+            <div onClick={() => editEvent(row)} className="flex gap-6">
+              <ToolTip tooltip="Edit Scholarship">
+                {/* <FormButton
+                  asChild
+                  Form={() => HandleForm({ type: "EDIT", singleData: row })}
+                > */}
+                <div>
+                  <FiEdit
+                    //   onClick={() => editWallet(row)}
+                    className="text-xl font-black  cursor-pointer"
+                  />
+                </div>
+                {/* </FormButton> */}
               </ToolTip>
             </div>
           </div>
@@ -407,29 +655,77 @@ export function EventDataTable() {
     []
   );
 
+  const handleCloseButtonClick = () => {
+    // console.log("Close button Clicked");
+    setIsAddingEvent(false);
+    setIsEditingEvent(false);
+  };
+
+  const addEvent = () => {
+    // form.setValue("title", "");
+    // form.setValue("information", "");
+    // form.setValue("image", "");
+    form.reset();
+    setIsAddingEvent(true);
+  };
+
+  const editEvent = (event: EventData) => {
+    form.setValue("hashTags", [...event?.hashTags]);
+    form.setValue("title", event?.title);
+    form.setValue("information", event?.information);
+    form.setValue("image", event?.image);
+    form.setValue("eventDate", new Date(event?.eventDate));
+    form.setValue("eventStartTime", new Date(event?.eventDate));
+    form.setValue("eventEndTime", new Date(event?.eventDate));
+    form.setValue("eventLocation", event?.eventLocation);
+    form.setValue("isEventDay", event?.isEventDay);
+
+    setIsEditingEvent(true);
+  };
+
   return (
-    <div className={`w-[100%] flex flex-col  `}>
-      <div className="absolute z-[20] bg-white w-full pb-2">
-        <Breadcrump prePath={pathname.split("/")[1]} title={pathname.split("/")[2]} />
-      </div>
-      {/* <Card className="w-full mt-10 rounded-none border-none">
+    <>
+      {isAddingEvent &&
+        createPortal(
+          <ModalForm closeModal={handleCloseButtonClick}>
+            <div>{HandleForm({ type: "CREATE" })}</div>
+          </ModalForm>,
+          document.body
+        )}
+
+      {isEditingEvent &&
+        createPortal(
+          <ModalForm closeModal={handleCloseButtonClick}>
+            <div>{HandleForm({ type: "EDIT" })}</div>
+          </ModalForm>,
+          document.body
+        )}
+      <div className={`w-[100%] flex flex-col  `}>
+        <div className="absolute z-[20] bg-white w-full pb-2">
+          <Breadcrump
+            prePath={pathname.split("/")[1]}
+            title={pathname.split("/")[2]}
+          />
+        </div>
+        {/* <Card className="w-full mt-10 rounded-none border-none">
         <CardContent className="w-full "> */}
-      <div className=" mt-20 flex justify-center ">
-        <Table
-          filteredData={filteredData}
-          columns={columns}
-          isLoading={isLoading}
-          search={search}
-          setSearch={setSearch}
-          report={report}
-          reportFilename="Payments"
-          addButtonTitle="Add Payment"
-          isAdd={true}
-          addModal={HandleForm}
-        />
-      </div>
-      {/* </CardContent>
+        <div className=" mt-20 flex justify-center ">
+          <ModalTable
+            filteredData={filteredData}
+            columns={columns}
+            isLoading={isLoading}
+            search={search}
+            setSearch={setSearch}
+            report={report}
+            reportFilename="Payments"
+            addButtonTitle="Add Payment"
+            isAdd={true}
+            addModal={addEvent}
+          />
+        </div>
+        {/* </CardContent>
       </Card> */}
-    </div>
+      </div>
+    </>
   );
 }

@@ -6,15 +6,22 @@ export const jobList = async (q: string, page: number) => {
     let jobData = await JobListData;
 
     if (q.length > 3) {
-      jobData = jobData.filter((job) =>
-        job.List.every(({ title }) => {
-          return title.toLowerCase().includes(q.toLowerCase());
-        })
+      jobData = jobData.filter(
+        (job) => job.title.toLowerCase().includes(q.toLowerCase())
+        // job.List.every(({ title }) => {
+        //   return title.toLowerCase().includes(q.toLowerCase());
+        // })
       );
     }
+    console.log(jobData?.length);
+    console.log(ITEM_PER_PAGE);
     const pageCount = Math.ceil(jobData?.length / ITEM_PER_PAGE);
+    console.log(pageCount);
+    console.log(page);
     const skip = (page - 1) * ITEM_PER_PAGE;
+    console.log(skip);
     jobData = jobData?.slice(skip, skip + ITEM_PER_PAGE);
+    console.log(jobData);
 
     const jobsData = await jobData;
 
@@ -30,11 +37,14 @@ export const singleJob = async (id: string) => {
     let jobListData = await JobListData;
 
     jobListData.map((job) => {
-      job.List.map((data) => {
-        if (data.id === id) {
-          jobData = data;
-        }
-      });
+      if (job.id === id) {
+        jobData = job;
+      }
+      // job.List.map((data) => {
+      //   if (data.id === id) {
+      //     jobData = data;
+      //   }
+      // });
     });
 
     return { jobData };

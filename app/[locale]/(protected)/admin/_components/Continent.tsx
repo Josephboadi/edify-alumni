@@ -13,157 +13,103 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { login } from "@/actions/login";
 // import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/schemas";
-import { useAppStore } from "@/store/store";
+import { ContinentSchema } from "@/schemas";
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import { AlertButton } from "./common/alert-button";
 import { AlertCardWrapper } from "./common/alert-card-wrapper";
 import { CardWrapper } from "./common/card-wrapper";
 import { FormButton } from "./common/form-button";
 
-const data: Payment[] = [
+const data: Continent[] = [
   {
     id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
+    name: "Africa",
+    status: "ENABLED",
   },
   {
     id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
+    name: "Asia",
+    status: "ENABLED",
   },
   {
     id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
+    name: "America",
+    status: "ENABLED",
   },
   {
     id: "5kma53ae1",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
+    name: "Australia",
+    status: "ENABLED",
   },
   {
     id: "bhqecj4p1",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws01",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae2",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p2",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws02",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae3",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p3",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
+    name: "Europe",
+    status: "ENABLED",
   },
 ];
 
-export type Payment = {
+export type Continent = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  name: string;
+  status: "ENABLED" | "DISABLED";
 };
+
+// type Continent = z.infer<typeof ContinentSchema>;
 
 export function ContinentDataTable() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [filteredData, setFilteredData] = useState<Payment[]>([]);
+  const [dataList, setDataList] = useState<Continent[]>([]);
+  const [filteredData, setFilteredData] = useState<Continent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
   const [report, setReport] = useState<any>([]);
 
   const { locale } = useParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
-  const { setFormType } = useAppStore();
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof ContinentSchema>>({
+    resolver: zodResolver(ContinentSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      name: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: z.infer<typeof ContinentSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      login(values, locale, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
-
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-          }
-
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-          }
-        })
-        .catch(() => setError("Something went wrong"));
+      // login(values, locale, callbackUrl)
+      // .then((data) => {
+      //   if (data?.error) {
+      //     form.reset();
+      //     setError(data.error);
+      //   }
+      //   if (data?.success) {
+      //     form.reset();
+      //     setSuccess(data.success);
+      //   }
+      //   if (data?.twoFactor) {
+      //     setShowTwoFactor(true);
+      //   }
+      // })
+      // .catch(() => setError("Something went wrong"));
     });
   };
 
@@ -172,7 +118,7 @@ export function ContinentDataTable() {
     const getData = async () => {
       // const data = await getAllTransactionsAPI();
       // setTransactions(data)
-      setPayments(data);
+      setDataList(data);
       setIsLoading(false);
     };
     getData();
@@ -180,13 +126,12 @@ export function ContinentDataTable() {
 
   useEffect(() => {
     const getData = async () => {
-      setFilteredData(payments);
+      setFilteredData(dataList);
 
-      const rep: any = payments?.map((dat: any) => {
+      const rep: any = dataList?.map((dat: any) => {
         return {
           ID: dat.id,
-          Amount: dat.amount,
-          Email: dat.email,
+          Name: dat.name,
           Status: dat.status,
         };
       });
@@ -194,14 +139,14 @@ export function ContinentDataTable() {
       setReport(rep);
     };
     getData();
-  }, [payments]);
+  }, [dataList]);
 
   useEffect(() => {
-    let result = payments;
+    let result = dataList;
     if (q && q.length > 3) {
-      result = payments.filter((data: any) => {
+      result = dataList.filter((data: any) => {
         return (
-          data?.email.toLowerCase().includes(q.toLowerCase()) ||
+          data?.name.toLowerCase().includes(q.toLowerCase()) ||
           data?.status.toLowerCase().includes(q.toLowerCase())
         );
       });
@@ -243,10 +188,25 @@ export function ContinentDataTable() {
     );
   };
 
-  const HandleForm = () => {
+  const HandleForm = ({
+    type = "CREATE",
+    singleData,
+  }: {
+    type: "CREATE" | "EDIT";
+    singleData?: Continent;
+  }) => {
+    if (type === "EDIT") {
+      if (singleData) {
+        form.setValue("name", singleData?.name);
+      }
+    } else {
+      form.setValue("name", "");
+    }
     return (
       <CardWrapper
-        headerLabel="Sign In"
+        headerLabel={
+          type === "CREATE" ? "Create New Continent" : "Update Continent"
+        }
         // subHeaderLabel="Welcome back"
       >
         <Form {...form}>
@@ -258,18 +218,17 @@ export function ContinentDataTable() {
               <>
                 <FormField
                   control={form.control}
-                  name="password"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>Continent Name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="******"
-                          type="password"
-                          className={` bg-[var(--clr-silver-v7)] ${
-                            form.formState.errors.password
+                          placeholder="eg. Africa"
+                          className={` bg-[var(--clr-silver-v6)] ${
+                            form.formState.errors.name
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
                           }`}
@@ -281,15 +240,13 @@ export function ContinentDataTable() {
                 />
               </>
             </div>
-            <FormError message={error || urlError} />
-            <FormSuccess message={success} />
             <div className="!mb-4 !mt-6 !pt-4">
               <Button
                 disabled={isPending}
                 type="submit"
                 className="w-full bg-[var(--clr-secondary)] "
               >
-                {showTwoFactor ? "Confirm" : "Login"}
+                {type === "CREATE" ? "Create" : "Update"}
               </Button>
             </div>
           </form>
@@ -298,27 +255,22 @@ export function ContinentDataTable() {
     );
   };
 
-  const columns: TableColumn<Payment>[] = useMemo(
+  const columns: TableColumn<Continent>[] = useMemo(
     () => [
       {
         name: "ID",
-        // width: "100px",
+        width: "100px",
         selector: (row: any, index: any) => index + 1,
       },
       {
-        name: "Amount",
-        // width: "120px",
-        cell: (row: any) => row?.amount,
-      },
-      {
-        name: "Email",
-        cell: (row: any) => row?.email,
-        width: "300px",
+        name: "Name",
+        minWidth: "200px",
+        cell: (row: any) => row?.name,
       },
 
       {
         name: "Status",
-        // width: "120px",
+        width: "120px",
         cell: (row: any) => row?.status,
         //   selector: (row) => (row?.status ? "Active" : "Inactive"),
         //   sortable: true,
@@ -349,13 +301,13 @@ export function ContinentDataTable() {
         cell: (row) => (
           <div className="flex justify-center items-center">
             <div className="flex gap-6">
-              {row.status === "success" ? (
-                <ToolTip tooltip="Deactivate">
+              {row.status === "ENABLED" ? (
+                <ToolTip tooltip="Disable">
                   <AlertButton
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "disactivate this continent",
+                        alertText: "disable this continent",
                         alertType: "danger",
                       })
                     }
@@ -370,12 +322,12 @@ export function ContinentDataTable() {
                   </AlertButton>
                 </ToolTip>
               ) : (
-                <ToolTip tooltip="Activate">
+                <ToolTip tooltip="Enable">
                   <AlertButton
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "activate this continent",
+                        alertText: "enable this continent",
                       })
                     }
                     isAlert={true}
@@ -389,8 +341,11 @@ export function ContinentDataTable() {
                   </AlertButton>
                 </ToolTip>
               )}
-              <ToolTip tooltip="Edit Role">
-                <FormButton asChild Form={HandleForm}>
+              <ToolTip tooltip="Edit Continent">
+                <FormButton
+                  asChild
+                  Form={() => HandleForm({ type: "EDIT", singleData: row })}
+                >
                   <div>
                     <FiEdit
                       //   onClick={() => editWallet(row)}
@@ -410,7 +365,10 @@ export function ContinentDataTable() {
   return (
     <div className={`w-[100%] flex flex-col  `}>
       <div className="absolute z-[20] bg-white w-full pb-2">
-        <Breadcrump prePath={pathname.split("/")[1]} title={pathname.split("/")[2]} />
+        <Breadcrump
+          prePath={pathname.split("/")[1]}
+          title={pathname.split("/")[2]}
+        />
       </div>
       {/* <Card className="w-full mt-10 rounded-none border-none">
         <CardContent className="w-full "> */}
@@ -422,8 +380,8 @@ export function ContinentDataTable() {
           search={search}
           setSearch={setSearch}
           report={report}
-          reportFilename="Payments"
-          addButtonTitle="Add Payment"
+          reportFilename="Continents"
+          addButtonTitle="Add Continent"
           isAdd={true}
           addModal={HandleForm}
         />

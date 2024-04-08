@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "i18nexus pull && next dev",
-    "build": "i18nexus pull && next build",
-    "start": "i18nexus pull && next start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
   },
@@ -45,6 +45,7 @@
     "@react-email/components": "^0.0.12",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-table": "^8.13.2",
+    "@types/react-datepicker": "^4.19.3",
     "@uploadthing/react": "^6.3.2",
     "accept-language": "^3.0.18",
     "axios": "^1.6.5",
@@ -73,6 +74,7 @@
     "react": "^18",
     "react-confetti": "^6.1.0",
     "react-data-table-component": "^7.6.2",
+    "react-datepicker": "^4.24.0",
     "react-day-picker": "^8.10.0",
     "react-dom": "^18",
     "react-google-charts": "^4.0.1",

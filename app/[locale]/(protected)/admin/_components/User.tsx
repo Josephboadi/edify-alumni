@@ -1,178 +1,70 @@
 "use client";
 
 import ToolTip from "@/components/common/ToolTip";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState, useTransition } from "react";
 import { TableColumn } from "react-data-table-component";
-import { FiEdit } from "react-icons/fi";
-import { VscActivateBreakpoints } from "react-icons/vsc";
 import Breadcrump from "./common/Breadcrump";
 import Table from "./common/Table";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { login } from "@/actions/login";
-// import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/schemas";
-import { useAppStore } from "@/store/store";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { alumniList } from "@/lib/users";
+import { ProfileData } from "@/schemas";
+import Image from "next/image";
+import { BiDetail } from "react-icons/bi";
+import { MdVerifiedUser } from "react-icons/md";
 import { TbAlertTriangleFilled } from "react-icons/tb";
+import ProfileDetail from "../../_components/ProfileDetail";
+import ReportDetail from "../../_components/ReportDetail";
 import { AlertButton } from "./common/alert-button";
 import { AlertCardWrapper } from "./common/alert-card-wrapper";
 import { CardWrapper } from "./common/card-wrapper";
 import { FormButton } from "./common/form-button";
-
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae1",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p1",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws01",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae2",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p2",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    id: "derv1ws02",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae3",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p3",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
+import { ImageWrapper } from "./common/image-wrapper";
 
 export function UserDataTable() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [filteredData, setFilteredData] = useState<Payment[]>([]);
+  const [dataList, setDataList] = useState<ProfileData[]>([]);
+  const [filteredData, setFilteredData] = useState<ProfileData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
   const [report, setReport] = useState<any>([]);
-
-  const { locale } = useParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
-  const { setFormType } = useAppStore();
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = () => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      login(values, locale, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
-
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-          }
-
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-          }
-        })
-        .catch(() => setError("Something went wrong"));
+      // login(values, locale, callbackUrl)
+      //   .then((data) => {
+      //     if (data?.error) {
+      //       form.reset();
+      //       setError(data.error);
+      //     }
+      //     if (data?.success) {
+      //       form.reset();
+      //       setSuccess(data.success);
+      //     }
+      //     if (data?.twoFactor) {
+      //       setShowTwoFactor(true);
+      //     }
+      //   })
+      //   .catch(() => setError("Something went wrong"));
     });
   };
 
   useEffect(() => {
     setIsLoading(true);
     const getData = async () => {
-      // const data = await getAllTransactionsAPI();
-      // setTransactions(data)
-      setPayments(data);
+      const data = await alumniList();
+      setDataList(data);
       setIsLoading(false);
     };
     getData();
@@ -180,13 +72,21 @@ export function UserDataTable() {
 
   useEffect(() => {
     const getData = async () => {
-      setFilteredData(payments);
+      setFilteredData(dataList);
 
-      const rep: any = payments?.map((dat: any) => {
+      const rep: any = dataList?.map((dat: ProfileData) => {
         return {
           ID: dat.id,
-          Amount: dat.amount,
-          Email: dat.email,
+          Name: dat.bio.name,
+          "Phone Number": dat.bio.phoneNumber,
+          Email: dat.bio.email,
+          Country: dat.bio.country,
+          Education: JSON.stringify(dat.education),
+          Certificate: JSON.stringify(dat.certificates),
+          Employment: JSON.stringify(dat.employments),
+          "Job Applications": JSON.stringify(dat.jobApplications),
+          Scholarship: JSON.stringify(dat.scholarships),
+          Services: JSON.stringify(dat.services),
           Status: dat.status,
         };
       });
@@ -194,14 +94,15 @@ export function UserDataTable() {
       setReport(rep);
     };
     getData();
-  }, [payments]);
+  }, [dataList]);
 
   useEffect(() => {
-    let result = payments;
+    let result = dataList;
     if (q && q.length > 3) {
-      result = payments.filter((data: any) => {
+      result = dataList.filter((data: any) => {
         return (
-          data?.email.toLowerCase().includes(q.toLowerCase()) ||
+          data?.bio?.email.toLowerCase().includes(q.toLowerCase()) ||
+          data?.bio?.phoneNumber.toLowerCase().includes(q.toLowerCase()) ||
           data?.status.toLowerCase().includes(q.toLowerCase())
         );
       });
@@ -243,82 +144,136 @@ export function UserDataTable() {
     );
   };
 
-  const HandleForm = () => {
+  const HandleUserDetailPreview = ({
+    singleData,
+  }: {
+    singleData?: ProfileData;
+  }) => {
     return (
       <CardWrapper
-        headerLabel="Sign In"
+        headerLabel="Alumni Detail Info"
         // subHeaderLabel="Welcome back"
       >
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6 w-[260px] xs:w-[300px] sm:w-[340px]"
-          >
-            <div className="space-y-4">
-              <>
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder="******"
-                          type="password"
-                          className={` bg-[var(--clr-silver-v7)] ${
-                            form.formState.errors.password
-                              ? "border border-red-500 focus-visible:ring-0"
-                              : "focus-visible:ring-transparent border-none"
-                          }`}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            </div>
-            <FormError message={error || urlError} />
-            <FormSuccess message={success} />
-            <div className="!mb-4 !mt-6 !pt-4">
-              <Button
-                disabled={isPending}
-                type="submit"
-                className="w-full bg-[var(--clr-secondary)] "
+        <div className="w-[260px] xs:w-[300px] sm:w-[380px] md:w-full">
+          <Tabs defaultValue="profile" className="w-full !bg-transparent ">
+            <TabsList className="border-b-[1px] border-b-[var(--clr-silver-v5)] !bg-transparent w-full flex items-center justify-start pb-0 gap-2 h-max">
+              <TabsTrigger
+                value="profile"
+                className="py-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-[3px] data-[state=active]:border-b-[var(--clr-green)] font-semibold"
               >
-                {showTwoFactor ? "Confirm" : "Login"}
-              </Button>
-            </div>
-          </form>
-        </Form>
+                Profile
+              </TabsTrigger>
+              <TabsTrigger
+                value="report"
+                className="py-2 data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-[3px] data-[state=active]:border-b-[var(--clr-green)] font-semibold"
+              >
+                Reports
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="profile" className="mt-6">
+              <Suspense
+                fallback={
+                  <ProfileDetail loading={true} />
+                  // [1, 2, 3, 4].map((el) => (
+                  // <Skeleton
+                  //   className="border-2 border-primary-/20 h-[190px] w-[200px]"
+                  //   key={el}
+                  // />
+                  // ))
+                }
+              >
+                {/* <ProfileDetailWrapper /> */}
+                <ProfileDetail profileData={singleData} loading={false} />
+              </Suspense>
+            </TabsContent>
+            <TabsContent value="report" className="mt-6">
+              <Suspense fallback={<ReportDetail loading={true} />}>
+                {/* <ReportDetailWrapper /> */}
+                <ReportDetail profileData={singleData} loading={false} />
+              </Suspense>
+            </TabsContent>
+          </Tabs>
+        </div>
       </CardWrapper>
     );
   };
 
-  const columns: TableColumn<Payment>[] = useMemo(
+  const HandleImagePreview = ({ singleData }: { singleData?: ProfileData }) => {
+    return (
+      <ImageWrapper
+      // subHeaderLabel="Welcome back"
+      >
+        <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center justify-center !rounded-xl">
+          {singleData?.bio.image ? (
+            <Image
+              src={singleData?.bio.image}
+              alt="-"
+              fill
+              className="object-cover object-center !rounded-xl"
+            />
+          ) : (
+            <div className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] flex items-center justify-center w-full h-full">
+              <h1 className="text-4xl font-bold">
+                {singleData?.bio?.name?.split("")?.shift()?.toUpperCase()}
+              </h1>
+            </div>
+          )}
+        </div>
+      </ImageWrapper>
+    );
+  };
+
+  const columns: TableColumn<ProfileData>[] = useMemo(
     () => [
       {
         name: "ID",
-        // width: "100px",
+        width: "100px",
         selector: (row: any, index: any) => index + 1,
       },
       {
-        name: "Amount",
-        // width: "120px",
-        cell: (row: any) => row?.amount,
+        name: "Profile",
+        width: "100px",
+        cell: (row: any) => (
+          <FormButton
+            asChild
+            Form={() => HandleImagePreview({ singleData: row })}
+          >
+            <div className="cursor-pointer">
+              <Avatar className="w-[38px] h-[38px] relative">
+                <AvatarImage src={row?.bio?.image || ""} />
+                <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)]">
+                  {row?.bio?.name?.split("")?.shift()?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          </FormButton>
+        ),
+      },
+      {
+        name: "Name",
+        minWidth: "200px",
+        cell: (row: any) => row?.bio.name,
       },
       {
         name: "Email",
-        cell: (row: any) => row?.email,
-        width: "300px",
+        minWidth: "200px",
+        cell: (row: any) => row?.bio.email,
+      },
+      {
+        name: "Phone Number",
+        // minWidth: "300px",
+        width: "200px",
+        cell: (row: any) => row?.bio?.phoneNumber,
+      },
+      {
+        name: "Country",
+        cell: (row: any) => row?.bio.country,
+        width: "150px",
       },
 
       {
         name: "Status",
-        // width: "120px",
+        width: "120px",
         cell: (row: any) => row?.status,
         //   selector: (row) => (row?.status ? "Active" : "Inactive"),
         //   sortable: true,
@@ -349,39 +304,58 @@ export function UserDataTable() {
         cell: (row) => (
           <div className="flex justify-center items-center">
             <div className="flex gap-6">
-              {row.status === "success" ? (
-                <ToolTip tooltip="Deactivate">
+              {row.status === "VERIFIED" ? (
+                <ToolTip tooltip="Block">
                   <AlertButton
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "disactivate this user",
+                        alertText: "block this user",
                         alertType: "danger",
                       })
                     }
                     isAlert={true}
                   >
                     <div>
-                      <VscActivateBreakpoints
+                      <MdVerifiedUser
                         //   onClick={() => onDeactivateRole(row)}
                         className="text-red-600 text-xl cursor-pointer"
                       />
                     </div>
                   </AlertButton>
                 </ToolTip>
-              ) : (
-                <ToolTip tooltip="Activate">
+              ) : row.status === "BLOCKED" ? (
+                <ToolTip tooltip="Unblock">
                   <AlertButton
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "activate this user",
+                        alertText: "unblock this user",
                       })
                     }
                     isAlert={true}
                   >
                     <div>
-                      <VscActivateBreakpoints
+                      <MdVerifiedUser
+                        //   onClick={() => onDeactivateRole(row)}
+                        className="text-green-600 text-xl cursor-pointer"
+                      />
+                    </div>
+                  </AlertButton>
+                </ToolTip>
+              ) : (
+                <ToolTip tooltip="Verify">
+                  <AlertButton
+                    asChild
+                    Form={() =>
+                      HandleConfirmPromt({
+                        alertText: "verify this user",
+                      })
+                    }
+                    isAlert={true}
+                  >
+                    <div>
+                      <MdVerifiedUser
                         //   onClick={() => onDeactivateRole(row)}
                         className="text-green-600 text-xl cursor-pointer"
                       />
@@ -389,12 +363,15 @@ export function UserDataTable() {
                   </AlertButton>
                 </ToolTip>
               )}
-              <ToolTip tooltip="Edit Role">
-                <FormButton asChild Form={HandleForm}>
+              <ToolTip tooltip="View Alumni Detail">
+                <FormButton
+                  asChild
+                  Form={() => HandleUserDetailPreview({ singleData: row })}
+                >
                   <div>
-                    <FiEdit
+                    <BiDetail
                       //   onClick={() => editWallet(row)}
-                      className="text-xl font-black  cursor-pointer"
+                      className="text-xl text-[var(--clr-secondary)] font-black  cursor-pointer"
                     />
                   </div>
                 </FormButton>
@@ -425,10 +402,10 @@ export function UserDataTable() {
           search={search}
           setSearch={setSearch}
           report={report}
-          reportFilename="Payments"
-          addButtonTitle="Add Payment"
-          isAdd={true}
-          addModal={HandleForm}
+          reportFilename="Alumni List"
+          // addButtonTitle="Add User"
+          // isAdd={true}
+          // addModal={HandleForm}
         />
       </div>
       {/* </CardContent>

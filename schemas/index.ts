@@ -63,6 +63,9 @@ export const RegisterSchema = z.object({
   email: z.string().email({
     message: "Email is required",
   }),
+  phoneNumber: z.string().email({
+    message: "Phone number is required",
+  }),
   password: z.string().min(6, {
     message: "Minimum 6 characters required",
   }),
@@ -133,16 +136,114 @@ export const CommentSchema = z.object({
   }),
 });
 
+export const ContinentSchema = z.object({
+  name: z.string().min(1, {
+    message: "Continent name is required",
+  }),
+});
+
+export const SubRegionSchema = z.object({
+  name: z.string().min(1, {
+    message: "Sub region name is required",
+  }),
+  continentId: z.string().min(1, {
+    message: "Continent id is required",
+  }),
+});
+
+export const CountrySchema = z.object({
+  name: z.string().min(1, {
+    message: "Country name is required",
+  }),
+  subRegionId: z.string().min(1, {
+    message: "Sub Region id is required",
+  }),
+});
+
+export const SchoolSchema = z.object({
+  name: z.string().min(1, {
+    message: "School name is required",
+  }),
+  countryId: z.string().min(1, {
+    message: "Sub Region id is required",
+  }),
+});
+
+export const EventFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  information: z
+    .string()
+    .min(3, "Description must be at least 3 characters")
+    .max(400, "Description must be less than 400 characters"),
+  eventLocation: z
+    .string()
+    .min(3, "Location must be at least 3 characters")
+    .max(400, "Location must be less than 400 characters"),
+  image: z.string().url(),
+  eventStartTime: z.date(),
+  eventEndTime: z.date(),
+  publishDate: z.date(),
+  eventDate: z.date(),
+  // categoryId: z.string(),
+  hashTags: z.array(z.object({ hash: z.string() })),
+  isEventDay: z.boolean(),
+  // url: z.string().url(),
+});
+
+export const JobFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  categoryName: z.string().min(1, "Job category is required."),
+  information: z
+    .string()
+    .min(3, "Description must be at least 3 characters")
+    .max(400, "Description must be less than 400 characters"),
+  location: z
+    .string()
+    .min(3, "Location must be at least 3 characters")
+    .max(400, "Location must be less than 400 characters"),
+  publishDate: z.date(),
+  jobType: z.string(),
+  company: z.string(),
+  pay: z.string(),
+  jobDescription: z.array(z.object({ id: z.number(), info: z.string() })),
+  jobSpecification: z.array(z.object({ id: z.number(), info: z.string() })),
+});
+
+export const ScholarshipFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  information: z
+    .string()
+    .min(3, "Description must be at least 3 characters")
+    .max(400, "Description must be less than 400 characters"),
+  image: z.string().url(),
+  publishDate: z.date(),
+});
+
+export const DiscussionFormSchema = z.object({
+  topic: z.string().min(3, "Title must be at least 3 characters"),
+  createdBy: z.string(),
+  hashTags: z.array(z.object({ hash: z.string() })),
+});
+
+export const CommentFormSchema = z.object({
+  comment: z.string().min(3, "Title must be at least 3 characters"),
+  questionId: z.string(),
+  createdBy: z.string(),
+});
+
 type JobSpecification = {
+  id: number;
   info: string;
 };
 
 type JobDescription = {
+  id: number;
   info: string;
 };
 
 export type Job = {
   id: string;
+  categoryName: string;
   title: string;
   jobType: string;
   pay: string;
@@ -154,15 +255,29 @@ export type Job = {
   jobSpecification: JobSpecification[];
 };
 
-export type JobCategory = {
-  key: number;
+export type JobData = {
+  id: string;
+  title: string;
   categoryName: string;
-  List: Job[];
+  jobType: string;
+  pay: string;
+  company: string;
+  location: string;
+  publishDate: string;
+  information: string;
+  jobDescription: JobDescription[];
+  jobSpecification: JobSpecification[];
 };
 
-export type JobListData = JobCategory[];
+// export type JobCategory = {
+//   key: number;
+//   categoryName: string;
+//   List: Job[];
+// };
 
-export type Scholarship = {
+export type JobListData = Job[];
+
+export type ScholarshipData = {
   key: number;
   image: string;
   title: string;
@@ -170,25 +285,25 @@ export type Scholarship = {
   information: string;
 };
 
-export type ScholarshipListData = Scholarship[];
+export type ScholarshipListData = ScholarshipData[];
 
-export type Event = {
+export type EventData = {
   key: number;
   image: string;
   title: string;
-  hashTags: string[];
-  eventStartTime: string;
-  eventEndTime: string;
-  publishDate: string;
-  eventDate: string;
+  hashTags: { hash: string }[];
+  eventStartTime: Date;
+  eventEndTime: Date;
+  publishDate: Date;
+  eventDate: Date;
   eventLocation: string;
   isEventDay: boolean;
   information: string;
 };
 
-export type EventListData = Event[];
+export type EventListData = EventData[];
 
-export interface Comment {
+interface Comment {
   id: string;
   isMyComment: boolean;
   comment: string;
@@ -198,24 +313,25 @@ export interface Comment {
   createdTime: string;
 }
 
-export interface Discussion {
+export interface DiscussionData {
   key: number;
   topic: string;
   createdBy: string;
   image: string;
   createdAt: string;
   createdTime: string;
-  hashTags: string[];
+  hashTags: { hash: string }[];
   comments: Comment[];
 }
 
-export type DiscussionListData = Discussion[];
+export type DiscussionListData = DiscussionData[];
 
 export type ProfileData = {
   id: number;
   status: string;
   bio: {
     name: string;
+    phoneNumber: string;
     email: string;
     image: string;
     country: string;
@@ -303,6 +419,11 @@ export type SchoolData = {
 }[];
 
 export type YearData = {
+  name: string;
+  value: string;
+}[];
+
+export type JobTypeData = {
   name: string;
   value: string;
 }[];

@@ -22,7 +22,8 @@ const DropdownSchool = ({
   const [selected, setSelected] = useState("");
   const [open, setOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const selectMenuRef = useRef<HTMLUListElement>(null);
+  // const selectMenuRef = useRef<HTMLUListElement>(null);
+  const selectMenuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -77,7 +78,7 @@ const DropdownSchool = ({
         <div
           ref={contextMenuRef}
           onClick={() => handleClick()}
-          className={` w-full h-[38px] bg-[var(--clr-silver-v7)] cursor-pointer relative ${isError ? "border-[1px] border-red-500" : ""}`}
+          className={` w-full h-[38px] bg-[var(--clr-silver-v6)] cursor-pointer relative ${isError ? "border-[1px] border-red-500" : ""}`}
         >
           <input
             type="text"
@@ -97,13 +98,13 @@ const DropdownSchool = ({
           </div>
         </div>
 
-        <ul
+        <div
           ref={selectMenuRef}
-          className={`bg-[var(--clr-silver-v7)] no-scrollbar shadow-2xl overflow-y-auto max-h-60 absolute top-[36] left-0 right-0 z-[10] rounded rounded-tl-md rounded-tr-md ${
+          className={`bg-[var(--clr-silver-v6)] no-scrollbar shadow-2xl overflow-y-auto max-h-60 absolute top-[36] left-0 right-0 z-[10] rounded rounded-tl-md rounded-tr-md ${
             open ? "block" : "hidden"
           } `}
         >
-          <div className="flex w-full items-center px-2 gap-2 sticky top-0 bg-[var(--clr-silver-v7)] overflow-hidden">
+          <div className="flex w-full items-center px-2 gap-2 sticky top-0 bg-[var(--clr-silver-v6)] overflow-hidden">
             <div className=" absolute w-[5%] ">
               <AiOutlineSearch className="text-[var(--clr-black-light)] !text-lg" />
             </div>
@@ -120,7 +121,7 @@ const DropdownSchool = ({
               />
             </div>
           </div>
-          <li
+          <p
             className={`p-2 text-sm text-[var(--clr-black)] hover:bg-[var(--clr-secondary)] hover:text-[var(--clr-primary)]
             ${
               selected === "" &&
@@ -134,9 +135,9 @@ const DropdownSchool = ({
             }}
           >
             Select a School
-          </li>
+          </p>
           {schoolData?.map((item, index) => (
-            <li
+            <p
               key={index}
               className={`p-2 text-[var(--clr-black)] text-sm hover:bg-[var(--clr-secondary)] hover:text-[var(--clr-primary)]
             ${
@@ -157,9 +158,9 @@ const DropdownSchool = ({
               }}
             >
               {item?.name}
-            </li>
+            </p>
           ))}
-        </ul>
+        </div>
       </div>
     </>
     // <Select onValueChange={onChangeHandler} defaultValue={value}>

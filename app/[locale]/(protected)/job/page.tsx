@@ -17,7 +17,7 @@ const font1 = Montserrat({
   weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-const i18nNamespace = ["navbar", "footer","job"];
+const i18nNamespace = ["navbar", "footer", "job"];
 const JobPage = async ({ searchParams, params: { locale } }: any) => {
   const q = searchParams?.q || "";
   const page = searchParams?.page || 1;
@@ -92,8 +92,8 @@ const JobPage = async ({ searchParams, params: { locale } }: any) => {
         </section>
       </div>
       <div className="w-full">
-          <Footer />
-        </div>
+        <Footer />
+      </div>
     </TranslationsProvider>
   );
 };

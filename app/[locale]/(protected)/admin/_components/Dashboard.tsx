@@ -1,20 +1,24 @@
 "use client";
 import DynamicIcons from "@/components/common/DynamicIcons";
 import ToolTip from "@/components/common/ToolTip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AnalyticsData from "@/data/analytics";
 import { alumniList } from "@/lib/users";
 import { cn } from "@/lib/utils";
 import { ProfileData } from "@/schemas";
 import { Montserrat, Montserrat_Alternates } from "next/font/google";
+import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { TableColumn } from "react-data-table-component";
 import { Chart } from "react-google-charts";
 import { ImSpinner2 } from "react-icons/im";
-import { VscActivateBreakpoints } from "react-icons/vsc";
+import { MdVerifiedUser } from "react-icons/md";
 import { HandleConfirmPrompt } from "./common/AlertComponent";
 import TableDashboard from "./common/TableDashboard";
 import { AlertButton } from "./common/alert-button";
+import { FormButton } from "./common/form-button";
+import { ImageWrapper } from "./common/image-wrapper";
 
 export const data = [
   ["Country", "Popularity"],
@@ -117,6 +121,31 @@ const DashboardComponent = () => {
     setFilteredData(result);
   }, [q]);
 
+  const HandleImagePreview = ({ singleData }: { singleData?: ProfileData }) => {
+    return (
+      <ImageWrapper
+      // subHeaderLabel="Welcome back"
+      >
+        <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center justify-center !rounded-xl">
+          {singleData?.bio.image ? (
+            <Image
+              src={singleData?.bio.image}
+              alt="-"
+              fill
+              className="object-cover object-center !rounded-xl"
+            />
+          ) : (
+            <div className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] flex items-center justify-center w-full h-full">
+              <h1 className="text-4xl font-bold">
+                {singleData?.bio?.name?.split("")?.shift()?.toUpperCase()}
+              </h1>
+            </div>
+          )}
+        </div>
+      </ImageWrapper>
+    );
+  };
+
   const columns: TableColumn<ProfileData>[] = useMemo(
     () => [
       {
@@ -125,10 +154,35 @@ const DashboardComponent = () => {
         selector: (row: any, index: any) => index + 1,
       },
       {
+        name: "Profile",
+        width: "100px",
+        cell: (row: any) => (
+          <FormButton
+            asChild
+            Form={() => HandleImagePreview({ singleData: row })}
+          >
+            <div className="cursor-pointer">
+              <Avatar className="w-[38px] h-[38px] relative">
+                <AvatarImage src={row?.bio?.image || ""} />
+                <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)]">
+                  {row?.bio?.name?.split("")?.shift()?.toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          </FormButton>
+        ),
+      },
+      {
         name: "Name",
         minWidth: "300px",
         // width: "300px",
         cell: (row: any) => row?.bio?.name,
+      },
+      {
+        name: "Phone Number",
+        // minWidth: "300px",
+        width: "200px",
+        cell: (row: any) => row?.bio?.phoneNumber,
       },
       {
         name: "Email",
@@ -185,7 +239,7 @@ const DashboardComponent = () => {
                   isAlert={true}
                 >
                   <div>
-                    <VscActivateBreakpoints
+                    <MdVerifiedUser
                       //   onClick={() => onDeactivateRole(row)}
                       className="text-green-600 text-xl cursor-pointer"
                     />

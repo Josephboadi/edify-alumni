@@ -7,7 +7,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 // import { discussionListData } from "@/data/discussionlist";
-import { CommentSchema, Discussion } from "@/schemas";
+import { CommentSchema, DiscussionData } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 // import moment from "moment";
@@ -21,7 +21,7 @@ import * as z from "zod";
 const SingleDiscussion = ({
   discussionData,
 }: {
-  discussionData: Discussion;
+  discussionData: DiscussionData;
 }) => {
   // const params = useParams();
   // const [discussionData, setDiscussionData] = useState<Discussion>();
@@ -113,12 +113,12 @@ const SingleDiscussion = ({
                 <CardFooter className="px-6 w-full flex  py-0">
                   <div className="flex justify-between gap-4 w-full">
                     <div className="flex flex-1 flex-wrap gap-2 items-center px-1">
-                      {discussionData?.hashTags?.map((tag, index) => (
+                      {discussionData?.hashTags?.map((tag: any, index: any) => (
                         <p
                           key={index}
                           className=" capitalize text-xs text-center font-semibold text-[var(--clr-primary)]"
                         >
-                          #{tag}
+                          #{tag.hash}
                         </p>
                       ))}
                     </div>
@@ -128,36 +128,38 @@ const SingleDiscussion = ({
               <div className="w-full px-1 md:px-2 flex justify-center">
                 <Card className="w-full flex flex-col min-h-[70vh] h-[70vh] max-h-[70vh] overflow-y-none bg-[var(--clr-silver-v2)] border-x-4 border-b-4 border-[var(--clr-primary)] rounded-none rounded-b-[10px]">
                   <CardContent className="relative w-full px-4 sm:px-6 py-4 min-h-[57vh] overflow-y-auto no-scrollbar flex flex-col gap-5">
-                    {discussionData?.comments?.map((comment, index) => (
-                      <div
-                        className={`flex w-full gap-2 ${comment.isMyComment ? "justify-end" : "justify-start"}`}
-                        key={comment.id}
-                      >
+                    {discussionData?.comments?.map(
+                      (comment: any, index: any) => (
                         <div
-                          className={`flex w-[80%] sm:w-[72%] md:w-[64%] lg:w-[51%] gap-2 sm:gap-5 ${comment.isMyComment ? " flex-row-reverse" : " flex-row"}`}
+                          className={`flex w-full gap-2 ${comment.isMyComment ? "justify-end" : "justify-start"}`}
+                          key={comment.id}
                         >
-                          <Avatar className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] relative">
-                            {/* <Suspense
+                          <div
+                            className={`flex w-[80%] sm:w-[72%] md:w-[64%] lg:w-[51%] gap-2 sm:gap-5 ${comment.isMyComment ? " flex-row-reverse" : " flex-row"}`}
+                          >
+                            <Avatar className="w-[40px] h-[40px] sm:w-[44px] sm:h-[44px] relative">
+                              {/* <Suspense
                                     fallback={
                                       <FaSpinner className="animate-spin" />
                                     }
                                   > */}
-                            <AvatarImage src={comment?.image || ""} />
-                            {/* </Suspense> */}
-                            <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] text-lg font-bold">
-                              {comment?.createdBy
-                                ?.split("")
-                                ?.shift()
-                                ?.toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
+                              <AvatarImage src={comment?.image || ""} />
+                              {/* </Suspense> */}
+                              <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] text-lg font-bold">
+                                {comment?.createdBy
+                                  ?.split("")
+                                  ?.shift()
+                                  ?.toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
 
-                          <div className="flex-1 text-xs sm:text-sm md:text-base lg:text-lg flex flex-col p-4 rounded-[10px] bg-[var(--clr-primary)] shadow-sm">
-                            {comment.comment}
+                            <div className="flex-1 text-xs sm:text-sm md:text-base lg:text-lg flex flex-col p-4 rounded-[10px] bg-[var(--clr-primary)] shadow-sm">
+                              {comment.comment}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </CardContent>
                   <CardFooter className="px-3 sm:px-4">
                     <Form {...form}>
