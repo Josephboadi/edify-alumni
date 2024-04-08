@@ -1,4 +1,4 @@
-import EventListData from "@/data/events.json";
+import EventListData from "@/data/events";
 
 export const eventList = async (page: number) => {
   const ITEM_PER_PAGE = 4;
