@@ -40,9 +40,9 @@ function CreateFormBtn() {
       const formId = await CreateForm(values);
       toast({
         title: "Success",
-        description: "Form created successfully",
+        description: "Service created successfully",
       });
-      router.push(`/builder/${formId}`);
+      router.push(`/admin/service/builder/${formId}`);
     } catch (error) {
       toast({
         title: "Error",
@@ -57,31 +57,45 @@ function CreateFormBtn() {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4"
+          className="group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed rounded-[8px] gap-4"
         >
           <BsFileEarmarkPlus className="h-8 w-8 text-muted-foreground group-hover:text-primary" />
           <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">
-            Create new form
+            Create new service
           </p>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="!rounded-xl">
         <DialogHeader>
-          <DialogTitle>Create form</DialogTitle>
+          <DialogTitle className="text-2xl mt-2 font-semibold capitalize text-center">
+            Create Service
+          </DialogTitle>
           <DialogDescription>
-            Create a new form to start collecting responses
+            Create a new service to start collecting responses
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-2 mt-4"
+          >
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Service Title</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Enter service title"
+                      className={` bg-[var(--clr-silver-v6)] ${
+                        form.formState.errors.name
+                          ? "border border-red-500 focus-visible:ring-0"
+                          : "focus-visible:ring-transparent border-none"
+                      }`}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,9 +106,19 @@ function CreateFormBtn() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Service Description</FormLabel>
                   <FormControl>
-                    <Textarea rows={5} {...field} />
+                    <Textarea
+                      rows={5}
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Type a brief discussion for this service."
+                      className={`rounded-[6px]  !min-h-[100px] !max-h-[10vh] bg-[var(--clr-silver-v6)] placeholder:text-left ${
+                        form.formState.errors.description
+                          ? "border border-red-500 focus-visible:ring-0"
+                          : "focus-visible:ring-transparent border-none"
+                      }`}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,7 +130,7 @@ function CreateFormBtn() {
           <Button
             onClick={form.handleSubmit(onSubmit)}
             disabled={form.formState.isSubmitting}
-            className="w-full mt-4"
+            className="w-full mt-4 bg-[var(--clr-secondary)]"
           >
             {!form.formState.isSubmitting && <span>Save</span>}
             {form.formState.isSubmitting && (

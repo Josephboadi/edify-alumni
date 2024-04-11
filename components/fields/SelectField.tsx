@@ -102,7 +102,10 @@ function DesignerComponent({
         {required && "*"}
       </Label>
       <Select>
-        <SelectTrigger className="w-full">
+        <SelectTrigger
+          //  className="w-full"
+          className={` bg-[var(--clr-silver-v6)] w-full`}
+        >
           <SelectValue placeholder={placeHolder} />
         </SelectTrigger>
       </Select>

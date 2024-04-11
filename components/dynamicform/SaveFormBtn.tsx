@@ -29,7 +29,7 @@ function SaveFormBtn({ id }: { id: number }) {
   return (
     <Button
       variant={"outline"}
-      className="gap-2"
+      className="gap-2 rounded-[4px]"
       disabled={loading}
       onClick={() => {
         startTransition(updateFormContent);

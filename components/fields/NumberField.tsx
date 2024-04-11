@@ -125,7 +125,12 @@ function FormComponent({
       </Label>
       <Input
         type="number"
-        className={cn(error && "border-red-500")}
+        // className={cn(error && "border-red-500")}
+        className={` bg-[var(--clr-silver-v6)] ${
+          error
+            ? "border border-red-500 focus-visible:ring-0"
+            : "focus-visible:ring-transparent border-none"
+        }`}
         placeholder={placeHolder}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
@@ -140,7 +145,7 @@ function FormComponent({
         }}
         value={value}
       />
-      {helperText && (
+      {helperText && error && (
         <p
           className={cn(
             "text-muted-foreground text-[0.8rem]",

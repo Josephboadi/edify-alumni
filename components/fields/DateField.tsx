@@ -140,7 +140,7 @@ function FormComponent({
           <Button
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal bg-[var(--clr-silver-v6)]",
               !date && "text-muted-foreground",
               error && "border-red-500"
             )}

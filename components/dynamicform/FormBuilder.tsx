@@ -72,14 +72,15 @@ function FormBuilder({ form }: { form: Form }) {
         />
         <div className="flex flex-col items-center justify-center h-full w-full">
           <div className="max-w-md">
-            <h1 className="text-center text-4xl font-bold text-primary border-b pb-2 mb-10">
-              🎊🎊 Form Published 🎊🎊
+            <h1 className="text-center text-2xl font-bold text-primary border-b pb-2 mb-10">
+              🎊 Service Published Successfully 🎊
             </h1>
-            <h2 className="text-2xl">Share this form</h2>
+            <h2 className="text-2xl">Service Form</h2>
             <h3 className="text-xl text-muted-foreground border-b pb-10">
-              Anyone with the link can view and submit the form
+              This service form can be accessed from the front facing service
+              page.
             </h3>
-            <div className="my-4 flex flex-col gap-2 items-center w-full border-b pb-4">
+            {/* <div className="my-4 flex flex-col gap-2 items-center w-full border-b pb-4">
               <Input className="w-full" readOnly value={shareUrl} />
               <Button
                 className="mt-2 w-full"
@@ -93,17 +94,17 @@ function FormBuilder({ form }: { form: Form }) {
               >
                 Copy link
               </Button>
-            </div>
+            </div> */}
             <div className="flex justify-between">
               <Button variant={"link"} asChild>
-                <Link href={"/"} className="gap-2">
+                <Link href={"/admin/service"} className="gap-2">
                   <BsArrowLeft />
-                  Go back home
+                  Go back
                 </Link>
               </Button>
               <Button variant={"link"} asChild>
-                <Link href={`/forms/${form.id}`} className="gap-2">
-                  Form details
+                <Link href={`/admin/service/${form.id}`} className="gap-2">
+                  Servive Form details
                   <BsArrowRight />
                 </Link>
               </Button>
@@ -119,7 +120,7 @@ function FormBuilder({ form }: { form: Form }) {
       <main className="flex flex-col w-full">
         <nav className="flex justify-between border-b-2 p-4 gap-3 items-center">
           <h2 className="truncate font-medium">
-            <span className="text-muted-foreground mr-2">Form:</span>
+            <span className="text-muted-foreground mr-2">Service Form:</span>
             {form.name}
           </h2>
           <div className="flex items-center gap-2">

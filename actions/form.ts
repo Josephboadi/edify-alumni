@@ -139,6 +139,7 @@ export async function GetFormContentByUrl(formUrl: string) {
   return await db.form.update({
     select: {
       content: true,
+      name: true,
     },
     data: {
       visits: {

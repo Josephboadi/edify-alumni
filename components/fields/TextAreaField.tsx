@@ -1,19 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
   SubmitFunction,
 } from "../dynamicform/FormElements";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
+import { cn } from "@/lib/utils";
+import { BsTextareaResize } from "react-icons/bs";
 import {
   Form,
   FormControl,
@@ -23,11 +25,9 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Switch } from "../ui/switch";
-import { cn } from "@/lib/utils";
-import { BsTextareaResize } from "react-icons/bs";
-import { Textarea } from "../ui/textarea";
 import { Slider } from "../ui/slider";
+import { Switch } from "../ui/switch";
+import { Textarea } from "../ui/textarea";
 
 const type: ElementsType = "TextAreaField";
 
@@ -130,7 +130,12 @@ function FormComponent({
         {required && "*"}
       </Label>
       <Textarea
-        className={cn(error && "border-red-500")}
+        // className={cn(error && "border-red-500")}
+        className={`rounded-[6px] bg-[var(--clr-silver-v6)] placeholder:text-left ${
+          error
+            ? "border border-red-500 focus-visible:ring-0"
+            : "focus-visible:ring-transparent border-none"
+        }`}
         rows={rows}
         placeholder={placeHolder}
         onChange={(e) => setValue(e.target.value)}
@@ -143,7 +148,7 @@ function FormComponent({
         }}
         value={value}
       />
-      {helperText && (
+      {helperText && error && (
         <p
           className={cn(
             "text-muted-foreground text-[0.8rem]",

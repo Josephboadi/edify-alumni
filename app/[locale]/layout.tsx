@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 // import { unstable_setRequestLocale } from "next-intl/server";
+import DesignerContextProvider from "@/components/context/DesignerContext";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -51,15 +52,17 @@ export default async function LocaleLayout({
             color={"var(--clr-secondary-light)"}
             showSpinner={false}
           />
-          {/* <ThemeProvider
+          <DesignerContextProvider>
+            {/* <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           > */}
-          {children}
-          <Toaster />
-          {/* </ThemeProvider> */}
+            {children}
+            <Toaster />
+            {/* </ThemeProvider> */}
+          </DesignerContextProvider>
         </body>
       </SessionProvider>
     </html>

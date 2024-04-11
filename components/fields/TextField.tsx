@@ -1,20 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { MdTextFields } from "react-icons/md";
+import { z } from "zod";
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
   SubmitFunction,
 } from "../dynamicform/FormElements";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
@@ -25,7 +26,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Switch } from "../ui/switch";
-import { cn } from "@/lib/utils";
 
 const type: ElementsType = "TextField";
 
@@ -124,7 +124,12 @@ function FormComponent({
         {required && "*"}
       </Label>
       <Input
-        className={cn(error && "border-red-500")}
+        // className={cn(error && "border-red-500")}
+        className={` bg-[var(--clr-silver-v6)] ${
+          error
+            ? "border border-red-500 focus-visible:ring-0"
+            : "focus-visible:ring-transparent border-none"
+        }`}
         placeholder={placeHolder}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
@@ -136,7 +141,7 @@ function FormComponent({
         }}
         value={value}
       />
-      {helperText && (
+      {helperText && error && (
         <p
           className={cn(
             "text-muted-foreground text-[0.8rem]",
