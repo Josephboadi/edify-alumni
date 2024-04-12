@@ -1,4 +1,4 @@
-import { CountryDataTable } from "../_components/Country";
+import { CountryDataTable } from "../_components/setups/Country";
 
 const Country = () => {
   return (

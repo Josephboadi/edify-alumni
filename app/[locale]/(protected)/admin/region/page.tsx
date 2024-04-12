@@ -1,4 +1,4 @@
-import { RegionDataTable } from "../_components/Region";
+import { RegionDataTable } from "../_components/setups/Region";
 
 const Region = () => {
   return (

@@ -28,12 +28,12 @@ const NewsPreview = () => {
             <div className=" col-span-1 w-full relative h-[300px] sm:h-[400px]  md:h-[500px] ">
               <Carousel plugins={[plugin1.current]} className="w-full ">
                 <CarouselContent>
-                  {newsInfoData?.images.map((img: any) => {
+                  {newsInfoData?.images.map((img: any, index: any) => {
                     return (
-                      <CarouselItem key={img.key}>
+                      <CarouselItem key={index}>
                         <div className="w-full h-[300px] sm:h-[400px]  md:h-[500px] relative">
                           <Image
-                            src={img.image}
+                            src={img}
                             fill
                             alt="Image"
                             className=" object-cover"

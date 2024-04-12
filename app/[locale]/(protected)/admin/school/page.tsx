@@ -1,4 +1,4 @@
-import { SchoolDataTable } from "../_components/School";
+import { SchoolDataTable } from "../_components/setups/School";
 
 const School = () => {
   return (

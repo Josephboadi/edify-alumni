@@ -43,10 +43,10 @@ const BriefNews = ({ newsData }: BriefNewsProps) => {
                     <CarouselContent>
                       {news?.images?.map((img, index) => {
                         return (
-                          <CarouselItem key={img.key}>
+                          <CarouselItem key={index}>
                             <div className="w-full h-[274px] relative">
                               <Image
-                                src={img.image}
+                                src={img}
                                 fill
                                 alt="Image"
                                 className=" object-cover"

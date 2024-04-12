@@ -380,10 +380,11 @@ export type AboutData = {
 
 export type BriefNewsData = {
   key: number;
-  images: {
-    key: number;
-    image: string;
-  }[];
+  images: string[];
+  // images: {
+  //   key: number;
+  //   image: string;
+  // }[];
   title: string;
   description: string;
 }[];

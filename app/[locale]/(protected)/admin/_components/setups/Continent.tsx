@@ -6,17 +6,14 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { TableColumn } from "react-data-table-component";
 import { FiEdit } from "react-icons/fi";
 import { VscActivateBreakpoints } from "react-icons/vsc";
-import Breadcrump from "./common/Breadcrump";
-import Table from "./common/Table";
+import Breadcrump from "../common/Breadcrump";
+import Table from "../common/Table";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { login } from "@/actions/login";
 // import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,98 +24,92 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginSchema, SchoolSchema } from "@/schemas";
-import { useAppStore } from "@/store/store";
+import { ContinentSchema } from "@/schemas";
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import { AlertButton } from "./common/alert-button";
-import { AlertCardWrapper } from "./common/alert-card-wrapper";
-import { CardWrapper } from "./common/card-wrapper";
-import { FormButton } from "./common/form-button";
+import { AlertButton } from "../common/alert-button";
+import { AlertCardWrapper } from "../common/alert-card-wrapper";
+import { CardWrapper } from "../common/card-wrapper";
+import { FormButton } from "../common/form-button";
 
-const data: School[] = [
+const data: Continent[] = [
   {
     id: "m5gr84i9",
-    name: "Christ the king int. school",
-    countryId: "Ghana",
+    name: "Africa",
     status: "ENABLED",
   },
   {
     id: "3u1reuv4",
-    name: "Christ the king int. school",
-    countryId: "Liberia",
+    name: "Asia",
     status: "ENABLED",
   },
   {
     id: "derv1ws0",
-    name: "Christ the king int. school",
-    countryId: "Nigeria",
+    name: "America",
     status: "ENABLED",
   },
   {
     id: "5kma53ae1",
-    name: "Christ the king int. school",
-    countryId: "South Africa",
+    name: "Australia",
     status: "ENABLED",
   },
   {
     id: "bhqecj4p1",
-    name: "Christ the king int. school",
-    countryId: "Kenya",
+    name: "Europe",
     status: "ENABLED",
   },
 ];
 
-export type School = {
+export type Continent = {
   id: string;
   name: string;
-  countryId: string;
   status: "ENABLED" | "DISABLED";
 };
 
-export function SchoolDataTable() {
+// type Continent = z.infer<typeof ContinentSchema>;
+
+export function ContinentDataTable() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [dataList, setDataList] = useState<School[]>([]);
-  const [filteredData, setFilteredData] = useState<School[]>([]);
+  const [dataList, setDataList] = useState<Continent[]>([]);
+  const [filteredData, setFilteredData] = useState<Continent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
   const [report, setReport] = useState<any>([]);
+
+  const { locale } = useParams();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof SchoolSchema>>({
-    resolver: zodResolver(SchoolSchema),
+  const form = useForm<z.infer<typeof ContinentSchema>>({
+    resolver: zodResolver(ContinentSchema),
     defaultValues: {
       name: "",
-      countryId: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof SchoolSchema>) => {
+  const onSubmit = (values: z.infer<typeof ContinentSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
       // login(values, locale, callbackUrl)
-      //   .then((data) => {
-      //     if (data?.error) {
-      //       form.reset();
-      //       setError(data.error);
-      //     }
-
-      //     if (data?.success) {
-      //       form.reset();
-      //       setSuccess(data.success);
-      //     }
-
-      //     if (data?.twoFactor) {
-      //       setShowTwoFactor(true);
-      //     }
-      //   })
-      //   .catch(() => setError("Something went wrong"));
+      // .then((data) => {
+      //   if (data?.error) {
+      //     form.reset();
+      //     setError(data.error);
+      //   }
+      //   if (data?.success) {
+      //     form.reset();
+      //     setSuccess(data.success);
+      //   }
+      //   if (data?.twoFactor) {
+      //     setShowTwoFactor(true);
+      //   }
+      // })
+      // .catch(() => setError("Something went wrong"));
     });
   };
 
@@ -141,7 +132,6 @@ export function SchoolDataTable() {
         return {
           ID: dat.id,
           Name: dat.name,
-          Country: dat.countryId,
           Status: dat.status,
         };
       });
@@ -157,7 +147,6 @@ export function SchoolDataTable() {
       result = dataList.filter((data: any) => {
         return (
           data?.name.toLowerCase().includes(q.toLowerCase()) ||
-          data?.countryId.toLowerCase().includes(q.toLowerCase()) ||
           data?.status.toLowerCase().includes(q.toLowerCase())
         );
       });
@@ -204,20 +193,20 @@ export function SchoolDataTable() {
     singleData,
   }: {
     type: "CREATE" | "EDIT";
-    singleData?: School;
+    singleData?: Continent;
   }) => {
     if (type === "EDIT") {
       if (singleData) {
         form.setValue("name", singleData?.name);
-        form.setValue("countryId", singleData?.countryId);
       }
     } else {
       form.setValue("name", "");
-      form.setValue("countryId", "");
     }
     return (
       <CardWrapper
-        headerLabel={type === "CREATE" ? "Create New School" : "Update School"}
+        headerLabel={
+          type === "CREATE" ? "Create New Continent" : "Update Continent"
+        }
         // subHeaderLabel="Welcome back"
       >
         <Form {...form}>
@@ -232,37 +221,14 @@ export function SchoolDataTable() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>School Name</FormLabel>
+                      <FormLabel>Continent Name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="eg. De Youngsters Int. School"
+                          placeholder="eg. Africa"
                           className={` bg-[var(--clr-silver-v6)] ${
                             form.formState.errors.name
-                              ? "border border-red-500 focus-visible:ring-0"
-                              : "focus-visible:ring-transparent border-none"
-                          }`}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="countryId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder="eg. Ghana"
-                          className={` bg-[var(--clr-silver-v6)] ${
-                            form.formState.errors.countryId
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
                           }`}
@@ -289,7 +255,7 @@ export function SchoolDataTable() {
     );
   };
 
-  const columns: TableColumn<School>[] = useMemo(
+  const columns: TableColumn<Continent>[] = useMemo(
     () => [
       {
         name: "ID",
@@ -300,11 +266,6 @@ export function SchoolDataTable() {
         name: "Name",
         minWidth: "200px",
         cell: (row: any) => row?.name,
-      },
-      {
-        name: "Country",
-        minWidth: "200px",
-        cell: (row: any) => row?.countryId,
       },
 
       {
@@ -346,7 +307,7 @@ export function SchoolDataTable() {
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "disable this school",
+                        alertText: "disable this continent",
                         alertType: "danger",
                       })
                     }
@@ -366,7 +327,7 @@ export function SchoolDataTable() {
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "enable this school",
+                        alertText: "enable this continent",
                       })
                     }
                     isAlert={true}
@@ -380,8 +341,11 @@ export function SchoolDataTable() {
                   </AlertButton>
                 </ToolTip>
               )}
-              <ToolTip tooltip="Edit School">
-                <FormButton asChild Form={() => HandleForm({ type: "EDIT", singleData: row })}>
+              <ToolTip tooltip="Edit Continent">
+                <FormButton
+                  asChild
+                  Form={() => HandleForm({ type: "EDIT", singleData: row })}
+                >
                   <div>
                     <FiEdit
                       //   onClick={() => editWallet(row)}
@@ -401,7 +365,10 @@ export function SchoolDataTable() {
   return (
     <div className={`w-[100%] flex flex-col  `}>
       <div className="absolute z-[20] bg-white w-full pb-2">
-        <Breadcrump prePath={pathname.split("/")[1]} title={pathname.split("/")[2]} />
+        <Breadcrump
+          prePath={pathname.split("/")[1]}
+          title={pathname.split("/")[2]}
+        />
       </div>
       {/* <Card className="w-full mt-10 rounded-none border-none">
         <CardContent className="w-full "> */}
@@ -413,8 +380,8 @@ export function SchoolDataTable() {
           search={search}
           setSearch={setSearch}
           report={report}
-          reportFilename="Schools"
-          addButtonTitle="Add School"
+          reportFilename="Continents"
+          addButtonTitle="Add Continent"
           isAdd={true}
           addModal={HandleForm}
         />

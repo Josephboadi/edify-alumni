@@ -101,5 +101,42 @@
     "path": "/admin/service",
     "isParent": false,
     "isChild": false
+  },
+  {
+    "id": 9,
+    "title": "UI",
+    "icon": "BiLayout",
+    "path": "",
+    "isParent": true,
+    "isChild": false,
+    "subMenu": [
+      {
+        "id": 112,
+        "parentId": 9,
+        "title": "Hero",
+        "icon": "TbLayoutBottombarFilled",
+        "path": "/admin/hero",
+        "isParent": false,
+        "isChild": true
+      },
+      {
+        "id": 122,
+        "parentId": 9,
+        "title": "News",
+        "icon": "FaRegNewspaper",
+        "path": "/admin/news",
+        "isParent": false,
+        "isChild": true
+      },
+      {
+        "id": 132,
+        "parentId": 9,
+        "title": "Sponsors",
+        "icon": "MdOutlineSupport",
+        "path": "/admin/sponsors",
+        "isParent": false,
+        "isChild": true
+      }
+    ]
   }
 ]

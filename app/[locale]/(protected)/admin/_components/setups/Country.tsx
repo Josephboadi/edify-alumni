@@ -6,8 +6,8 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { TableColumn } from "react-data-table-component";
 import { FiEdit } from "react-icons/fi";
 import { VscActivateBreakpoints } from "react-icons/vsc";
-import Breadcrump from "./common/Breadcrump";
-import Table from "./common/Table";
+import Breadcrump from "../common/Breadcrump";
+import Table from "../common/Table";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -24,77 +24,76 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SubRegionSchema } from "@/schemas";
+import { CountrySchema } from "@/schemas";
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import { AlertButton } from "./common/alert-button";
-import { AlertCardWrapper } from "./common/alert-card-wrapper";
-import { CardWrapper } from "./common/card-wrapper";
-import { FormButton } from "./common/form-button";
+import { AlertButton } from "../common/alert-button";
+import { AlertCardWrapper } from "../common/alert-card-wrapper";
+import { CardWrapper } from "../common/card-wrapper";
+import { FormButton } from "../common/form-button";
 
-const data: Region[] = [
+const data: Country[] = [
   {
     id: "m5gr84i9",
-    name: "West Africa",
-    continentId: "Africa",
+    name: "Ghana",
+    subRegionId: "West Africa",
     status: "ENABLED",
   },
   {
     id: "3u1reuv4",
-    name: "North America",
-    continentId: "America",
+    name: "Liberia",
+    subRegionId: "East Africa",
     status: "ENABLED",
   },
   {
     id: "derv1ws0",
-    name: "North Africa",
-    continentId: "Africa",
+    name: "Ghana",
+    subRegionId: "West Africa",
     status: "ENABLED",
   },
   {
     id: "5kma53ae1",
-    name: "East Africa",
-    continentId: "Africa",
+    name: "Ghana",
+    subRegionId: "West Africa",
     status: "ENABLED",
   },
   {
     id: "bhqecj4p1",
-    name: "South Africa",
-    continentId: "Africa",
+    name: "Ghana",
+    subRegionId: "West Africa",
     status: "ENABLED",
   },
 ];
 
-export type Region = {
+export type Country = {
   id: string;
   name: string;
-  continentId: string;
+  subRegionId: string;
   status: "ENABLED" | "DISABLED";
 };
 
-export function RegionDataTable() {
+export function CountryDataTable() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [dataList, setDataList] = useState<Region[]>([]);
-  const [filteredData, setFilteredData] = useState<Region[]>([]);
+  const [dataList, setDataList] = useState<Country[]>([]);
+  const [filteredData, setFilteredData] = useState<Country[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
 
   const [report, setReport] = useState<any>([]);
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof SubRegionSchema>>({
-    resolver: zodResolver(SubRegionSchema),
+  const form = useForm<z.infer<typeof CountrySchema>>({
+    resolver: zodResolver(CountrySchema),
     defaultValues: {
       name: "",
-      continentId: "",
+      subRegionId: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof SubRegionSchema>) => {
+  const onSubmit = (values: z.infer<typeof CountrySchema>) => {
     setError("");
     setSuccess("");
 
@@ -135,8 +134,8 @@ export function RegionDataTable() {
       const rep: any = dataList?.map((dat: any) => {
         return {
           ID: dat.id,
-          Name: dat.name,
-          Continent: dat.continentId,
+          name: dat.name,
+          "Sub Region": dat.subRegionId,
           Status: dat.status,
         };
       });
@@ -152,7 +151,7 @@ export function RegionDataTable() {
       result = dataList.filter((data: any) => {
         return (
           data?.name.toLowerCase().includes(q.toLowerCase()) ||
-          data?.continentId.toLowerCase().includes(q.toLowerCase()) ||
+          data?.subRegionId.toLowerCase().includes(q.toLowerCase()) ||
           data?.status.toLowerCase().includes(q.toLowerCase())
         );
       });
@@ -199,21 +198,21 @@ export function RegionDataTable() {
     singleData,
   }: {
     type: "CREATE" | "EDIT";
-    singleData?: Region;
+    singleData?: Country;
   }) => {
     if (type === "EDIT") {
       if (singleData) {
         form.setValue("name", singleData?.name);
-        form.setValue("continentId", singleData?.continentId);
+        form.setValue("subRegionId", singleData?.subRegionId);
       }
     } else {
       form.setValue("name", "");
-      form.setValue("continentId", "");
+      form.setValue("subRegionId", "");
     }
     return (
       <CardWrapper
         headerLabel={
-          type === "CREATE" ? "Create New Sub Region" : "Update Sub Region"
+          type === "CREATE" ? "Create New Country" : "Update Country"
         }
         // subHeaderLabel="Welcome back"
       >
@@ -229,12 +228,12 @@ export function RegionDataTable() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Sub Region Name</FormLabel>
+                      <FormLabel>Country Name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="eg. West Africa"
+                          placeholder="eg. Ghana"
                           className={` bg-[var(--clr-silver-v6)] ${
                             form.formState.errors.name
                               ? "border border-red-500 focus-visible:ring-0"
@@ -249,17 +248,17 @@ export function RegionDataTable() {
 
                 <FormField
                   control={form.control}
-                  name="continentId"
+                  name="subRegionId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Continent</FormLabel>
+                      <FormLabel>Sub Region</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="eg. Africa"
+                          placeholder="eg. West Africa"
                           className={` bg-[var(--clr-silver-v6)] ${
-                            form.formState.errors.continentId
+                            form.formState.errors.subRegionId
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
                           }`}
@@ -286,7 +285,7 @@ export function RegionDataTable() {
     );
   };
 
-  const columns: TableColumn<Region>[] = useMemo(
+  const columns: TableColumn<Country>[] = useMemo(
     () => [
       {
         name: "ID",
@@ -299,9 +298,9 @@ export function RegionDataTable() {
         cell: (row: any) => row?.name,
       },
       {
-        name: "Continent",
+        name: "Sub Region",
         minWidth: "200px",
-        cell: (row: any) => row?.continentId,
+        cell: (row: any) => row?.subRegionId,
       },
 
       {
@@ -343,7 +342,7 @@ export function RegionDataTable() {
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "disable this region",
+                        alertText: "disable this country",
                         alertType: "danger",
                       })
                     }
@@ -363,7 +362,7 @@ export function RegionDataTable() {
                     asChild
                     Form={() =>
                       HandleConfirmPromt({
-                        alertText: "enable this region",
+                        alertText: "enable this country",
                       })
                     }
                     isAlert={true}
@@ -377,7 +376,7 @@ export function RegionDataTable() {
                   </AlertButton>
                 </ToolTip>
               )}
-              <ToolTip tooltip="Edit Sub Region">
+              <ToolTip tooltip="Edit Country">
                 <FormButton
                   asChild
                   Form={() => HandleForm({ type: "EDIT", singleData: row })}
@@ -399,7 +398,7 @@ export function RegionDataTable() {
   );
 
   return (
-    <div className={`w-[100%] flex flex-col `}>
+    <div className={`w-[100%] flex flex-col  `}>
       <div className="absolute z-[20] bg-white w-full pb-2">
         <Breadcrump
           prePath={pathname.split("/")[1]}
@@ -416,8 +415,8 @@ export function RegionDataTable() {
           search={search}
           setSearch={setSearch}
           report={report}
-          reportFilename="Sub Regions"
-          addButtonTitle="Add Sub Region"
+          reportFilename="Countries"
+          addButtonTitle="Add Country"
           isAdd={true}
           addModal={HandleForm}
         />
