@@ -17,7 +17,7 @@ import { useRef } from "react";
 import { NewsPreviewButton } from "./NewsPreviewButton";
 
 interface BriefNewsProps {
-  newsData: BriefNewsData;
+  newsData: BriefNewsData[];
 }
 
 const BriefNews = ({ newsData }: BriefNewsProps) => {

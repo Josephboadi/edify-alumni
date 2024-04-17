@@ -231,6 +231,32 @@ export const CommentFormSchema = z.object({
   createdBy: z.string(),
 });
 
+export const HeroFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  image: z.string().url(),
+  description: z
+    .string()
+    .min(3, "Description must be at least 3 characters")
+    .max(400, "Description must be less than 400 characters"),
+  // createdBy: z.string(),
+});
+
+export const BriefNewsFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  images: z.array(z.string().url()),
+  description: z
+    .string()
+    .min(3, "Description must be at least 3 characters")
+    .max(400, "Description must be less than 400 characters"),
+  // createdBy: z.string(),
+});
+
+export const SponsorsFormSchema = z.object({
+  name: z.string().min(3, "Title must be at least 3 characters"),
+  image: z.string().url(),
+  // createdBy: z.string(),
+});
+
 type JobSpecification = {
   id: number;
   info: string;
@@ -371,7 +397,7 @@ export type HeroData = {
   image: string;
   title: string;
   description: string;
-}[];
+};
 
 export type AboutData = {
   key: number;
@@ -387,7 +413,7 @@ export type BriefNewsData = {
   // }[];
   title: string;
   description: string;
-}[];
+};
 
 export type TopAlumniData = {
   key: number;
@@ -400,8 +426,9 @@ export type TopAlumniData = {
 
 export type SponsorData = {
   key: number;
+  name: string;
   image: string;
-}[];
+};
 
 export type JobCatData = {
   key: number;

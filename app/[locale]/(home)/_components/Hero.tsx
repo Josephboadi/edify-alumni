@@ -26,7 +26,7 @@ const font = Quintessential({
 });
 
 interface HeroProps {
-  herosData: HeroData;
+  herosData: HeroData[];
 }
 const Hero = ({ herosData }: HeroProps) => {
   const plugin = useRef(Autoplay({ delay: 10000, stopOnInteraction: true }));

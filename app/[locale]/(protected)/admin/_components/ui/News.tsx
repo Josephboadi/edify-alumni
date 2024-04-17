@@ -1,13 +1,19 @@
 "use client";
 
 import ToolTip from "@/components/common/ToolTip";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { TableColumn } from "react-data-table-component";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FiEdit } from "react-icons/fi";
 import * as z from "zod";
 import Breadcrump from "../common/Breadcrump";
@@ -16,7 +22,6 @@ import Breadcrump from "../common/Breadcrump";
 import ModalForm from "@/components/common/Modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,16 +32,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { eventsList } from "@/lib/eventlist";
+import { news } from "@/lib/news";
 import { useUploadThing } from "@/lib/uploadthing";
-import { EventData, EventFormSchema } from "@/schemas";
-import moment from "moment";
+import { BriefNewsData, BriefNewsFormSchema } from "@/schemas";
+import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { createPortal } from "react-dom";
-import { FaTrashAlt } from "react-icons/fa";
-import { HiOutlinePlus } from "react-icons/hi";
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import { ImageUploader } from "../../../_components/ImageUploader";
+import { ImagesUploader } from "../../../_components/ImagesUploader";
 import { AlertCardWrapper } from "../common/alert-card-wrapper";
 import { CardWrapper } from "../common/card-wrapper";
 import { FormButton } from "../common/form-button";
@@ -44,59 +47,45 @@ import { ImageWrapper } from "../common/image-wrapper";
 import ModalTable from "../common/ModalTable";
 
 export function NewsDataTable() {
+  const plugin = useRef(Autoplay({ delay: 10000, stopOnInteraction: true }));
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
   const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [dataList, setDataList] = useState<EventData[]>([]);
-  const [filteredData, setFilteredData] = useState<EventData[]>([]);
+  const [dataList, setDataList] = useState<BriefNewsData[]>([]);
+  const [filteredData, setFilteredData] = useState<BriefNewsData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
-  const [isAddingEvent, setIsAddingEvent] = useState<boolean>(false);
-  const [isEditingEvent, setIsEditingEvent] = useState<boolean>(false);
+  const [isAddingNews, setIsAddingNews] = useState<boolean>(false);
+  const [isEditingNews, setIsEditingNews] = useState<boolean>(false);
 
   const [report, setReport] = useState<any>([]);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const { startUpload } = useUploadThing("imageUploader");
+  const { startUpload } = useUploadThing("imagesUploader");
   const startDateTimeLocalNow = new Date();
   // new Date().getTime() - new Date().getTimezoneOffset() * 60_000
   const endDateTimeLocalNow = new Date();
   // new Date().getTime() - new Date().getTimezoneOffset() * 60_000
   // .toISOString().slice(0, 16);
 
-  const form = useForm<z.infer<typeof EventFormSchema>>({
-    resolver: zodResolver(EventFormSchema),
+  const form = useForm<z.infer<typeof BriefNewsFormSchema>>({
+    resolver: zodResolver(BriefNewsFormSchema),
     defaultValues: {
       title: "",
-      information: "",
-      eventLocation: "",
-      image: "",
-      eventStartTime: startDateTimeLocalNow,
-      eventEndTime: endDateTimeLocalNow,
-      eventDate: new Date(),
-      hashTags: [{ hash: "" }],
-      isEventDay: false,
+      description: "",
+      images: [],
     },
   });
 
-  const control = form.control;
-
-  const eventHashTagsArray = useFieldArray({
-    name: "hashTags",
-    control,
-    //  rules: {
-    //    required: "Please append at least 1 Job Specification",
-    //  },
-  });
-
-  const onSubmit = (values: z.infer<typeof EventFormSchema>) => {
+  const onSubmit = (values: z.infer<typeof BriefNewsFormSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(async () => {
-      let uploadedCoverImageUrl = values.image;
+      let uploadedNewsImageUrls = values.images;
+      let newImages = [""];
 
       if (imageFiles.length > 0) {
         const uploadedImages = await startUpload(imageFiles);
@@ -104,9 +93,13 @@ export function NewsDataTable() {
         if (!uploadedImages) {
           return;
         }
-        console.log("Image file url================, ", uploadedImages[0]);
+        // console.log("Image file url================, ", uploadedImages[0]);
 
-        uploadedCoverImageUrl = uploadedImages[0].url;
+        await uploadedImages.map((imgFile: any) => {
+          newImages.push(imgFile.url);
+        });
+
+        uploadedNewsImageUrls = newImages;
       }
       // login(values, locale, callbackUrl)
       //   .then((data) => {
@@ -131,7 +124,7 @@ export function NewsDataTable() {
   useEffect(() => {
     setIsLoading(true);
     const getData = async () => {
-      const data = await eventsList();
+      const data = await news();
       setDataList(data);
       setIsLoading(false);
     };
@@ -142,18 +135,12 @@ export function NewsDataTable() {
     const getData = async () => {
       setFilteredData(dataList);
 
-      const rep: any = dataList?.map((dat: EventData) => {
+      const rep: any = dataList?.map((dat: BriefNewsData) => {
         return {
           ID: dat.key,
           Title: dat.title,
-          Information: dat.information,
-          Image: dat.image,
-          "Event Start": dat.eventStartTime,
-          "Event End": dat.eventEndTime,
-          "Event Date": dat.eventDate,
-          Location: dat.eventLocation,
-          "Published Date": dat.publishDate,
-          Hashtag: JSON.stringify(dat.hashTags),
+          Details: dat.description,
+          Images: JSON.stringify(dat.images),
         };
       });
       setReport(rep);
@@ -167,12 +154,7 @@ export function NewsDataTable() {
       result = dataList.filter((data: any) => {
         return (
           data?.title.toLowerCase().includes(q.toLowerCase()) ||
-          data?.information.toLowerCase().includes(q.toLowerCase()) ||
-          data?.eventStartTime.toLowerCase().includes(q.toLowerCase()) ||
-          data?.eventEndTime.toLowerCase().includes(q.toLowerCase()) ||
-          data?.publishDate.toString().includes(q.toString()) ||
-          data?.eventDate.toString().includes(q.toString()) ||
-          data?.eventLocation.toLowerCase().includes(q.toLowerCase())
+          data?.description.toLowerCase().includes(q.toLowerCase())
         );
       });
     }
@@ -216,7 +198,7 @@ export function NewsDataTable() {
   const HandleForm = ({ type = "CREATE" }: { type: "CREATE" | "EDIT" }) => {
     return (
       <CardWrapper
-        headerLabel={type === "CREATE" ? "Create New Event" : "Update Event"}
+        headerLabel={type === "CREATE" ? "Create New News" : "Update News"}
         // subHeaderLabel="Welcome back"
       >
         <Form {...form}>
@@ -231,7 +213,7 @@ export function NewsDataTable() {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Event Title</FormLabel>
+                      <FormLabel>News Title</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -250,17 +232,17 @@ export function NewsDataTable() {
                 />
                 <FormField
                   control={form.control}
-                  name="information"
+                  name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Scholarship Information</FormLabel>
+                      <FormLabel>News Details</FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
                           disabled={isPending}
                           placeholder="Type Additional Notes Here."
                           className={`rounded-[6px]  !min-h-[100px] !max-h-[10vh] bg-[var(--clr-silver-v6)] placeholder:text-left ${
-                            form.formState.errors.information
+                            form.formState.errors.description
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"
                           }`}
@@ -273,257 +255,17 @@ export function NewsDataTable() {
 
                 <FormField
                   control={form.control}
-                  name="eventDate"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Event Date:</FormLabel>
-                      <FormControl>
-                        <div
-                          className={` relative flex item-center gap-1 justify-center pl-2  text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
-                            form.formState.errors.eventDate
-                              ? "border border-red-500 focus-visible:ring-0"
-                              : "focus-visible:ring-transparent border-none"
-                          }`}
-                        >
-                          <Image
-                            src="/assets/calendar.svg"
-                            alt="calendar"
-                            width={24}
-                            height={24}
-                            className="text-[var(--clr-secondary)]"
-                          />
-                          <DatePicker
-                            selected={field.value}
-                            onChange={(date: Date) => field.onChange(date)}
-                            // showTimeSelect
-                            // timeInputLabel="Time:"
-                            dateFormat="MM/dd/yyyy"
-                            wrapperClassName="w-full flex flex-1 h-full !py-2"
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="eventStartTime"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Start Time:</FormLabel>
-                      <FormControl>
-                        <div
-                          className={` relative flex item-center gap-1 justify-center pl-2  text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
-                            form.formState.errors.eventStartTime
-                              ? "border border-red-500 focus-visible:ring-0"
-                              : "focus-visible:ring-transparent border-none"
-                          }`}
-                        >
-                          <Image
-                            src="/assets/clock.svg"
-                            alt="calendar"
-                            width={24}
-                            height={24}
-                            className="filter-grey"
-                          />
-                          <DatePicker
-                            selected={field.value}
-                            onChange={(date: Date) => field.onChange(date)}
-                            showTimeSelect
-                            timeInputLabel="Time:"
-                            dateFormat="MM/dd/yyyy h:mm aa"
-                            wrapperClassName="w-full flex flex-1 h-full !py-2"
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="eventEndTime"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>End Time:</FormLabel>
-                      <FormControl>
-                        <div
-                          className={` relative flex item-center gap-1 justify-center pl-2  text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
-                            form.formState.errors.eventEndTime
-                              ? "border border-red-500 focus-visible:ring-0"
-                              : "focus-visible:ring-transparent border-none"
-                          }`}
-                        >
-                          <Image
-                            src="/assets/clock.svg"
-                            alt="calendar"
-                            width={24}
-                            height={24}
-                            className="filter-grey"
-                          />
-
-                          <DatePicker
-                            selected={field.value}
-                            onChange={(date: Date) => field.onChange(date)}
-                            showTimeSelect
-                            timeInputLabel="Time:"
-                            dateFormat="MM/dd/yyyy h:mm aa"
-                            wrapperClassName="w-full flex flex-1 h-full !py-2 "
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="eventLocation"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Event Location</FormLabel>
-                      <FormControl>
-                        <div
-                          className={` relative flex item-center gap-1 justify-center pl-2 text-[var(--clr-secondary)] h-[40px] w-full bg-[var(--clr-silver-v6)] rounded-[6px] shadow-none ${
-                            form.formState.errors.eventLocation
-                              ? "border border-red-500 focus-visible:ring-0"
-                              : "focus-visible:ring-transparent border-none"
-                          }`}
-                        >
-                          <Image
-                            src="/assets/location-grey.svg"
-                            alt="calendar"
-                            width={24}
-                            height={24}
-                            className="filter-grey"
-                          />
-                          <Input
-                            placeholder="Event location or Online"
-                            disabled={isPending}
-                            {...field}
-                            className="flex flex-1 h-full py-3 outline-none focus-visible:ring-transparent border-none"
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="image"
+                  name="images"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Upload Cover Image</FormLabel>
                       <FormControl>
-                        <ImageUploader
+                        <ImagesUploader
                           onFieldChange={field.onChange}
-                          imageUrl={field.value}
+                          imageUrls={field.value}
                           setFiles={setImageFiles}
-                          isError={form.formState.errors.image ? true : false}
+                          isError={form.formState.errors.images ? true : false}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div>
-                  <p className="text-[0.9rem] font-medium mb-2">Hashtags</p>
-                  <div className=" space-y-2">
-                    {eventHashTagsArray.fields.map((field, index) => {
-                      const errorForField =
-                        form.formState.errors?.hashTags?.[index]?.hash;
-                      return (
-                        <div key={field.hash} className="w-full flex flex-col">
-                          <div className="flex flex-row items-end gap-2">
-                            <div className="flex-1 !h-[38px] ">
-                              <input
-                                {...form.register(
-                                  `hashTags.${index}.hash` as const
-                                )}
-                                placeholder="eg. bible"
-                                defaultValue={field.hash}
-                                className={`flex rounded-md border border-input px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-full w-full bg-[var(--clr-silver-v6)] ${
-                                  errorForField
-                                    ? "border border-red-500 focus-visible:ring-0"
-                                    : "focus-visible:ring-transparent border-none"
-                                }`}
-                              />
-                            </div>
-
-                            <ToolTip tooltip="Remove">
-                              <Button
-                                size={"icon"}
-                                variant={"ghost"}
-                                asChild
-                                className="  w-5 h-5 shadow-lg  mb-1 flex items-center justify-center"
-                              >
-                                <FaTrashAlt
-                                  onClick={() =>
-                                    eventHashTagsArray.remove(index)
-                                  }
-                                  className="text-sm text-[var(--clr-scarlet)]"
-                                />
-                              </Button>
-                            </ToolTip>
-                          </div>
-                          {errorForField?.message && (
-                            <p>{errorForField?.message ?? <>&nbsp;</>}</p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <p>{form.formState.errors.hashTags?.message}</p>
-                  <div className="flex w-full justify-end mt-3 pr-7">
-                    <Button
-                      // size={""}
-                      size={"sm"}
-                      variant={"outline"}
-                      asChild
-                      className="shadow-none  flex items-center justify-center rounded-[4px] border-[var(--clr-secondary)]"
-                    >
-                      <p
-                        className="gap-2"
-                        onClick={() => {
-                          eventHashTagsArray.append({ hash: "" });
-                          form.trigger("hashTags");
-                        }}
-                      >
-                        <HiOutlinePlus className="text-lg text-[var(--clr-secondary)]" />
-                        <span>Add New Hashtag</span>
-                      </p>
-                    </Button>
-                  </div>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="isEventDay"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="flex items-center flex-row-reverse">
-                          <label
-                            htmlFor="isEventDay"
-                            className="flex-1 pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            Is Event Day
-                          </label>
-                          <Checkbox
-                            onCheckedChange={field.onChange}
-                            checked={field.value}
-                            id="isEventDay"
-                            className="mr-2 h-5 w-5 border-2 border-primary-500"
-                          />
-                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -546,15 +288,52 @@ export function NewsDataTable() {
     );
   };
 
-  const HandleImagePreview = ({ singleData }: { singleData?: EventData }) => {
+  const HandleImagePreview = ({
+    singleData,
+  }: {
+    singleData?: BriefNewsData;
+  }) => {
     return (
       <ImageWrapper
       // subHeaderLabel="Welcome back"
       >
-        <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center justify-center !rounded-xl">
-          {singleData?.image ? (
+        <Carousel
+          plugins={[plugin.current]}
+          className="w-[260px] xs:w-[300px] sm:w-[340px]"
+          // onMouseEnter={plugin.current.stop}
+          // onMouseLeave={plugin.current.reset}
+        >
+          <CarouselContent>
+            {singleData?.images?.map((img, index) => (
+              <CarouselItem key={index}>
+                <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center">
+                  {img ? (
+                  <Image
+                    src={img}
+                    fill
+                    alt="image"
+                    className="object-cover lg:object-cover bg-no-repeat"
+                  />
+                  ) : (
+                      <div className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] flex items-center justify-center w-full h-full">
+              <h1 className="text-4xl font-bold">
+                {singleData?.title?.split("")?.shift()?.toUpperCase()}
+              </h1>
+            </div>
+                  )}
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className=" ml-14" />
+                <CarouselNext className=" mr-14" />
+        </Carousel>
+
+
+        {/* <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center justify-center !rounded-xl">
+          {singleData?.images[0] ? (
             <Image
-              src={singleData?.image}
+              src={singleData?.images[0]}
               alt="-"
               fill
               className="object-cover object-center !rounded-xl"
@@ -566,20 +345,20 @@ export function NewsDataTable() {
               </h1>
             </div>
           )}
-        </div>
+        </div> */}
       </ImageWrapper>
     );
   };
 
-  const columns: TableColumn<EventData>[] = useMemo(
+  const columns: TableColumn<BriefNewsData>[] = useMemo(
     () => [
       {
         name: "ID",
-        // width: "100px",
+        width: "80px",
         selector: (row: any, index: any) => index + 1,
       },
       {
-        name: "Cover Image",
+        name: "News Image",
         width: "120px",
         cell: (row: any) => (
           <FormButton
@@ -588,7 +367,7 @@ export function NewsDataTable() {
           >
             <div className="cursor-pointer">
               <Avatar className="w-[45px] h-[45px] relative">
-                <AvatarImage src={row?.image || ""} />
+                <AvatarImage src={row?.images[0] || ""} />
                 <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)]">
                   {row?.title?.split("")?.shift()?.toUpperCase()}
                 </AvatarFallback>
@@ -603,38 +382,17 @@ export function NewsDataTable() {
         cell: (row: any) => row?.title,
       },
       {
-        name: "Information",
+        name: "Description",
         minWidth: "450px",
-        cell: (row: any) => row?.information,
-      },
-      {
-        name: "Event Date",
-        width: "200px",
-        cell: (row: any) => moment(new Date(row?.eventDate)).format("LL"),
-      },
-
-      {
-        name: "Start Time",
-        minWidth: "200px",
-        cell: (row: any) => moment(new Date(row?.eventStartTime)).format("LT"),
-      },
-      {
-        name: "End Time",
-        minWidth: "200px",
-        cell: (row: any) => moment(new Date(row?.eventEndTime)).format("LT"),
-      },
-      {
-        name: "Event Location",
-        minWidth: "200px",
-        cell: (row: any) => row?.eventLocation,
+        cell: (row: any) => row?.description,
       },
       {
         name: "Action",
         width: "140px",
         cell: (row) => (
           <div className="flex justify-center items-center">
-            <div onClick={() => editEvent(row)} className="flex gap-6">
-              <ToolTip tooltip="Edit Scholarship">
+            <div onClick={() => editNews(row)} className="flex gap-6">
+              <ToolTip tooltip="Edit News">
                 {/* <FormButton
                   asChild
                   Form={() => HandleForm({ type: "EDIT", singleData: row })}
@@ -657,35 +415,29 @@ export function NewsDataTable() {
 
   const handleCloseButtonClick = () => {
     // console.log("Close button Clicked");
-    setIsAddingEvent(false);
-    setIsEditingEvent(false);
+    setIsAddingNews(false);
+    setIsEditingNews(false);
   };
 
-  const addEvent = () => {
+  const addNews = () => {
     // form.setValue("title", "");
     // form.setValue("information", "");
     // form.setValue("image", "");
     form.reset();
-    setIsAddingEvent(true);
+    setIsAddingNews(true);
   };
 
-  const editEvent = (event: EventData) => {
-    form.setValue("hashTags", [...event?.hashTags]);
-    form.setValue("title", event?.title);
-    form.setValue("information", event?.information);
-    form.setValue("image", event?.image);
-    form.setValue("eventDate", new Date(event?.eventDate));
-    form.setValue("eventStartTime", new Date(event?.eventDate));
-    form.setValue("eventEndTime", new Date(event?.eventDate));
-    form.setValue("eventLocation", event?.eventLocation);
-    form.setValue("isEventDay", event?.isEventDay);
+  const editNews = (news: BriefNewsData) => {
+    form.setValue("title", news?.title);
+    form.setValue("description", news?.description);
+    form.setValue("images", news?.images);
 
-    setIsEditingEvent(true);
+    setIsEditingNews(true);
   };
 
   return (
     <>
-      {isAddingEvent &&
+      {isAddingNews &&
         createPortal(
           <ModalForm closeModal={handleCloseButtonClick}>
             <div>{HandleForm({ type: "CREATE" })}</div>
@@ -693,7 +445,7 @@ export function NewsDataTable() {
           document.body
         )}
 
-      {isEditingEvent &&
+      {isEditingNews &&
         createPortal(
           <ModalForm closeModal={handleCloseButtonClick}>
             <div>{HandleForm({ type: "EDIT" })}</div>
@@ -717,10 +469,10 @@ export function NewsDataTable() {
             search={search}
             setSearch={setSearch}
             report={report}
-            reportFilename="Payments"
-            addButtonTitle="Add Payment"
+            reportFilename="News"
+            addButtonTitle="Add News"
             isAdd={true}
-            addModal={addEvent}
+            addModal={addNews}
           />
         </div>
         {/* </CardContent>

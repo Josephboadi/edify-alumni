@@ -25,7 +25,7 @@ const font1 = Aclonica({
 });
 
 interface SponsorProps {
-  sponsorData: SponsorData;
+  sponsorData: SponsorData[];
 }
 const Sponsors = ({ sponsorData }: SponsorProps) => {
   const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
