@@ -78,9 +78,9 @@ export async function GetForms() {
   }
 
   return await db.form.findMany({
-    where: {
-      userId: user.id,
-    },
+    // where: {
+    //   userId: user.id,
+    // },
     orderBy: {
       createdAt: "desc",
     },
