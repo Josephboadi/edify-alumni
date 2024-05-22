@@ -4,7 +4,11 @@ export const createAuthSlice = (set, get) => ({
   isAuthenticated: false,
   userInfo: null,
   formType: "login",
+  authModal: false,
   authErrorMessage: "",
+  setAuthModal: () => {
+    set({ authModal: !get()?.authModal });
+  },
   setIsAuthenticated: () => {
     set({ isAuthenticated: !get()?.isAuthenticated });
   },

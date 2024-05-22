@@ -63,9 +63,10 @@ export const RegisterSchema = z.object({
   email: z.string().email({
     message: "Email is required",
   }),
-  phoneNumber: z.string().email({
-    message: "Phone number is required",
-  }),
+  phoneNumber: z
+    .string()
+    .min(10, "Phone Number must be at least 10 digits")
+    .max(12, "Phone Number must not be more than 12 digits"),
   password: z.string().min(6, {
     message: "Minimum 6 characters required",
   }),

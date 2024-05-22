@@ -7,6 +7,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   isOAuth: boolean;
   user_id: string;
   country: string;
+  phoneNumber: string;
   school: string;
   year: string;
 };

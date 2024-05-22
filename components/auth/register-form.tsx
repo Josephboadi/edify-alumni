@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RegisterSchema } from "@/schemas";
+import { useAppStore } from "@/store/store";
 import { useParams } from "next/navigation";
 import DropdownCountry from "../common/DropdownCountry";
 import DropdownSchool from "../common/DropdownSchool";
@@ -29,6 +30,7 @@ export const RegisterForm = () => {
   const { locale } = useParams();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const { setAuthModal } = useAppStore();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -50,6 +52,9 @@ export const RegisterForm = () => {
       register(values, locale).then((data) => {
         setError(data.error);
         setSuccess(data.success);
+        if (data.success) {
+          setAuthModal();
+        }
       });
     });
   };
@@ -119,6 +124,7 @@ export const RegisterForm = () => {
                   <FormControl>
                     <Input
                       {...field}
+                      type="number"
                       disabled={isPending}
                       placeholder="eg. 0544789544"
                       className={` bg-[var(--clr-silver-v7)] ${
@@ -214,7 +220,7 @@ export const RegisterForm = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full bg-[var(--clr-secondary)]"
+            className="w-full bg-[var(--clr-secondary)] !mt-10"
           >
             Create an account
           </Button>

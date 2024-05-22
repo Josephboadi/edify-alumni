@@ -32,7 +32,7 @@ export const LoginForm = () => {
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
       : "";
-  const { setFormType } = useAppStore();
+  const { setFormType, setAuthModal } = useAppStore();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -61,6 +61,7 @@ export const LoginForm = () => {
           if (data?.success) {
             form.reset();
             setSuccess(data.success);
+            setAuthModal();
           }
 
           if (data?.twoFactor) {

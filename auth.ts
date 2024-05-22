@@ -68,6 +68,7 @@ export const {
       if (session.user) {
         session.user.user_id = token.user_id as string;
         session.user.name = token.name;
+        session.user.phoneNumber = token.phoneNumber as string;
         session.user.country = token.country as string;
         session.user.school = token.school as string;
         session.user.year = token.year as string;
@@ -89,6 +90,7 @@ export const {
       token.isOAuth = !!existingAccount;
       token.user_id = existingUser.user_id;
       token.name = existingUser.name;
+      token.phoneNumber = existingUser.phoneNumber;
       token.country = existingUser?.country;
       token.school = existingUser?.school;
       token.year = existingUser?.year;
