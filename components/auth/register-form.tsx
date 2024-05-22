@@ -52,9 +52,9 @@ export const RegisterForm = () => {
       register(values, locale).then((data) => {
         setError(data.error);
         setSuccess(data.success);
-        if (data.success) {
-          setAuthModal();
-        }
+        // if (data.success) {
+        //   setAuthModal();
+        // }
       });
     });
   };

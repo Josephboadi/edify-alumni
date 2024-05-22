@@ -12,7 +12,7 @@ const ModalForm = ({ closeModal, children }: any) => {
     >
       <div className="!p-0 !m-0  w-max  flex items-center justify-center !bg-transparent border-none !z-[19080000000000] max-h-[96vh] overflow-y-auto no-scrollbar shadow-lg !rounded-xl">
         <div
-          className=" absolute right-4 top-2 flex justify-end text-xl"
+          className=" absolute right-6 top-2 flex justify-end text-xl"
           onClick={() => closeModal()}
         >
           <p className="cursor-pointer">&times;</p>
