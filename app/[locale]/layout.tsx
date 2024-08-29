@@ -1,9 +1,9 @@
 import { auth } from "@/auth";
-import { Toaster } from "@/components/ui/sonner";
-import NextTopLoader from "nextjs-toploader";
-// import { Toaster } from "@/components/ui/toaster";
+// import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
+import NextTopLoader from "nextjs-toploader";
 // import { unstable_setRequestLocale } from "next-intl/server";
 import DesignerContextProvider from "@/components/context/DesignerContext";
 import { Inter } from "next/font/google";

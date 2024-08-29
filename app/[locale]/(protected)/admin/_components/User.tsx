@@ -1,41 +1,47 @@
 "use client";
 
+import { getusers } from "@/actions/user";
+import ModalForm from "@/components/common/Modal";
 import ToolTip from "@/components/common/ToolTip";
-import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState, useTransition } from "react";
-import { TableColumn } from "react-data-table-component";
-import Breadcrump from "./common/Breadcrump";
-import Table from "./common/Table";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { alumniList } from "@/lib/users";
-import { ProfileData } from "@/schemas";
+import { useToast } from "@/components/ui/use-toast";
+import { UserInfoData } from "@/schemas";
 import Image from "next/image";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState, useTransition } from "react";
+import { TableColumn } from "react-data-table-component";
+import { createPortal } from "react-dom";
 import { BiDetail } from "react-icons/bi";
 import { MdVerifiedUser } from "react-icons/md";
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import ProfileDetail from "../../_components/ProfileDetail";
 import ReportDetail from "../../_components/ReportDetail";
+import { getsingleuser } from "./../../../../../actions/user";
 import { AlertButton } from "./common/alert-button";
 import { AlertCardWrapper } from "./common/alert-card-wrapper";
+import Breadcrump from "./common/Breadcrump";
 import { CardWrapper } from "./common/card-wrapper";
 import { FormButton } from "./common/form-button";
 import { ImageWrapper } from "./common/image-wrapper";
+import Table from "./common/Table";
 
 export function UserDataTable() {
+  const { toast } = useToast();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const q = searchParams.get("q") ? searchParams.get("q") : "";
-  const [dataList, setDataList] = useState<ProfileData[]>([]);
-  const [filteredData, setFilteredData] = useState<ProfileData[]>([]);
+  const [dataList, setDataList] = useState<UserInfoData[]>([]);
+  const [filteredData, setFilteredData] = useState<UserInfoData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isViewUserDetail, setIsViewUserDetail] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
-
+  const { locale } = useParams();
   const [report, setReport] = useState<any>([]);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const [singleUserData, setSingleUserData] = useState<UserInfoData>();
 
   const onSubmit = () => {
     setError("");
@@ -63,9 +69,23 @@ export function UserDataTable() {
   useEffect(() => {
     setIsLoading(true);
     const getData = async () => {
-      const data = await alumniList();
-      setDataList(data);
-      setIsLoading(false);
+      const data = await getusers();
+      if (data?.success) {
+        setDataList(data?.data);
+        setIsLoading(false);
+      } else if (data?.error) {
+        setDataList([]);
+        setIsLoading(false);
+        // setError(data?.error);
+        toast({
+          title: "Error",
+          description: data.error,
+          variant: "destructive",
+        });
+      } else {
+        setDataList([]);
+        setIsLoading(false);
+      }
     };
     getData();
   }, []);
@@ -74,19 +94,19 @@ export function UserDataTable() {
     const getData = async () => {
       setFilteredData(dataList);
 
-      const rep: any = dataList?.map((dat: ProfileData) => {
+      const rep: any = dataList?.map((dat: UserInfoData) => {
         return {
           ID: dat.id,
-          Name: dat.bio.name,
-          "Phone Number": dat.bio.phoneNumber,
-          Email: dat.bio.email,
-          Country: dat.bio.country,
-          Education: JSON.stringify(dat.education),
-          Certificate: JSON.stringify(dat.certificates),
-          Employment: JSON.stringify(dat.employments),
-          "Job Applications": JSON.stringify(dat.jobApplications),
-          Scholarship: JSON.stringify(dat.scholarships),
-          Services: JSON.stringify(dat.services),
+          Name: dat.name,
+          "Phone Number": dat.phone_numbers,
+          Email: dat.email,
+          Country: dat.country.country_name,
+          // Education: JSON.stringify(dat.education),
+          // Certificate: JSON.stringify(dat.certificates),
+          // Employment: JSON.stringify(dat.employments),
+          // "Job Applications": JSON.stringify(dat.jobApplications),
+          // Scholarship: JSON.stringify(dat.scholarships),
+          // Services: JSON.stringify(dat.services),
           Status: dat.status,
         };
       });
@@ -101,8 +121,10 @@ export function UserDataTable() {
     if (q && q.length > 3) {
       result = dataList.filter((data: any) => {
         return (
-          data?.bio?.email.toLowerCase().includes(q.toLowerCase()) ||
-          data?.bio?.phoneNumber.toLowerCase().includes(q.toLowerCase()) ||
+          data?.email.toLowerCase().includes(q.toLowerCase()) ||
+          data?.name.toLowerCase().includes(q.toLowerCase()) ||
+          data?.country?.country_name.toLowerCase().includes(q.toLowerCase()) ||
+          data?.phone_numbers.toLowerCase().includes(q.toLowerCase()) ||
           data?.status.toLowerCase().includes(q.toLowerCase())
         );
       });
@@ -147,8 +169,13 @@ export function UserDataTable() {
   const HandleUserDetailPreview = ({
     singleData,
   }: {
-    singleData?: ProfileData;
+    singleData?: UserInfoData;
   }) => {
+    // if (data?.success) {
+    //   setDataList(data?.data);
+    // }
+
+    // console.log("Single Data=======================, ", singleData);
     return (
       <CardWrapper
         headerLabel="Alumni Detail Info"
@@ -183,13 +210,21 @@ export function UserDataTable() {
                 }
               >
                 {/* <ProfileDetailWrapper /> */}
-                <ProfileDetail profileData={singleData} loading={false} />
+                {singleData ? (
+                  <ProfileDetail profileData={singleData} loading={false} />
+                ) : (
+                  <ProfileDetail loading={true} />
+                )}
               </Suspense>
             </TabsContent>
             <TabsContent value="report" className="mt-6">
               <Suspense fallback={<ReportDetail loading={true} />}>
                 {/* <ReportDetailWrapper /> */}
-                <ReportDetail profileData={singleData} loading={false} />
+                {singleData ? (
+                  <ReportDetail profileData={singleData} loading={false} />
+                ) : (
+                  <ReportDetail loading={true} />
+                )}
               </Suspense>
             </TabsContent>
           </Tabs>
@@ -198,15 +233,19 @@ export function UserDataTable() {
     );
   };
 
-  const HandleImagePreview = ({ singleData }: { singleData?: ProfileData }) => {
+  const HandleImagePreview = ({
+    singleData,
+  }: {
+    singleData?: UserInfoData;
+  }) => {
     return (
       <ImageWrapper
       // subHeaderLabel="Welcome back"
       >
         <div className="relative w-[260px] xs:w-[300px] sm:w-[340px] h-[260px] xs:h-[300px] sm:h-[340px] flex items-center justify-center !rounded-xl">
-          {singleData?.bio.image ? (
+          {singleData?.image ? (
             <Image
-              src={singleData?.bio.image}
+              src={singleData?.image}
               alt="-"
               fill
               className="object-cover object-center !rounded-xl"
@@ -214,7 +253,7 @@ export function UserDataTable() {
           ) : (
             <div className="bg-[var(--clr-secondary)] text-[var(--clr-primary)] flex items-center justify-center w-full h-full">
               <h1 className="text-4xl font-bold">
-                {singleData?.bio?.name?.split("")?.shift()?.toUpperCase()}
+                {singleData?.name?.split("")?.shift()?.toUpperCase()}
               </h1>
             </div>
           )}
@@ -223,7 +262,7 @@ export function UserDataTable() {
     );
   };
 
-  const columns: TableColumn<ProfileData>[] = useMemo(
+  const columns: TableColumn<UserInfoData>[] = useMemo(
     () => [
       {
         name: "ID",
@@ -240,9 +279,9 @@ export function UserDataTable() {
           >
             <div className="cursor-pointer">
               <Avatar className="w-[38px] h-[38px] relative">
-                <AvatarImage src={row?.bio?.image || ""} />
+                <AvatarImage src={row?.image || ""} />
                 <AvatarFallback className="bg-[var(--clr-secondary)] text-[var(--clr-primary)]">
-                  {row?.bio?.name?.split("")?.shift()?.toUpperCase()}
+                  {row?.name?.split("")?.shift()?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </div>
@@ -252,51 +291,51 @@ export function UserDataTable() {
       {
         name: "Name",
         minWidth: "200px",
-        cell: (row: any) => row?.bio.name,
+        cell: (row: any) => row?.name,
       },
       {
         name: "Email",
         minWidth: "200px",
-        cell: (row: any) => row?.bio.email,
+        cell: (row: any) => row?.email,
       },
       {
         name: "Phone Number",
         // minWidth: "300px",
         width: "200px",
-        cell: (row: any) => row?.bio?.phoneNumber,
+        cell: (row: any) => row?.phone_numbers,
       },
       {
         name: "Country",
-        cell: (row: any) => row?.bio.country,
+        cell: (row: any) => row?.country?.country_name,
         width: "150px",
       },
 
       {
         name: "Status",
         width: "120px",
-        cell: (row: any) => row?.status,
-        //   selector: (row) => (row?.status ? "Active" : "Inactive"),
-        //   sortable: true,
-        //   conditionalCellStyles: [
-        //     {
-        //       when: (row) => row?.status,
-        //       style: {
-        //         color: "green",
-        //         "&:hover": {
-        //           cursor: "pointer",
-        //         },
-        //       },
-        //     },
-        //     {
-        //       when: (row) => !row?.status,
-        //       style: {
-        //         color: "red",
-        //         "&:hover": {
-        //           cursor: "pointer",
-        //         },
-        //       },
-        //     },
-        //   ],
+        // cell: (row: any) => row?.status,
+        selector: (row) => (row?.status == 1 ? "Active" : "Inactive"),
+        sortable: true,
+        conditionalCellStyles: [
+          {
+            when: (row) => row?.status == 1,
+            style: {
+              color: "green",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            },
+          },
+          {
+            when: (row) => row?.status == 0,
+            style: {
+              color: "red",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            },
+          },
+        ],
       },
       {
         name: "Action",
@@ -304,7 +343,7 @@ export function UserDataTable() {
         cell: (row) => (
           <div className="flex justify-center items-center">
             <div className="flex gap-6">
-              {row.status === "VERIFIED" ? (
+              {row.status ? (
                 <ToolTip tooltip="Block">
                   <AlertButton
                     asChild
@@ -324,7 +363,7 @@ export function UserDataTable() {
                     </div>
                   </AlertButton>
                 </ToolTip>
-              ) : row.status === "BLOCKED" ? (
+              ) : row.status == 0 ? (
                 <ToolTip tooltip="Unblock">
                   <AlertButton
                     asChild
@@ -363,7 +402,7 @@ export function UserDataTable() {
                   </AlertButton>
                 </ToolTip>
               )}
-              <ToolTip tooltip="View Alumni Detail">
+              {/* <ToolTip tooltip="View Alumni Detail">
                 <FormButton
                   asChild
                   Form={() => HandleUserDetailPreview({ singleData: row })}
@@ -375,7 +414,23 @@ export function UserDataTable() {
                     />
                   </div>
                 </FormButton>
-              </ToolTip>
+              </ToolTip> */}
+
+              <div onClick={() => viewUserDetail(row)}>
+                <ToolTip tooltip="View Alumni Detail">
+                  {/* <FormButton
+                    asChild
+                    Form={() => HandleForm({ type: "EDIT", single: row })}
+                  > */}
+                  <div>
+                    <BiDetail
+                      //   onClick={() => editWallet(row)}
+                      className="text-xl text-[var(--clr-secondary)] font-black  cursor-pointer"
+                    />
+                  </div>
+                  {/* </FormButton> */}
+                </ToolTip>
+              </div>
             </div>
           </div>
         ),
@@ -384,32 +439,51 @@ export function UserDataTable() {
     []
   );
 
+  const handleCloseButtonClick = () => {
+    setIsViewUserDetail(false);
+  };
+
+  const viewUserDetail = async (details: UserInfoData) => {
+    setIsViewUserDetail(true);
+    const data = await getsingleuser(locale, details?.id);
+    setSingleUserData(data?.data);
+  };
+
   return (
-    <div className={`w-[100%] flex flex-col  `}>
-      <div className="absolute z-[20] bg-white w-full pb-2">
-        <Breadcrump
-          prePath={pathname.split("/")[1]}
-          title={pathname.split("/")[2]}
-        />
-      </div>
-      {/* <Card className="w-full mt-10 rounded-none border-none">
+    <>
+      {isViewUserDetail &&
+        createPortal(
+          <ModalForm closeModal={handleCloseButtonClick}>
+            <div>{HandleUserDetailPreview({ singleData: singleUserData })}</div>
+          </ModalForm>,
+          document.body
+        )}
+      <div className={`w-[100%] flex flex-col  `}>
+        <div className="absolute z-[20] bg-white w-full pb-2">
+          <Breadcrump
+            prePath={pathname.split("/")[1]}
+            title={pathname.split("/")[2]}
+          />
+        </div>
+        {/* <Card className="w-full mt-10 rounded-none border-none">
         <CardContent className="w-full "> */}
-      <div className=" mt-20 flex justify-center ">
-        <Table
-          filteredData={filteredData}
-          columns={columns}
-          isLoading={isLoading}
-          search={search}
-          setSearch={setSearch}
-          report={report}
-          reportFilename="Alumni List"
-          // addButtonTitle="Add User"
-          // isAdd={true}
-          // addModal={HandleForm}
-        />
-      </div>
-      {/* </CardContent>
+        <div className=" mt-20 flex justify-center ">
+          <Table
+            filteredData={filteredData}
+            columns={columns}
+            isLoading={isLoading}
+            search={search}
+            setSearch={setSearch}
+            report={report}
+            reportFilename="Alumni List"
+            // addButtonTitle="Add User"
+            // isAdd={true}
+            // addModal={HandleForm}
+          />
+        </div>
+        {/* </CardContent>
       </Card> */}
-    </div>
+      </div>
+    </>
   );
 }

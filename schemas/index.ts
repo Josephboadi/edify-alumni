@@ -113,6 +113,9 @@ export const ScholarshipApplicationSchema = z.object({
   applicationLetterFileUrl: z.string().min(1, {
     message: "Upload your application letter.",
   }),
+  recommendationLetterFileUrl: z.string().min(1, {
+    message: "Upload a letter of recommendation.",
+  }),
 });
 
 export const ServiceRequestSchema = z.object({
@@ -138,35 +141,58 @@ export const CommentSchema = z.object({
 });
 
 export const ContinentSchema = z.object({
-  name: z.string().min(1, {
+  continent_name: z.string().min(1, {
     message: "Continent name is required",
   }),
 });
 
 export const SubRegionSchema = z.object({
-  name: z.string().min(1, {
+  subregion_name: z.string().min(1, {
     message: "Sub region name is required",
   }),
-  continentId: z.string().min(1, {
+  continent_id: z.string().min(1, {
     message: "Continent id is required",
   }),
 });
 
 export const CountrySchema = z.object({
-  name: z.string().min(1, {
+  country_name: z.string().min(1, {
     message: "Country name is required",
   }),
-  subRegionId: z.string().min(1, {
+  country_code: z.string().min(1, {
+    message: "Country code is required",
+  }),
+  subreion_id: z.string().min(1, {
     message: "Sub Region id is required",
   }),
+  is_edify_country: z.boolean().default(true),
 });
 
 export const SchoolSchema = z.object({
-  name: z.string().min(1, {
+  school_name: z.string().min(1, {
     message: "School name is required",
   }),
-  countryId: z.string().min(1, {
-    message: "Sub Region id is required",
+  address: z.string().min(1, {
+    message: "Address is required",
+  }),
+  phone_numbers: z.array(z.object({ number: z.string() })),
+  country_id: z.string().min(1, {
+    message: "Country is required",
+  }),
+});
+
+export const DynamicReportFormSchema = z.object({
+  continent: z.optional(z.string()),
+  subRegion: z.optional(z.string()),
+  country: z.optional(z.string()),
+  school: z.optional(z.string()),
+  startDate: z.date({
+    required_error: "Please select a start date",
+    invalid_type_error: "That's not a date!",
+  }),
+  endDate: z.date({
+    required_error: "Please select an end date",
+    invalid_type_error: "That's not a date!",
   }),
 });
 
@@ -206,18 +232,50 @@ export const JobFormSchema = z.object({
   jobType: z.string(),
   company: z.string(),
   pay: z.string(),
-  jobDescription: z.array(z.object({ id: z.number(), info: z.string() })),
+  jobDescription: z.optional(
+    z.array(z.object({ id: z.number(), info: z.string() }))
+  ),
   jobSpecification: z.array(z.object({ id: z.number(), info: z.string() })),
+});
+
+export const NewJobFormSchema = z.object({
+  jobTitle: z.string(),
+  country_id: z.string().uuid(),
+  jobType: z.string(),
+  jobCategory: z.string(),
+  minimumSalary: z.number(),
+  maximumSalary: z.number(),
+  location: z.string(),
+  infomation: z
+    .string()
+    .min(3, "Description must be at least 3 characters")
+    .max(400, "Description must be less than 400 characters"),
+  description: z.array(z.string()),
+  sepcification: z.array(z.string()),
+  salaryCurrency: z.string(),
+});
+
+export const ProcessJobFormSchema = z.object({
+  application_id: z.string().uuid(),
+  status: z.number(),
+  processComment: z.string(),
 });
 
 export const ScholarshipFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
-  information: z
+  country_id: z.string().uuid(),
+  infomation: z
     .string()
     .min(3, "Description must be at least 3 characters")
     .max(400, "Description must be less than 400 characters"),
-  image: z.string().url(),
-  publishDate: z.date(),
+  cover_image_url: z.string().url(),
+  // publishDate: z.date(),
+});
+
+export const ProcessScholarshipFormSchema = z.object({
+  application_id: z.string().uuid(),
+  status: z.number(),
+  processComment: z.string(),
 });
 
 export const DiscussionFormSchema = z.object({
@@ -239,6 +297,13 @@ export const HeroFormSchema = z.object({
     .string()
     .min(3, "Description must be at least 3 characters")
     .max(400, "Description must be less than 400 characters"),
+  // createdBy: z.string(),
+});
+
+export const BulkEmailFormSchema = z.object({
+  subject: z.string().min(3, "Email Subject must be at least 3 characters"),
+  content: z.string().min(3, "Email content must be at least 3 characters"),
+  // .max(400, "Email content must be less than 400 characters"),
   // createdBy: z.string(),
 });
 
@@ -456,3 +521,279 @@ export type JobTypeData = {
   name: string;
   value: string;
 }[];
+
+export type CurrencyData = {
+  name: string;
+  value: string;
+}[];
+
+export type StatusData = {
+  name: string;
+  value: number;
+}[];
+
+export type UserInfoData = {
+  id: string;
+  user_id: string;
+  name: string;
+  phone_numbers: string;
+  email: string;
+  address: string | null;
+  date_added: string | null;
+  status: number;
+  date_activated: string | null;
+  year: string;
+  school_id: string;
+  country_of_res_id: string;
+  emailVerified: string;
+  image: string | null;
+  imageObj: string | null;
+  password: string;
+  role: string;
+  isTwoFactorEnabled: boolean;
+  user_employment: any[];
+  user_education: any[];
+  user_certificate: any[];
+  school: {
+    id: number;
+    school_id: string;
+    country_id: string;
+    school_name: string;
+    phone_numbers: string[];
+    address: string;
+    status: number;
+    date_added: string;
+  };
+  country: {
+    id: number;
+    country_id: string;
+    country_name: string;
+    date_created: string;
+    country_code: string;
+    status: number;
+    is_edify_country: number;
+    subreion_id: string;
+  };
+  job_applications?: {
+    id: number;
+    application_id: string;
+    date_added: string;
+    status: number;
+    user_id: string;
+    job_id: string;
+    cvUrl: string;
+    coverPageUrl: string;
+    processComment: string;
+    user_process_id: string;
+    date_processed: string;
+    job: {
+      id: number;
+      job_id: string;
+      jobTitle: string;
+      status: number;
+      country_id: string;
+      jobType: string;
+      jobCategory: string;
+      minimumSalary: string;
+      maximumSalary: string;
+      location: string;
+      infomation: string;
+      description: string[];
+      sepcification: string[];
+      numberOfApplication: number;
+      numberOfConfirmation: number;
+      numberOfPending: number;
+      numberOfDeclined: number;
+      date_added: string;
+      salaryCurrency: string;
+    };
+  }[];
+  scholarships?: {
+    id: number;
+    application_id: string;
+    date_added: string;
+    status: number;
+    user_id: string;
+    scholarship_id: string;
+    certificate_url: string;
+    application_letter_url: string;
+    recommendation_letter_url: string;
+    processComment: string | null;
+    user_process_id: string | null;
+    date_processed: string;
+    scholarship: {
+      id: number;
+      scholarship_id: string;
+      title: string;
+      status: number;
+      country_id: string;
+      infomation: string;
+      numberOfApplication: number;
+      numberOfConfirmation: number;
+      numberOfPending: number;
+      numberOfDeclined: number;
+      date_added: string;
+      cover_image_url: string;
+    };
+  }[];
+};
+
+export type JobInfoData = {
+  id: number;
+  job_id: string;
+  jobTitle: string;
+  status: number;
+  country_id: string;
+  jobType: string;
+  jobCategory: string;
+  minimumSalary: string;
+  maximumSalary: string;
+  location: string;
+  infomation: string;
+  description: string[];
+  sepcification: string[];
+  numberOfApplication: number;
+  numberOfConfirmation: number;
+  numberOfPending: number;
+  numberOfDeclined: number;
+  date_added: string;
+  salaryCurrency: string;
+  country: {
+    id: number;
+    country_id: string;
+    country_name: string;
+    date_created: string;
+    country_code: string;
+    status: number;
+    is_edify_country: number;
+    subreion_id: string;
+  };
+  applications?: JobApplicationsData[];
+};
+
+export type JobApplicationsData = {
+  id: number;
+  application_id: string;
+  date_added: string;
+  status: number;
+  user_id: string;
+  job_id: string;
+  cvUrl: string;
+  coverPageUrl: string;
+  user: {
+    id: string;
+    user_id: string;
+    name: string;
+    phone_numbers: string;
+    email: string;
+    address: string | null;
+    date_added: string | null;
+    status: number;
+    date_activated: string | null;
+    year: string;
+    school_id: string;
+    country_of_res_id: string;
+    emailVerified: string;
+    image: string | null;
+    imageObj: string | null;
+    password: string;
+    role: string;
+    isTwoFactorEnabled: boolean;
+  };
+  job: {
+    id: number;
+    job_id: string;
+    jobTitle: string;
+    status: number;
+    country_id: string;
+    jobType: string;
+    jobCategory: string;
+    minimumSalary: string;
+    maximumSalary: string;
+    location: string;
+    infomation: string;
+    description: string[];
+    sepcification: string[];
+    numberOfApplication: number;
+    numberOfConfirmation: number;
+    numberOfPending: number;
+    numberOfDeclined: number;
+    date_added: string;
+    salaryCurrency: string;
+  };
+};
+
+export type ScholarshipInfoData = {
+  id: number;
+  scholarship_id: string;
+  title: string;
+  status: number;
+  country_id: string;
+  infomation: string;
+  numberOfApplication: number;
+  numberOfConfirmation: number;
+  numberOfPending: number;
+  numberOfDeclined: number;
+  date_added: string;
+  cover_image_url: string;
+  country: {
+    id: number;
+    country_id: string;
+    country_name: string;
+    date_created: string;
+    country_code: string;
+    status: number;
+    is_edify_country: number;
+    subreion_id: string;
+  };
+  applications?: ScholarshipApplicationsData[];
+};
+
+export type ScholarshipApplicationsData = {
+  id: number;
+  application_id: string;
+  date_added: string;
+  status: number;
+  user_id: string;
+  scholarship_id: string;
+  certificate_url: string;
+  application_letter_url: string;
+  recommendation_letter_url: string;
+  processComment: string | null;
+  user_process_id: string | null;
+  date_processed: string;
+  user: {
+    id: string;
+    user_id: string;
+    name: string;
+    phone_numbers: string;
+    email: string;
+    address: string | null;
+    date_added: string | null;
+    status: number;
+    date_activated: string | null;
+    year: string;
+    school_id: string;
+    country_of_res_id: string;
+    emailVerified: string;
+    image: string | null;
+    imageObj: string | null;
+    password: string;
+    role: string;
+    isTwoFactorEnabled: boolean;
+  };
+  scholarship: {
+    id: number;
+    scholarship_id: string;
+    title: string;
+    status: number;
+    country_id: string;
+    infomation: string;
+    numberOfApplication: number;
+    numberOfConfirmation: number;
+    numberOfPending: number;
+    numberOfDeclined: number;
+    date_added: string;
+    cover_image_url: string;
+  };
+};

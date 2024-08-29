@@ -28,19 +28,19 @@ export const register = async (
     return { error: "Email already in use!" };
   }
 
-  await db.user.create({
+  const newUser = await db.user.create({
     data: {
       name,
       email,
-      phoneNumber,
-      country,
-      school,
+      phone_numbers: phoneNumber,
+      // country_of_res_id: country,
+      // school_id: school,
       year,
       password: hashedPassword,
     },
   });
 
-  const verificationToken = await generateVerificationToken(email);
+  const verificationToken = await generateVerificationToken(email, newUser.id);
   await sendVerificationEmail(
     verificationToken.email,
     verificationToken.token,

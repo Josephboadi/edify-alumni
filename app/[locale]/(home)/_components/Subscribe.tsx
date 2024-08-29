@@ -4,6 +4,7 @@ import { subscribe } from "@/actions/subscribe";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { SubscribeSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +12,7 @@ import { Montserrat } from "next/font/google";
 import Image from "next/image";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import * as z from "zod";
 
 const font = Montserrat({
@@ -45,10 +46,10 @@ const Subscribe = () => {
 
   useEffect(() => {
     if (error) {
-      toast(error);
+      toast({ description: error });
     }
     if (success) {
-      toast(success);
+      toast({ description: success });
     }
 
     return;

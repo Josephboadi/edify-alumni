@@ -1,15 +1,16 @@
 "use client";
+import { saveAs } from "file-saver";
 import { useEffect, useRef, useState } from "react";
 import { CgAddR } from "react-icons/cg";
-import { TiDownload } from "react-icons/ti";
-
 // import convertArrayOfObjectsToCSV from "@/utils/convertArray";
 import DataTable from "react-data-table-component";
 import { RiFileExcel2Line } from "react-icons/ri";
 // import ToolTip from "./ToolTip";
 import ToolTip from "@/components/common/ToolTip";
 import { convertArrayOfObjectsToCSV } from "@/lib/utils";
-import { ImSpinner2 } from "react-icons/im";
+import { BiExport, BiImport } from "react-icons/bi";
+import { ImDownload, ImSpinner2 } from "react-icons/im";
+import BulkUploadButton from "./BulkUploadButton";
 import Search from "./Search";
 import { FormButton } from "./form-button";
 
@@ -24,9 +25,36 @@ const Table = ({
   addButtonTitle,
   addModal,
   isAdd,
+  isBulk,
+  template,
+  bulkUploadTitle,
+  onUpdateCSVDataHandler,
 }: any) => {
   const [showReport, setShowReport] = useState<boolean>();
+  const [showImport, setShowImport] = useState<boolean>();
   const contextMenuRef = useRef<HTMLDivElement>(null);
+  const contextImportRef = useRef<HTMLDivElement>(null);
+
+  const saveFile = () => {
+    saveAs(template, bulkUploadTitle);
+    setShowImport(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        contextImportRef.current &&
+        !contextImportRef.current.contains(event.target)
+      ) {
+        setShowImport(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -73,6 +101,15 @@ const Table = ({
       Excel
     </button>
   );
+
+  const showImportView = () => {
+    setShowImport(!showImport);
+  };
+
+  const hideImportView = (e: any) => {
+    e.stopPropagation();
+    setShowImport(false);
+  };
 
   const showReportView = () => {
     setShowReport(!showReport);
@@ -184,7 +221,7 @@ const Table = ({
             </div>
 
             <div
-              className={`w-full xsm:w-24 sm:w-32 gap-4 relative flex flex-row-reverse xsm:flex-row items-center  ${
+              className={`w-full xsm:w-24 sm:w-48 gap-4 relative flex flex-row-reverse xsm:flex-row items-center  ${
                 isAdd ? "justify-between" : "justify-end"
               } `}
             >
@@ -211,25 +248,72 @@ const Table = ({
               )}
 
               {/* )} */}
-
-              <div ref={contextMenuRef} className=" flex justify-center">
-                <ToolTip tooltip="Report">
-                  <TiDownload
-                    className="text-[25px] text-[var(--clr-black-light)]"
-                    onClick={() => showReportView()}
-                  />
-                </ToolTip>
-                {showReport && (
+              <div className=" flex flex-row items-center justify-center gap-4">
+                {isBulk && (
                   <div
-                    // ref={contextMenuRef}
-                    className="absolute py-6 px-2 bg-[var(--clr-primary)] border-[1px] border-[var(--clr-primary-light)] rounded-md top-4 right-0 shadow-lg z-40 gap-2 flex flex-col justify-start"
+                    ref={contextImportRef}
+                    className=" flex flex-col items-center justify-center gap-2"
                   >
-                    <Export
-                      onExport={() => downloadCSV(report)}
-                      onClick={(e: any) => hideReportView(e)}
-                    />
+                    <div className="flex items-center justify-center  ">
+                      <ToolTip tooltip="Import">
+                        <BiImport
+                          className="text-[25px] text-[var(--clr-black-light)]"
+                          onClick={() => showImportView()}
+                        />
+                      </ToolTip>
+
+                      {showImport && (
+                        <div
+                          // ref={contextMenuRef}
+                          className="absolute py-6 px-2 bg-[var(--clr-primary)] border-[1px] border-[var(--clr-primary-light)] rounded-md top-4 right-0 shadow-lg z-40 gap-4 flex flex-col justify-start"
+                        >
+                          <div className="flex items-center justify-center  ">
+                            <button
+                              // href="/templates/text.csv"
+                              onClick={saveFile}
+                              className="flex justify-start items-center gap-2 hover:bg-[var(--clr-primary-light)] py-1 px-2 rounded-md"
+                              // download={"template"}
+                            >
+                              <span>
+                                <ImDownload className="text-green-600" />
+                              </span>
+                              Template
+                            </button>
+                          </div>
+
+                          <BulkUploadButton
+                            onUpdateCSVDataHandler={onUpdateCSVDataHandler}
+                            hideImportView={hideImportView}
+                            // onClick={(e: any) => hideImportView(e)}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
+
+                <div
+                  ref={contextMenuRef}
+                  className=" flex flex-row items-center justify-center"
+                >
+                  <ToolTip tooltip="Export">
+                    <BiExport
+                      className="text-[25px] text-[var(--clr-black-light)]"
+                      onClick={() => showReportView()}
+                    />
+                  </ToolTip>
+                  {showReport && (
+                    <div
+                      // ref={contextMenuRef}
+                      className="absolute py-6 px-2 bg-[var(--clr-primary)] border-[1px] border-[var(--clr-primary-light)] rounded-md top-4 right-0 shadow-lg z-40 gap-2 flex flex-col justify-start"
+                    >
+                      <Export
+                        onExport={() => downloadCSV(report)}
+                        onClick={(e: any) => hideReportView(e)}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

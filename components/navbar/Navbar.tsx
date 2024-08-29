@@ -51,7 +51,6 @@ const Navbar = ({ locale }: any) => {
   // const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   // const [open, setOpen] = useState(false);
   // const screenSize = useScreenSize();
-
   // const user = useCurrentUser();
   const [selectedMenu, setSelectedMenu] = useState(pathname);
 

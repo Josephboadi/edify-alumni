@@ -6,6 +6,7 @@ import authConfig from "@/auth.config";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { getUserById } from "@/data/user";
 import { db } from "@/lib/db";
+import { generateSessionToken } from "@/lib/tokens";
 import { getAccountByUserId } from "./data/account";
 
 export const {
@@ -68,12 +69,21 @@ export const {
       if (session.user) {
         session.user.user_id = token.user_id as string;
         session.user.name = token.name;
-        session.user.phoneNumber = token.phoneNumber as string;
+        session.user.phone_numbers = token.phone_numbers as string;
         session.user.country = token.country as string;
         session.user.school = token.school as string;
         session.user.year = token.year as string;
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.token = token.jti as string;
+      }
+
+      if (token.sub && session.user) {
+        await generateSessionToken(
+          token.sub,
+          session.expires,
+          token.jti as string
+        );
       }
 
       return session;
@@ -90,9 +100,9 @@ export const {
       token.isOAuth = !!existingAccount;
       token.user_id = existingUser.user_id;
       token.name = existingUser.name;
-      token.phoneNumber = existingUser.phoneNumber;
-      token.country = existingUser?.country;
-      token.school = existingUser?.school;
+      token.phone_numbers = existingUser.phone_numbers;
+      token.country = existingUser?.country_of_res_id;
+      token.school = existingUser?.school_id;
       token.year = existingUser?.year;
       token.email = existingUser.email;
       token.role = existingUser.role;
@@ -102,6 +112,6 @@ export const {
     },
   },
   adapter: PrismaAdapter(db),
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 20 * 60 },
   ...authConfig,
 });

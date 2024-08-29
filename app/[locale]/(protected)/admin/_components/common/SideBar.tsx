@@ -22,6 +22,7 @@ const SideBar = () => {
     mouseCLick,
     setMouseClick,
   } = useAppStore();
+
   const session = useSession();
   const [menuData, setMenuData] = useState<any>([]);
   const pathname = usePathname();

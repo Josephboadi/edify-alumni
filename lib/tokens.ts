@@ -1,7 +1,9 @@
 import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
+import { signOut } from "@/auth";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
+import { getSessionByID } from "@/data/session-id";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { getVerificationTokenByEmail } from "@/data/verificiation-token";
 import { db } from "@/lib/db";
@@ -54,7 +56,10 @@ export const generatePasswordResetToken = async (email: string) => {
   return passwordResetToken;
 };
 
-export const generateVerificationToken = async (email: string) => {
+export const generateVerificationToken = async (
+  email: string,
+  user_id: string
+) => {
   const token = uuidv4();
   const expires = new Date(new Date().getTime() + 3600 * 1000);
 
@@ -71,10 +76,49 @@ export const generateVerificationToken = async (email: string) => {
   const verficationToken = await db.verificationToken.create({
     data: {
       email,
+      user_id,
       token,
       expires,
     },
   });
 
   return verficationToken;
+};
+
+export const generateSessionToken = async (
+  user_id: string,
+  expires: string,
+  token: string
+) => {
+  let sessionToken;
+  const existingToken = await getSessionByID(user_id);
+  if (existingToken) {
+    const hasExpired = new Date(existingToken.expires) < new Date();
+    if (hasExpired) {
+      await db.session.delete({
+        where: {
+          id: existingToken.id,
+        },
+      });
+      await signOut();
+      return;
+    } else {
+      sessionToken = await db.session.update({
+        data: { expires },
+        where: {
+          id: existingToken.id,
+        },
+      });
+    }
+  } else {
+    sessionToken = await db.session.create({
+      data: {
+        user_id,
+        token,
+        expires,
+      },
+    });
+  }
+
+  return sessionToken;
 };

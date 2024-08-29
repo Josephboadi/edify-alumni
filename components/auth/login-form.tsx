@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -23,10 +23,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 import { useAppStore } from "@/store/store";
+// import { useSession } from "next-auth/react";
 
 export const LoginForm = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useParams();
+  // const session = useSession();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
@@ -67,6 +70,22 @@ export const LoginForm = () => {
           if (data?.twoFactor) {
             setShowTwoFactor(true);
           }
+
+          // console.log("session============================, ",session);
+          // if (token.sub && session.user) {
+          // await generateSessionToken(
+          //   token.sub,
+          //   session.expires,
+          //   token.jti as string
+          // );
+          // }
+          // if (data?.success) {
+          //   form.reset();
+          //   setAuthModal(false);
+          //   router.push(locale === "en" ? `/` : `/${locale}/`);
+          //   router.refresh();
+          //   setSuccess(data?.success);
+          // }
         })
         .catch(() => setError("Something went wrong"));
     });
@@ -146,7 +165,7 @@ export const LoginForm = () => {
                           disabled={isPending}
                           placeholder="******"
                           type="password"
-                          className={` bg-[var(--clr-silver-v7)] ${
+                          className={` bg-[var(--clr-silver-v6)] ${
                             form.formState.errors.password
                               ? "border border-red-500 focus-visible:ring-0"
                               : "focus-visible:ring-transparent border-none"

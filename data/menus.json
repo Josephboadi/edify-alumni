@@ -103,6 +103,22 @@
     "isChild": false
   },
   {
+    "id": 10,
+    "title": "News Letters",
+    "icon": "FaMailBulk",
+    "path": "/admin/bulknews",
+    "isParent": false,
+    "isChild": false
+  },
+  {
+    "id": 11,
+    "title": "Dynamic Report",
+    "icon": "HiDocumentReport",
+    "path": "/admin/report",
+    "isParent": false,
+    "isChild": false
+  },
+  {
     "id": 9,
     "title": "UI",
     "icon": "BiLayout",

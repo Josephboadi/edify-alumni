@@ -26,6 +26,9 @@ export const ScholarshipApplicationForm = () => {
   const { scholarshipInfoData } = useAppStore();
   const [certificateFiles, setCertificateFiles] = useState<File[]>([]);
   const [applicationFiles, setApplicationFiles] = useState<File[]>([]);
+  const [recommendationLetterFiles, setRecommendationLetterFiles] = useState<
+    File[]
+  >([]);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -38,6 +41,7 @@ export const ScholarshipApplicationForm = () => {
       scholarshiptitle: scholarshipInfoData?.title,
       certificateFileUrl: "",
       applicationLetterFileUrl: "",
+      recommendationLetterFileUrl: "",
     },
   });
 
@@ -50,6 +54,7 @@ export const ScholarshipApplicationForm = () => {
     startTransition(async () => {
       let uploadedCertificateFileUrl = values.certificateFileUrl;
       let uploadedApplicationFileUrl = values.applicationLetterFileUrl;
+      let recommendationLetterFileUrl = values.recommendationLetterFileUrl;
 
       if (certificateFiles.length > 0) {
         const uploadedFiles = await startUpload(certificateFiles);
@@ -72,6 +77,18 @@ export const ScholarshipApplicationForm = () => {
         // console.log("cover file url================, ", uploaded1Files[0]);
 
         uploadedApplicationFileUrl = uploaded1Files[0].url;
+      }
+
+      if (recommendationLetterFiles.length > 0) {
+        const uploaded1Files = await startUpload(recommendationLetterFiles);
+
+        if (!uploaded1Files) {
+          return;
+        }
+
+        // console.log("cover file url================, ", uploaded1Files[0]);
+
+        recommendationLetterFileUrl = uploaded1Files[0].url;
       }
       // jobApplication(values, locale, callbackUrl)
       //   .then((data) => {
@@ -162,6 +179,29 @@ export const ScholarshipApplicationForm = () => {
                           setFiles={setApplicationFiles}
                           isError={
                             form.formState.errors.applicationLetterFileUrl
+                              ? true
+                              : false
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="recommendationLetterFileUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Recommendation Letter</FormLabel>
+                      <FormControl>
+                        <FileUploader
+                          onFieldChange={field.onChange}
+                          imageUrl={field.value}
+                          setFiles={setRecommendationLetterFiles}
+                          isError={
+                            form.formState.errors.recommendationLetterFileUrl
                               ? true
                               : false
                           }

@@ -38,7 +38,8 @@ export const login = async (
 
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(
-      existingUser.email
+      existingUser.email,
+      existingUser.id
     );
 
     await sendVerificationEmail(
@@ -101,6 +102,8 @@ export const login = async (
       password,
       redirectTo: callbackUrl || redirectUrl,
     });
+
+    // return { success: "Continent added successfully!" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

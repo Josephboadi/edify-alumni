@@ -72,8 +72,7 @@ const DropdownYear = ({
   };
 
   return (
-    <>
-      <div className="w-full font-medium relative">
+    <div className="w-full font-medium relative">
         <div
           ref={contextMenuRef}
           onClick={() => handleClick()}
@@ -161,7 +160,6 @@ const DropdownYear = ({
           ))}
         </div>
       </div>
-    </>
     // <Select onValueChange={onChangeHandler} defaultValue={value}>
     //   <SelectTrigger className="select-field">
     //     <SelectValue placeholder="Category" />

@@ -17,9 +17,10 @@ const DropdownJobCat = ({
   isError,
 }: DropdownJobCatProps) => {
   const [jobCatData, setJobCatData] = useState<JobCatData>([]);
-  const [inputValue, setInputValue] = useState<any>("");
-  const [inputValue1, setInputValue1] = useState<any>(value);
-  const [selected, setSelected] = useState<any>(value);
+  const [inputValue, setInputValue] = useState("");
+  const [inputValue1, setInputValue1] = useState("");
+  const [selected, setSelected] = useState("");
+  const [selected1, setSelected1] = useState("");
   const [open, setOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const selectMenuRef = useRef<HTMLDivElement>(null);
@@ -29,7 +30,16 @@ const DropdownJobCat = ({
     const getJobCats = async () => {
       const jobCatList = await jobCategories();
 
-      jobCatList && setJobCatData(jobCatList as JobCatData);
+      // jobCatList && setJobCatData(jobCatList as JobCatData);
+      if (jobCatList) {
+        setJobCatData(jobCatList as JobCatData);
+        jobCatList?.map((dat) => {
+          if (dat?.title === value) {
+            setSelected(dat?.title);
+            setSelected1(dat?.title);
+          }
+        });
+      }
     };
 
     getJobCats();
@@ -61,7 +71,7 @@ const DropdownJobCat = ({
           : selected
         : ""
     );
-    onChangeHandler(selected);
+    onChangeHandler(selected1);
   }, [selected]);
 
   const handleClick = async () => {
@@ -130,6 +140,7 @@ const DropdownJobCat = ({
             `}
             onClick={() => {
               setSelected("");
+              setSelected1("");
               setOpen(false);
               setInputValue("");
             }}
@@ -141,7 +152,8 @@ const DropdownJobCat = ({
               key={index}
               className={`p-2 text-[var(--clr-black)] text-sm hover:bg-[var(--clr-secondary)] hover:text-[var(--clr-primary)]
             ${
-              item?.title?.toLowerCase() === selected?.toLowerCase() &&
+              (item?.title?.toLowerCase() === selected?.toLowerCase() ||
+                item?.title === value) &&
               "bg-[var(--clr-secondary)] text-[var(--clr-primary)]"
             }
             ${
@@ -150,8 +162,12 @@ const DropdownJobCat = ({
                 : "hidden"
             }`}
               onClick={() => {
-                if (item?.title?.toLowerCase() !== selected.toLowerCase()) {
+                if (
+                  item?.title?.toLowerCase() !== selected.toLowerCase() ||
+                  item?.title === value
+                ) {
                   setSelected(item?.title);
+                  setSelected1(item?.title);
                   setOpen(false);
                   setInputValue("");
                 }

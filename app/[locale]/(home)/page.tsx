@@ -71,6 +71,8 @@ async function getTopAlumniData() {
 }
 export default async function Home({ params: { locale } }: any) {
   const { t, resources } = await initTranslations(locale, i18nNamespace);
+  // const authData = await auth();
+  // console.log("AUTH DATA================================, ", authData);
   //  const herosData = await heroes();
   //   const aboutData = await about();
   //   const newsData = await news();
@@ -94,6 +96,13 @@ export default async function Home({ params: { locale } }: any) {
       getTopAlumni,
     ]);
 
+  // if (authData) {
+  //   generateSessionToken(
+  //     authData?.user?.id,
+  //     authData?.expires,
+  //     authData?.user?.token
+  //   );
+  // }
   // console.log(herosData);
 
   return (

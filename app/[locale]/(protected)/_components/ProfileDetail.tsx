@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 // import { profileData } from "@/data/profile";
 import { cn } from "@/lib/utils";
-import { ProfileData } from "@/schemas";
+import { UserInfoData } from "@/schemas";
 import { Montserrat, Montserrat_Alternates } from "next/font/google";
 // import { useEffect, useState } from "react";
 
@@ -26,130 +26,122 @@ const font1 = Montserrat({
 });
 
 interface ProfileDetailProps {
-  profileData?: Awaited<ProfileData>;
+  profileData?: Awaited<UserInfoData>;
   loading: boolean;
 }
 
 const ProfileDetail = ({ profileData, loading }: ProfileDetailProps) => {
-  // const [profileDetailData, setProfileDetailData] = useState<ProfileData>();
-
-  // useEffect(() => {
-  //   setProfileDetailData(profileData);
-  //   return;
-  // }, []);
-
   return (
-    <>
-      <div className=" w-full !mb-5">
-        {loading && (
-          <section className=" w-full  pb-5 flex flex-col gap-4">
-            {[1, 2, 3, 4].map((el) => (
-              <Skeleton
-                className=" w-full shadow-md !px-0 pt-3 h-[180px]  rounded-[4px] border-none"
-                key={el}
-              />
-            ))}
-          </section>
-        )}
-        {!loading && profileData && (
-          <section className=" w-full  pb-5 flex flex-col gap-4">
-            <div className="">
-              <Card className=" w-full shadow-md !px-0 pt-3  rounded-[6px] border-none">
-                <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
-                  <h1
+    <div className=" w-full !mb-5">
+      {loading && (
+        <section className=" !w-full  pb-5 flex flex-col gap-4">
+          {[1, 2, 3, 4].map((el) => (
+            <Skeleton
+              className=" w-[260px] xs:w-[300px] sm:w-[380px] md:w-[620px] shadow-md !px-0 pt-3 h-[180px]  rounded-[4px] border-none"
+              key={el}
+            />
+          ))}
+        </section>
+      )}
+      {!loading && profileData && (
+        <section className=" w-full  pb-5 flex flex-col gap-4">
+          <div className="">
+            <Card className=" w-full shadow-md !px-0 pt-3  rounded-[6px] border-none">
+              <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
+                <h1
+                  className={cn(
+                    " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                    font1.className
+                  )}
+                >
+                  B
+                  <span
                     className={cn(
-                      " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                      " text-lg  text-[var(--clr-secondary)] font-semibold ",
                       font1.className
                     )}
                   >
-                    B
-                    <span
+                    IO
+                  </span>
+                </h1>
+                <div className="relative w-full  grid grid-cols-1 md:grid-cols-2 gap-2 px-1">
+                  <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
                       className={cn(
-                        " text-lg  text-[var(--clr-secondary)] font-semibold ",
-                        font1.className
+                        " text-sm  text-[var(--clr-black-light)] font-bold ",
+                        font.className
                       )}
                     >
-                      IO
-                    </span>
-                  </h1>
-                  <div className="relative w-full  grid grid-cols-1 md:grid-cols-2 gap-2 px-1">
-                    <div className="flex items-center justify-start gap-4 text-wrap">
-                      <p
-                        className={cn(
-                          " text-sm  text-[var(--clr-black-light)] font-bold ",
-                          font.className
-                        )}
-                      >
-                        Name
-                      </p>
+                      Name
+                    </p>
 
-                      <p
-                        className={cn(
-                          " text-sm text-[var(--clr-black-light)] font-normal ",
-                          font.className
-                        )}
-                      >
-                        {profileData?.bio?.name}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-start gap-4 text-wrap">
-                      <p
-                        className={cn(
-                          " text-sm  text-[var(--clr-black-light)] font-bold ",
-                          font.className
-                        )}
-                      >
-                        Email
-                      </p>
+                    <p
+                      className={cn(
+                        " text-sm text-[var(--clr-black-light)] font-normal ",
+                        font.className
+                      )}
+                    >
+                      {profileData?.name}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
+                      className={cn(
+                        " text-sm  text-[var(--clr-black-light)] font-bold ",
+                        font.className
+                      )}
+                    >
+                      Email
+                    </p>
 
-                      <p
-                        className={cn(
-                          " text-sm text-[var(--clr-black-light)] font-normal ",
-                          font.className
-                        )}
-                      >
-                        {profileData?.bio?.email}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-start gap-4 text-wrap">
-                      <p
-                        className={cn(
-                          " text-sm  text-[var(--clr-black-light)] font-bold ",
-                          font.className
-                        )}
-                      >
-                        Phone Number
-                      </p>
+                    <p
+                      className={cn(
+                        " text-sm text-[var(--clr-black-light)] font-normal ",
+                        font.className
+                      )}
+                    >
+                      {profileData?.email}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
+                      className={cn(
+                        " text-sm  text-[var(--clr-black-light)] font-bold ",
+                        font.className
+                      )}
+                    >
+                      Phone Number
+                    </p>
 
-                      <p
-                        className={cn(
-                          " text-sm text-[var(--clr-black-light)] font-normal ",
-                          font.className
-                        )}
-                      >
-                        {profileData?.bio?.phoneNumber}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-start gap-4 text-wrap">
-                      <p
-                        className={cn(
-                          " text-sm  text-[var(--clr-black-light)] font-bold ",
-                          font.className
-                        )}
-                      >
-                        Country
-                      </p>
+                    <p
+                      className={cn(
+                        " text-sm text-[var(--clr-black-light)] font-normal ",
+                        font.className
+                      )}
+                    >
+                      {profileData?.phone_numbers}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
+                      className={cn(
+                        " text-sm  text-[var(--clr-black-light)] font-bold ",
+                        font.className
+                      )}
+                    >
+                      Country
+                    </p>
 
-                      <p
-                        className={cn(
-                          " text-sm text-[var(--clr-black-light)] font-normal ",
-                          font.className
-                        )}
-                      >
-                        {profileData?.bio?.country}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
+                      className={cn(
+                        " text-sm text-[var(--clr-black-light)] font-normal ",
+                        font.className
+                      )}
+                    >
+                      {profileData?.country?.country_name}
+                    </p>
+                  </div>
+                  {/* <div className="flex items-center justify-start gap-4 text-wrap">
                       <p
                         className={cn(
                           " text-sm  text-[var(--clr-black-light)] font-bold ",
@@ -167,27 +159,27 @@ const ProfileDetail = ({ profileData, loading }: ProfileDetailProps) => {
                       >
                         {profileData?.bio?.region}
                       </p>
-                    </div>
-                    <div className="flex items-center justify-start gap-4 text-wrap">
-                      <p
-                        className={cn(
-                          " text-sm  text-[var(--clr-black-light)] font-bold ",
-                          font.className
-                        )}
-                      >
-                        Home Address
-                      </p>
+                    </div> */}
+                  <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
+                      className={cn(
+                        " text-sm  text-[var(--clr-black-light)] font-bold ",
+                        font.className
+                      )}
+                    >
+                      Home Address
+                    </p>
 
-                      <p
-                        className={cn(
-                          " text-sm text-[var(--clr-black-light)] font-normal ",
-                          font.className
-                        )}
-                      >
-                        {profileData?.bio?.homeAddress}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-start gap-4 text-wrap">
+                    <p
+                      className={cn(
+                        " text-sm text-[var(--clr-black-light)] font-normal ",
+                        font.className
+                      )}
+                    >
+                      {profileData?.address}
+                    </p>
+                  </div>
+                  {/* <div className="flex items-center justify-start gap-4 text-wrap">
                       <p
                         className={cn(
                           " text-sm  text-[var(--clr-black-light)] font-bold ",
@@ -205,219 +197,218 @@ const ProfileDetail = ({ profileData, loading }: ProfileDetailProps) => {
                       >
                         {profileData?.bio?.postalAddress}
                       </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                    </div> */}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <div className="">
-              <Card className=" w-full shadow-md !px-0 pt-3  rounded-[6px] border-none">
-                <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
-                  <h1
+          <div className="">
+            <Card className=" w-full shadow-md !px-0 pt-3  rounded-[6px] border-none">
+              <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
+                <h1
+                  className={cn(
+                    " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                    font1.className
+                  )}
+                >
+                  E
+                  <span
                     className={cn(
-                      " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                      " text-lg  text-[var(--clr-secondary)] font-semibold ",
                       font1.className
                     )}
                   >
-                    E
-                    <span
-                      className={cn(
-                        " text-lg  text-[var(--clr-secondary)] font-semibold ",
-                        font1.className
-                      )}
-                    >
-                      DUCATION
-                    </span>
-                  </h1>
+                    DUCATION
+                  </span>
+                </h1>
 
-                  <div className="w-full overflow-x-auto no-scrollbar">
-                    <div className=" w-[345px] md:w-full">
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="bg-[var(--clr-silver-v6)]">
-                            <TableHead
+                <div className="w-full overflow-x-auto no-scrollbar">
+                  <div className=" w-[345px] md:w-full">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-[var(--clr-silver-v6)]">
+                          <TableHead
+                            className={cn(
+                              " text-sm  text-[var(--clr-black-light)] font-bold ",
+                              font.className
+                            )}
+                          >
+                            Institution Name
+                          </TableHead>
+                          <TableHead
+                            className={cn(
+                              " w-[100px] text-sm  text-[var(--clr-black-light)] font-bold ",
+                              font.className
+                            )}
+                          >
+                            Completion
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+
+                      <TableBody>
+                        {profileData?.user_education?.map((edu, index) => (
+                          <TableRow key={index}>
+                            <TableCell
                               className={cn(
-                                " text-sm  text-[var(--clr-black-light)] font-bold ",
+                                " text-sm  text-[var(--clr-black-light)] font-normal ",
                                 font.className
                               )}
                             >
-                              Invoice
-                            </TableHead>
-                            <TableHead
+                              {edu?.school}
+                            </TableCell>
+                            <TableCell
                               className={cn(
-                                " w-[100px] text-sm  text-[var(--clr-black-light)] font-bold ",
+                                " text-sm  text-[var(--clr-black-light)] font-normal ",
                                 font.className
                               )}
                             >
-                              Completion
-                            </TableHead>
+                              {edu?.completionYear}
+                            </TableCell>
                           </TableRow>
-                        </TableHeader>
-
-                        <TableBody>
-                          {profileData?.education?.map((edu, index) => (
-                            <TableRow key={index}>
-                              <TableCell
-                                className={cn(
-                                  " text-sm  text-[var(--clr-black-light)] font-normal ",
-                                  font.className
-                                )}
-                              >
-                                {edu.school}
-                              </TableCell>
-                              <TableCell
-                                className={cn(
-                                  " text-sm  text-[var(--clr-black-light)] font-normal ",
-                                  font.className
-                                )}
-                              >
-                                {edu.completionYear}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <div className="">
-              <Card className=" w-full shadow-md !px-0 pt-3  rounded-[6 px] border-none">
-                <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
-                  <h1
+          <div className="">
+            <Card className=" w-full shadow-md !px-0 pt-3  rounded-[6 px] border-none">
+              <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
+                <h1
+                  className={cn(
+                    " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                    font1.className
+                  )}
+                >
+                  C
+                  <span
                     className={cn(
-                      " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                      " text-lg  text-[var(--clr-secondary)] font-semibold ",
                       font1.className
                     )}
                   >
-                    C
-                    <span
-                      className={cn(
-                        " text-lg  text-[var(--clr-secondary)] font-semibold ",
-                        font1.className
-                      )}
+                    ERTIFICATE(S)
+                  </span>
+                </h1>
+                <div className="relative w-full  grid grid-cols-1 gap-2 px-1">
+                  {profileData?.user_certificate.map((certificate, index) => (
+                    <div
+                      className="flex items-center justify-start gap-4 text-wrap"
+                      key={index}
                     >
-                      ERTIFICATE(S)
-                    </span>
-                  </h1>
-                  <div className="relative w-full  grid grid-cols-1 gap-2 px-1">
-                    {profileData?.certificates.map((certificate, index) => (
-                      <div
-                        className="flex items-center justify-start gap-4 text-wrap"
-                        key={index}
+                      <p
+                        className={cn(
+                          " text-sm  text-[var(--clr-black-light)] font-semibold ",
+                          font.className
+                        )}
                       >
-                        <p
-                          className={cn(
-                            " text-sm  text-[var(--clr-black-light)] font-semibold ",
-                            font.className
-                          )}
-                        >
-                          {certificate?.title}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                        {certificate?.title}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <div className="">
-              <Card className=" w-full shadow-md !px-0 pt-3  rounded-[4px] border-none">
-                <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
-                  <h1
+          <div className="">
+            <Card className=" w-full shadow-md !px-0 pt-3  rounded-[4px] border-none">
+              <CardContent className="relative w-full px-3 sm:px-4 flex flex-col gap-2">
+                <h1
+                  className={cn(
+                    " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                    font1.className
+                  )}
+                >
+                  E
+                  <span
                     className={cn(
-                      " text-2xl  text-[var(--clr-secondary)] font-semibold ",
+                      " text-lg  text-[var(--clr-secondary)] font-semibold ",
                       font1.className
                     )}
                   >
-                    E
-                    <span
-                      className={cn(
-                        " text-lg  text-[var(--clr-secondary)] font-semibold ",
-                        font1.className
-                      )}
-                    >
-                      MPLOYMENT(S)
-                    </span>
-                  </h1>
+                    MPLOYMENT(S)
+                  </span>
+                </h1>
 
-                  <div className="w-full overflow-x-auto no-scrollbar">
-                    <div className=" min-w-[460px] md:w-full">
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="bg-[var(--clr-silver-v6)]">
-                            <TableHead
-                              className={cn(
-                                " text-sm  text-[var(--clr-black-light)] font-bold ",
-                                font.className
-                              )}
-                            >
-                              Company
-                            </TableHead>
-                            <TableHead
-                              className={cn(
-                                " w-[100px] text-sm  text-[var(--clr-black-light)] font-bold ",
-                                font.className
-                              )}
-                            >
-                              Position
-                            </TableHead>
+                <div className="w-full overflow-x-auto no-scrollbar">
+                  <div className=" min-w-[460px] md:w-full">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-[var(--clr-silver-v6)]">
+                          <TableHead
+                            className={cn(
+                              " text-sm  text-[var(--clr-black-light)] font-bold ",
+                              font.className
+                            )}
+                          >
+                            Company
+                          </TableHead>
+                          <TableHead
+                            className={cn(
+                              " w-[100px] text-sm  text-[var(--clr-black-light)] font-bold ",
+                              font.className
+                            )}
+                          >
+                            Position
+                          </TableHead>
 
-                            <TableHead
+                          <TableHead
+                            className={cn(
+                              " w-[120px] text-sm  text-[var(--clr-black-light)] font-bold ",
+                              font.className
+                            )}
+                          >
+                            Period
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+
+                      <TableBody>
+                        {profileData?.user_employment?.map((emp, index) => (
+                          <TableRow key={index}>
+                            <TableCell
                               className={cn(
-                                " w-[120px] text-sm  text-[var(--clr-black-light)] font-bold ",
+                                " text-sm  text-[var(--clr-black-light)] font-normal ",
                                 font.className
                               )}
                             >
-                              Period
-                            </TableHead>
+                              {emp.company}
+                            </TableCell>
+                            <TableCell
+                              className={cn(
+                                " text-sm  text-[var(--clr-black-light)] font-normal ",
+                                font.className
+                              )}
+                            >
+                              {emp.position}
+                            </TableCell>
+
+                            <TableCell
+                              className={cn(
+                                " text-sm  text-[var(--clr-black-light)] font-normal ",
+                                font.className
+                              )}
+                            >
+                              {emp.period}
+                            </TableCell>
                           </TableRow>
-                        </TableHeader>
-
-                        <TableBody>
-                          {profileData?.employments?.map((emp, index) => (
-                            <TableRow key={index}>
-                              <TableCell
-                                className={cn(
-                                  " text-sm  text-[var(--clr-black-light)] font-normal ",
-                                  font.className
-                                )}
-                              >
-                                {emp.company}
-                              </TableCell>
-                              <TableCell
-                                className={cn(
-                                  " text-sm  text-[var(--clr-black-light)] font-normal ",
-                                  font.className
-                                )}
-                              >
-                                {emp.position}
-                              </TableCell>
-
-                              <TableCell
-                                className={cn(
-                                  " text-sm  text-[var(--clr-black-light)] font-normal ",
-                                  font.className
-                                )}
-                              >
-                                {emp.period}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </section>
-        )}
-      </div>
-    </>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
+    </div>
   );
 };
 

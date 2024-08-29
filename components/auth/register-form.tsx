@@ -80,7 +80,7 @@ export const RegisterForm = () => {
                       {...field}
                       disabled={isPending}
                       placeholder="John Doe"
-                      className={` bg-[var(--clr-silver-v7)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.name
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -104,7 +104,7 @@ export const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="john.doe@example.com"
                       type="email"
-                      className={` bg-[var(--clr-silver-v7)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.email
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -123,11 +123,12 @@ export const RegisterForm = () => {
                   <FormLabel>PhoneNumber</FormLabel>
                   <FormControl>
                     <Input
-                      {...field}
                       type="number"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))} // Convert value to number
                       disabled={isPending}
                       placeholder="eg. 0544789544"
-                      className={` bg-[var(--clr-silver-v7)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.phoneNumber
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
@@ -203,7 +204,7 @@ export const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="******"
                       type="password"
-                      className={` bg-[var(--clr-silver-v7)] ${
+                      className={` bg-[var(--clr-silver-v6)] ${
                         form.formState.errors.password
                           ? "border border-red-500 focus-visible:ring-0"
                           : "focus-visible:ring-transparent border-none"
