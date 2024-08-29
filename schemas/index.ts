@@ -251,7 +251,7 @@ export const NewJobFormSchema = z.object({
     .min(3, "Description must be at least 3 characters")
     .max(400, "Description must be less than 400 characters"),
   description: z.array(z.string()),
-  sepcification: z.array(z.string()),
+  sepcification: z.array(z.optional(z.string())),
   salaryCurrency: z.string(),
 });
 

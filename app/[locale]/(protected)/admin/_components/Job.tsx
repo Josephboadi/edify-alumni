@@ -57,6 +57,7 @@ import { Country } from "./setups/Country";
 // };
 
 type JobPost = z.infer<typeof NewJobFormSchema>;
+type NewJobFormValues = z.infer<typeof NewJobFormSchema>;
 
 export function JobDataTable() {
   const { toast } = useToast();
@@ -93,7 +94,7 @@ export function JobDataTable() {
   //   sepcification: [""],
   // };
 
-  const form = useForm<z.infer<typeof NewJobFormSchema>>({
+  const form = useForm<NewJobFormValues>({
     defaultValues: {
       jobTitle: "",
       jobCategory: "",
@@ -116,6 +117,7 @@ export function JobDataTable() {
 
   const jobSpecificationArray = useFieldArray({
     control: form.control,
+    // @ts-ignore
     name: "sepcification",
     rules: {
       required: "Please append at least 1 Job Specification",
@@ -124,6 +126,7 @@ export function JobDataTable() {
 
   const jobDescriptionArray = useFieldArray({
     control: form.control,
+    // @ts-ignore
     name: "description",
     rules: {
       required: "Please append at least 1 Job Description",
