@@ -4,8 +4,9 @@ import Wrapper from "@/components/common/Wrapper";
 import Navbar from "@/components/navbar/Navbar";
 import TranslationsProvider from "@/components/providers/TranslationsProvider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { userProfile } from "@/lib/profile";
 import { userProfile } from "@/lib/profile";
-import { ProfileData } from "@/schemas";
+import { UserInfoData } from "@/schemas";
 import Image from "next/image";
 import { Suspense } from "react";
 import Head from "../_components/Head";
@@ -18,7 +19,8 @@ const i18nNamespace = ["navbar", "footer", "profile"];
 export default async function ProfilePage({ params: { locale } }: any) {
   const { t, resources } = await initTranslations(locale, i18nNamespace);
 
-  const profileData: ProfileData | undefined = await userProfile();
+  const profileData: UserInfoData | undefined = await userProfile();
+  // const profileData: ProfileData | undefined = await userProfile();
 
   return (
     <TranslationsProvider

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 // import { profileData } from "@/data/profile";
 import { cn } from "@/lib/utils";
-import { ProfileData } from "@/schemas";
+import { UserInfoData } from "@/schemas";
 import { Montserrat } from "next/font/google";
 import Image from "next/image";
 // import { useEffect, useState } from "react";
@@ -17,7 +17,8 @@ const font = Montserrat({
 });
 
 interface ProfileHeadProps {
-  profileData?: Awaited<ProfileData>;
+  // profileData?: Awaited<ProfileData>;
+  profileData?: Awaited<UserInfoData>;
   loading: boolean;
 }
 
@@ -28,7 +29,6 @@ const ProfileHead = ({ profileData, loading }: ProfileHeadProps) => {
   //   setProfileDetailData(profileData);
   //   return;
   // }, []);
-
 
   return (
     <>
@@ -47,7 +47,7 @@ const ProfileHead = ({ profileData, loading }: ProfileHeadProps) => {
         <section className="w-full relative flex gap-4 items-end">
           <div className="w-[110px] h-[110px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-[10px] relative  shadow-md">
             <Image
-              src={profileData?.bio.image || "/profile.png"}
+              src={profileData?.image || "/profile.png"}
               fill
               alt="-"
               className="object-center rounded-[10px] object-cover "
@@ -70,7 +70,7 @@ const ProfileHead = ({ profileData, loading }: ProfileHeadProps) => {
                   font.className
                 )}
               >
-                {profileData.bio.name}
+                {profileData.name}
               </h1>
             </div>
             <div className="  h-[36px] flex items-end ">

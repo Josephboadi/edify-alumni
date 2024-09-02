@@ -27,6 +27,7 @@ const font1 = Montserrat({
 
 interface ProfileDetailProps {
   profileData?: Awaited<UserInfoData>;
+  // profileData?: Awaited<UserInfoData>;
   loading: boolean;
 }
 
