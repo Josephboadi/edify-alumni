@@ -266,9 +266,11 @@ export const getjobs = async () => {
       if (allowedOrigins.includes(origin)) {
         config.headers.tokenID = `${existingToken?.token}`;
       }
+      console.log(config);
       return config;
     },
     (error) => {
+      console.log(error);
       return Promise.reject(error);
     }
   );
