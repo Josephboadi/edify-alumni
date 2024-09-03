@@ -42,6 +42,7 @@ const Header = () => {
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   const [open, setOpen] = useState(false);
   // const screenSize = useScreenSize();
+  console.log(session);
   const {
     toggleSide,
     setToggleSide,

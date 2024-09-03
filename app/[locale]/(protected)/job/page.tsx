@@ -1,3 +1,4 @@
+// import { auth } from "@/auth";
 import initTranslations from "@/app/i18n";
 import Footer from "@/components/common/Footer";
 import Wrapper from "@/components/common/Wrapper";

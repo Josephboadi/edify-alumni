@@ -8,11 +8,10 @@ import { ReactNode } from "react";
 // const i18nNamespace = ["navbar", "footer"];
 interface ProtectedLayoutProps {
   children: ReactNode;
-  // params: any;
+  params: any;
 }
 
 const ProtectedLayout = async ({ children }: ProtectedLayoutProps) => {
-  // const { locale } = params;
   // const { t, resources } = await initTranslations(locale, i18nNamespace);
   return (
     // <TranslationsProvider
