@@ -7,6 +7,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 import { getUserById } from "@/data/user";
 import { db } from "@/lib/db";
 import { getAccountByUserId } from "./data/account";
+import { generateSessionToken } from "./lib/tokens";
 
 export const {
   handlers: { GET, POST },
@@ -77,13 +78,13 @@ export const {
         session.user.token = token.jti as string;
       }
 
-      // if (token.sub && session.user) {
-      //   await generateSessionToken(
-      //     token.sub,
-      //     session.expires,
-      //     token.jti as string
-      //   );
-      // }
+      if (token.sub && session.user) {
+        await generateSessionToken(
+          token.sub,
+          session.expires,
+          token.jti as string
+        );
+      }
 
       return session;
     },
@@ -111,7 +112,6 @@ export const {
     },
   },
   adapter: PrismaAdapter(db),
-  // session: { strategy: "jwt", maxAge: 20 * 60 },
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 20 * 60 },
   ...authConfig,
 });

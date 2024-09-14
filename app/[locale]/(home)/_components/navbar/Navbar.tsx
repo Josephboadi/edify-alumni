@@ -17,7 +17,7 @@ import { menusData } from "@/data/menus";
 import { notificationsData } from "@/data/notifications";
 import { ExitIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiWorld } from "react-icons/bi";
@@ -37,17 +37,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCurrentAuth } from "@/hooks/use-current-auth";
 import { useAppStore } from "@/store/store";
-import { useSession } from "next-auth/react";
 import { createPortal } from "react-dom";
 
 const Navbar = ({ locale }: any) => {
-  const session = useSession();
+  const session = useCurrentAuth();
   const { t } = useTranslation();
-  const { formType, authModal, setAuthModal, isAuthenticated } = useAppStore();
+  const { formType, authModal, setAuthModal } = useAppStore();
   const pathname = usePathname();
 
-  // const router = useRouter();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   // const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   // const [open, setOpen] = useState(false);
@@ -62,10 +62,10 @@ const Navbar = ({ locale }: any) => {
     setAuthModal();
   };
 
-  console.log(
-    "isAuthenticated==================================, ",
-    isAuthenticated
-  );
+  const handleLogout = async () => {
+    await logout();
+    window.location.reload();
+  };
   // const contextMenuOptions = [
   //   {
   //     name: "Home",
@@ -157,7 +157,7 @@ const Navbar = ({ locale }: any) => {
             {/* bg-[var(--clr-primary-light)] bg-clip-padding backdrop-filter
           backdrop-blur-sm bg-opacity-10 */}
             <div className="flex items-center ">
-              {session?.status === "authenticated" || isAuthenticated ? (
+              {session?.status === "authenticated" ? (
                 <>
                   <LanguageButton asChild mode="modal">
                     <div className=" h-[38px]   rounded-full p-2 px-2 flex items-center justify-center  bg-[var(--clr-silver)] bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer mr-1">
@@ -235,7 +235,7 @@ const Navbar = ({ locale }: any) => {
                     className=" h-[40px]   rounded-full p-4 px-2 flex items-center justify-center bg-[var(--clr-silver)] bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer"
                     // onClick={() => setIsContextMenuVisible(true)}
                   >
-                    {session?.status === "authenticated" || isAuthenticated ? (
+                    {session?.status === "authenticated" ? (
                       <>
                         <div className=" block md:hidden">
                           {/* {screenSize?.width <= 1024 ? ( */}
@@ -306,7 +306,7 @@ const Navbar = ({ locale }: any) => {
                               </div> */}
                                 <DrawerClose asChild>
                                   <div
-                                    onClick={() => logout()}
+                                    onClick={() => handleLogout()}
                                     className="flex items-center gap-4 px-4 hover:bg-slate-100 py-2 cursor-pointer"
                                   >
                                     <ExitIcon className="mr-2 h-4 w-4" />
@@ -375,7 +375,7 @@ const Navbar = ({ locale }: any) => {
                               })}
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
-                                onClick={() => logout()}
+                                onClick={() => handleLogout()}
                                 className="px-4"
                               >
                                 <ExitIcon className="mr-2 h-4 w-4" />

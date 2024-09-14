@@ -56,7 +56,7 @@ export const LoginForm = () => {
     startTransition(async () => {
       await login(values, locale, callbackUrl)
         .then((data) => {
-          console.log("Data===========================, ", data);
+          // console.log("Data===========================, ", data);
           if (data?.error) {
             form.reset();
             setError(data.error);
@@ -69,6 +69,7 @@ export const LoginForm = () => {
           form.reset();
           setIsAuthenticated();
           setSuccess("Login Sucessful");
+          window.location.reload();
 
           // router.push(locale === "en" ? `/` : `/${locale}/`);
 

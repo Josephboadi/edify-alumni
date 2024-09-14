@@ -42,7 +42,7 @@ const Header = () => {
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   const [open, setOpen] = useState(false);
   // const screenSize = useScreenSize();
-  console.log(session);
+  // console.log(session);
   const {
     toggleSide,
     setToggleSide,
@@ -65,6 +65,11 @@ const Header = () => {
       }
     });
   }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.reload();
+  };
 
   return (
     <header
@@ -219,7 +224,7 @@ const Header = () => {
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                              onClick={() => logout()}
+                              onClick={() => handleLogout()}
                               className="px-4"
                             >
                               <ExitIcon className="mr-2 h-4 w-4" />

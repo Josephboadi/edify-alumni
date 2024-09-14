@@ -10,7 +10,6 @@ import initTranslations from "@/app/i18n";
 import Footer from "@/components/common/Footer";
 import Wrapper from "@/components/common/Wrapper";
 // import Navbar from "@/components/navbar/Navbar";
-import Navbar from "@/components/navbar/Navbar";
 import { Button } from "@/components/ui/button";
 import { about } from "@/lib/about";
 import { alumni } from "@/lib/alumni";
@@ -29,7 +28,7 @@ import Service from "./_components/Service";
 import Sponsors from "./_components/Sponsors";
 import Subscribe from "./_components/Subscribe";
 import TopAlumi from "./_components/TopAlumi";
-// import Navbar from "./_components/navbar/Navbar";
+import Navbar from "./_components/navbar/Navbar";
 
 // const font = Poppins({
 //   subsets: ["latin"],

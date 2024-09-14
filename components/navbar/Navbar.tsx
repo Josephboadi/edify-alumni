@@ -14,7 +14,7 @@ import { menusData } from "@/data/menus";
 import { notificationsData } from "@/data/notifications";
 import { ExitIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiWorld } from "react-icons/bi";
@@ -47,7 +47,7 @@ const Navbar = ({ locale }: any) => {
   const { formType, authModal, setAuthModal } = useAppStore();
   const pathname = usePathname();
 
-  // const router = useRouter();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   // const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
   // const [open, setOpen] = useState(false);
@@ -59,6 +59,15 @@ const Navbar = ({ locale }: any) => {
   const handleCloseButtonClick = () => {
     setAuthModal();
   };
+
+  // if (session?.status === "authenticated") {
+  //   router.refresh();
+  // }
+
+  // useEffect(() => {
+
+  // }, [session]);
+
   // const contextMenuOptions = [
   //   {
   //     name: "Home",
@@ -119,7 +128,13 @@ const Navbar = ({ locale }: any) => {
     // };
   }, []);
 
+  // useEffect(() => {
+
+  // }, []);
+
   console.log("session from navigation=====================", session);
+
+  // router.refresh();
 
   // bg-[var(--clr-primary-light-trans)]
   return (
@@ -295,7 +310,7 @@ const Navbar = ({ locale }: any) => {
                               </div> */}
                                 <DrawerClose asChild>
                                   <div
-                                    onClick={() => logout()}
+                                    onClick={logout}
                                     className="flex items-center gap-4 px-4 hover:bg-slate-100 py-2 cursor-pointer"
                                   >
                                     <ExitIcon className="mr-2 h-4 w-4" />

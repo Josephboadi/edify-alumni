@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
+import { signOut } from "@/auth";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
 import { getSessionByID } from "@/data/session-id";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
@@ -91,7 +92,7 @@ export const generateSessionToken = async (
 ) => {
   let sessionToken;
   const existingToken = await getSessionByID(user_id);
-  console.log("EXISTINGTOKEN===============================, ", existingToken);
+  // console.log("EXISTINGTOKEN===============================, ", existingToken);
   if (existingToken) {
     const hasExpired = new Date(existingToken.expires) < new Date();
     if (hasExpired) {
@@ -100,7 +101,7 @@ export const generateSessionToken = async (
           id: existingToken.id,
         },
       });
-      // await signOut();
+      await signOut();
       return;
     } else {
       sessionToken = await db.session.update({
