@@ -35,7 +35,7 @@ export const LoginForm = () => {
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
       : "";
-  const { setFormType, setAuthModal } = useAppStore();
+  const { setFormType, setAuthModal, setIsAuthenticated } = useAppStore();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -49,27 +49,39 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
 
-    startTransition(() => {
-      login(values, locale, callbackUrl)
+    startTransition(async () => {
+      await login(values, locale, callbackUrl)
         .then((data) => {
+          console.log("Data===========================, ", data);
           if (data?.error) {
             form.reset();
             setError(data.error);
           }
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-            setAuthModal();
-          }
-
           if (data?.twoFactor) {
             setShowTwoFactor(true);
           }
+
+          form.reset();
+          setIsAuthenticated();
+          setSuccess("Login Sucessful");
+
+          // router.push(locale === "en" ? `/` : `/${locale}/`);
+
+          // setAuthModal(false);
+
+          // if (data?.success) {
+          //   console.log(data);
+          //   form.reset();
+          //   setSuccess(data.success);
+          //   setAuthModal(false);
+          //   router.push(locale === "en" ? `/` : `/${locale}/`);
+          //   router.refresh();
+          // }
 
           // console.log("session============================, ",session);
           // if (token.sub && session.user) {
@@ -82,8 +94,8 @@ export const LoginForm = () => {
           // if (data?.success) {
           //   form.reset();
           //   setAuthModal(false);
-          //   router.push(locale === "en" ? `/` : `/${locale}/`);
-          //   router.refresh();
+          // router.push(locale === "en" ? `/` : `/${locale}/`);
+          // router.refresh();
           //   setSuccess(data?.success);
           // }
         })

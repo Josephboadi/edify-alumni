@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 // import { useTranslations } from "next-intl";
 // import { unsta ble_setRequestLocale } from "next-intl/server";
 import { Montserrat, Righteous } from "next/font/google";
@@ -8,6 +9,7 @@ import initTranslations from "@/app/i18n";
 // import { useEffect } from "react";
 import Footer from "@/components/common/Footer";
 import Wrapper from "@/components/common/Wrapper";
+// import Navbar from "@/components/navbar/Navbar";
 import Navbar from "@/components/navbar/Navbar";
 import { Button } from "@/components/ui/button";
 import { about } from "@/lib/about";
@@ -27,6 +29,7 @@ import Service from "./_components/Service";
 import Sponsors from "./_components/Sponsors";
 import Subscribe from "./_components/Subscribe";
 import TopAlumi from "./_components/TopAlumi";
+// import Navbar from "./_components/navbar/Navbar";
 
 // const font = Poppins({
 //   subsets: ["latin"],
@@ -71,6 +74,7 @@ async function getTopAlumniData() {
 }
 export default async function Home({ params: { locale } }: any) {
   const { t, resources } = await initTranslations(locale, i18nNamespace);
+  const session = await auth();
   // const authData = await auth();
   // console.log("AUTH DATA================================, ", authData);
   //  const herosData = await heroes();

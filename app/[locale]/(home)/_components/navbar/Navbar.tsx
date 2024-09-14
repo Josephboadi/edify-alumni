@@ -1,6 +1,9 @@
 "use client";
 
 import { logout } from "@/actions/logout";
+import { LanguageButton } from "@/components/common/Language-button";
+import Wrapper from "@/components/common/Wrapper";
+import Logo from "@/components/header/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Drawer,
@@ -22,16 +25,10 @@ import { FaUser } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { RiNotification2Fill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { LanguageButton } from "../common/Language-button";
-import Wrapper from "../common/Wrapper";
-import Logo from "../header/Logo";
 
-import { useCurrentAuth } from "@/hooks/use-current-auth";
-import { useAppStore } from "@/store/store";
-import { createPortal } from "react-dom";
-import { LoginForm } from "../auth/login-form";
-import { RegisterForm } from "../auth/register-form";
-import ModalForm from "../common/Modal";
+import { LoginForm } from "@/components/auth/login-form";
+import { RegisterForm } from "@/components/auth/register-form";
+import ModalForm from "@/components/common/Modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,12 +36,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
+import { useAppStore } from "@/store/store";
+import { useSession } from "next-auth/react";
+import { createPortal } from "react-dom";
 
 const Navbar = ({ locale }: any) => {
-  const session = useCurrentAuth();
+  const session = useSession();
   const { t } = useTranslation();
-  const { formType, authModal, setAuthModal } = useAppStore();
+  const { formType, authModal, setAuthModal, isAuthenticated } = useAppStore();
   const pathname = usePathname();
 
   // const router = useRouter();
@@ -56,9 +56,16 @@ const Navbar = ({ locale }: any) => {
   const [selectedMenu, setSelectedMenu] = useState(pathname);
   const [authStatus, setAuthStatus] = useState(false);
 
+  // console.log("session from navigation=====================", session);
+
   const handleCloseButtonClick = () => {
     setAuthModal();
   };
+
+  console.log(
+    "isAuthenticated==================================, ",
+    isAuthenticated
+  );
   // const contextMenuOptions = [
   //   {
   //     name: "Home",
@@ -119,7 +126,11 @@ const Navbar = ({ locale }: any) => {
     // };
   }, []);
 
-  console.log("session from navigation=====================", session);
+  // useEffect(() => {
+  //   if (session?.status === "authenticated") {
+  //     setAuthStatus;
+  //   }
+  // }, [session]);
 
   // bg-[var(--clr-primary-light-trans)]
   return (
@@ -146,7 +157,7 @@ const Navbar = ({ locale }: any) => {
             {/* bg-[var(--clr-primary-light)] bg-clip-padding backdrop-filter
           backdrop-blur-sm bg-opacity-10 */}
             <div className="flex items-center ">
-              {session?.status === "authenticated" ? (
+              {session?.status === "authenticated" || isAuthenticated ? (
                 <>
                   <LanguageButton asChild mode="modal">
                     <div className=" h-[38px]   rounded-full p-2 px-2 flex items-center justify-center  bg-[var(--clr-silver)] bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer mr-1">
@@ -224,7 +235,7 @@ const Navbar = ({ locale }: any) => {
                     className=" h-[40px]   rounded-full p-4 px-2 flex items-center justify-center bg-[var(--clr-silver)] bg-clip-padding backdrop-filter backdrop-blur-3xl bg-opacity-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer"
                     // onClick={() => setIsContextMenuVisible(true)}
                   >
-                    {session?.status === "authenticated" ? (
+                    {session?.status === "authenticated" || isAuthenticated ? (
                       <>
                         <div className=" block md:hidden">
                           {/* {screenSize?.width <= 1024 ? ( */}

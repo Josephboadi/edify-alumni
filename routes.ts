@@ -3,7 +3,13 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/en", "/de", "/auth/new-verification"];
+export const publicRoutes = [
+  "/",
+  "/en",
+  "/de",
+  "/auth/new-verification",
+  "/de/auth/new-verification",
+];
 
 /**
  * An array of routes that are used for authentication
@@ -11,11 +17,16 @@ export const publicRoutes = ["/", "/en", "/de", "/auth/new-verification"];
  * @type {string[]}
  */
 export const authRoutes = [
-  "/en/auth/login",
-  "/en/auth/register",
-  "/en/auth/error",
-  "/en/auth/reset",
-  "/en/auth/new-password",
+  "/auth/login",
+  "/auth/register",
+  "/auth/error",
+  "/auth/reset",
+  "/auth/new-password",
+  "/de/auth/login",
+  "/de/auth/register",
+  "/de/auth/error",
+  "/de/auth/reset",
+  "/de/auth/new-password",
 ];
 
 /**
@@ -23,10 +34,10 @@ export const authRoutes = [
  * Routes that start with this prefix are used for API authentication purposes
  * @type {string}
  */
-export const apiAuthPrefix = "/api/auth";
+export const apiAuthPrefix = ["/api/auth"];
 
 /**
  * The default redirect path after logging in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT = "/settings";
+export const DEFAULT_LOGIN_REDIRECT = "/";

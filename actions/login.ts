@@ -20,7 +20,7 @@ export const login = async (
   locale: any,
   callbackUrl?: string | null
 ) => {
-  const redirectUrl = `/`;
+  const redirectUrl = locale === "en" ? `/` : `/${locale}/`;
 
   const validatedFields = LoginSchema.safeParse(values);
 
@@ -31,6 +31,8 @@ export const login = async (
   const { email, password, code } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
+
+  console.log(existingUser);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "Email does not exist!" };
@@ -100,10 +102,14 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || redirectUrl,
+      // redirectTo: callbackUrl || redirectUrl,
+      redirectTo: redirectUrl,
     });
+    console.log(
+      "Sign in successfully===========================================, "
+    );
 
-    // return { success: "Continent added successfully!" };
+    // return { success: "login successful!" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
